@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>AduaBot</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --cyan: #00f5ff;
+    --cyan-dim: #00a8b5;
+    --dark: #010d14;
+    --mid: #011a27;
+    --glow: 0 0 20px #00f5ff66, 0 0 60px #00f5ff22;
+    --glow-strong: 0 0 30px #00f5ffaa, 0 0 80px #00f5ff44;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--cyan);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Grid background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+  }
+
+  /* Scanline overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.15) 2px,
+      rgba(0,0,0,0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    z-index: 10;
+    padding: 40px 20px;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .logo {
+    text-align: center;
+  }
+
+  .logo-main {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: var(--cyan);
+    text-shadow: var(--glow);
+    line-height: 1;
+  }
+
+  .logo-sub {
+    font-size: 0.75rem;
+    letter-spacing: 0.5em;
+    color: var(--cyan-dim);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* Status display */
+  .status-panel {
+    width: 100%;
+    border: 1px solid rgba(0,245,255,0.2);
+    background: rgba(0,245,255,0.03);
+    padding: 16px 20px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .status-panel::before {
+    content: 'STATUS';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: var(--dark);
+    padding: 0 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--cyan-dim);
+  }
+
+  #status-text {
+    font-size: 0.85rem;
+    color: var(--cyan);
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: 0.05em;
+    opacity: 0.8;
+  }
+
+  /* Big mic button */
+  .btn-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Pulse rings */
+  .ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid var(--cyan);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .ring-1 { width: 200px; height: 200px; }
+  .ring-2 { width: 260px; height: 260px; }
+  .ring-3 { width: 320px; height: 320px; }
+
+  .listening .ring-1 { animation: pulse-ring 1.5s ease-out infinite; }
+  .listening .ring-2 { animation: pulse-ring 1.5s ease-out infinite 0.3s; }
+  .listening .ring-3 { animation: pulse-ring 1.5s ease-out infinite 0.6s; }
+
+  @keyframes pulse-ring {
+    0%   { transform: scale(0.8); opacity: 0.8; }
+    100% { transform: scale(1.2); opacity: 0; }
+  }
+
+  .mic-btn {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 2px solid var(--cyan);
+    background: var(--mid);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    position: relative;
+    z-index: 2;
+    transition: all 0.2s ease;
+    box-shadow: var(--glow), inset 0 0 30px rgba(0,245,255,0.05);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  .mic-btn:active, .mic-btn.pressed {
+    transform: scale(0.95);
+    box-shadow: var(--glow-strong), inset 0 0 40px rgba(0,245,255,0.15);
+  }
+
+  .mic-btn.listening {
+    border-color: #ff4466;
+    box-shadow: 0 0 30px #ff446688, 0 0 80px #ff446633, inset 0 0 40px rgba(255,68,102,0.1);
+  }
+
+  .mic-btn.speaking {
+    border-color: #44ff88;
+    box-shadow: 0 0 30px #44ff8888, 0 0 80px #44ff8833, inset 0 0 40px rgba(68,255,136,0.1);
+    animation: speaker-pulse 0.5s ease-in-out infinite alternate;
+  }
+
+  @keyframes speaker-pulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.04); }
+  }
+
+  .mic-icon {
+    font-size: 3rem;
+    line-height: 1;
+    transition: all 0.2s;
+  }
+
+  .mic-label {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+  }
+
+  /* API key input */
+  .api-section {
+    width: 100%;
+    position: relative;
+  }
+
+  .api-section::before {
+    content: 'GEMINI API KEY';
+    position: absolute;
+    top: -10px;
+    left: 16px;
+    background: var(--dark);
+    padding: 0 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    color: var(--cyan-dim);
+    z-index: 1;
+  }
+
+  .api-input {
+    width: 100%;
+    background: rgba(0,245,255,0.03);
+    border: 1px solid rgba(0,245,255,0.2);
+    color: var(--cyan);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    padding: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    letter-spacing: 0.05em;
+  }
+
+  .api-input:focus {
+    border-color: var(--cyan);
+  }
+
+  .api-input::placeholder {
+    color: rgba(0,245,255,0.25);
+    letter-spacing: 0.05em;
+  }
+
+  /* Bottom indicator */
+  .indicator-row {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--cyan-dim);
+  }
+
+  .dot.active {
+    background: var(--cyan);
+    box-shadow: 0 0 8px var(--cyan);
+    animation: blink 1s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.2; }
+  }
+
+  .indicator-text {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--cyan-dim);
+    text-transform: uppercase;
+  }
+
+  /* Corner decorations */
+  .corner {
+    position: fixed;
+    width: 60px;
+    height: 60px;
+    opacity: 0.3;
+  }
+  .corner-tl { top: 16px; left: 16px; border-top: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+  .corner-tr { top: 16px; right: 16px; border-top: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+  .corner-bl { bottom: 16px; left: 16px; border-bottom: 1px solid var(--cyan); border-left: 1px solid var(--cyan); }
+  .corner-br { bottom: 16px; right: 16px; border-bottom: 1px solid var(--cyan); border-right: 1px solid var(--cyan); }
+</style>
+</head>
+<body>
+
+<div class="corner corner-tl"></div>
+<div class="corner corner-tr"></div>
+<div class="corner corner-bl"></div>
+<div class="corner corner-br"></div>
+
+<div class="container">
+
+  <div class="logo">
+    <div class="logo-main">ADUABOT</div>
+    <div class="logo-sub">Asistente de Comercio Exterior</div>
+  </div>
+
+  <div class="api-section">
+    <input class="api-input" type="password" id="apiKey" placeholder="AIza..." autocomplete="off" spellcheck="false" />
+  </div>
+
+  <div class="status-panel">
+    <div id="status-text">Ingresa tu API Key y presiona el botón para hablar.</div>
+  </div>
+
+  <div class="btn-wrapper" id="btnWrapper">
+    <div class="ring ring-1"></div>
+    <div class="ring ring-2"></div>
+    <div class="ring ring-3"></div>
+    <button class="mic-btn" id="micBtn" ontouchstart="" onclick="handleMicClick()">
+      <span class="mic-icon" id="micIcon">🎙️</span>
+      <span class="mic-label" id="micLabel">Toca para hablar</span>
+    </button>
+  </div>
+
+  <div class="indicator-row">
+    <div class="dot" id="statusDot"></div>
+    <div class="indicator-text" id="indicatorText">EN ESPERA</div>
+  </div>
+
+</div>
+
+<script>
+  const SYSTEM_PROMPT = `Eres AduaBot, el asistente virtual de ADUAMEX, empresa líder en agencia aduanal y comercio exterior con base en Tijuana, México. 
+Respondes preguntas sobre trámites aduanales, importación, exportación, clasificación arancelaria, regulaciones IMMEX, permisos COFEPRIS, y temas relacionados al comercio exterior México-EE.UU.
+Eres preciso, profesional y amigable. Tus respuestas son concisas y directas. Siempre hablas en español.`;
+
+  let recognition = null;
+  let isListening = false;
+  let isSpeaking = false;
+  let speechSynth = window.speechSynthesis;
+
+  const micBtn = document.getElementById('micBtn');
+  const btnWrapper = document.getElementById('btnWrapper');
+  const micIcon = document.getElementById('micIcon');
+  const micLabel = document.getElementById('micLabel');
+  const statusText = document.getElementById('status-text');
+  const statusDot = document.getElementById('statusDot');
+  const indicatorText = document.getElementById('indicatorText');
+  const apiKeyInput = document.getElementById('apiKey');
+
+  function setStatus(msg, state = 'idle') {
+    statusText.textContent = msg;
+    micBtn.className = 'mic-btn';
+    btnWrapper.querySelector('.ring-1').parentElement.className !== 'btn-wrapper' ? null : null;
+    statusDot.className = 'dot';
+    indicatorText.textContent = state.toUpperCase();
+
+    if (state === 'listening') {
+      micBtn.classList.add('listening');
+      btnWrapper.classList.add('listening');
+      micIcon.textContent = '🔴';
+      micLabel.textContent = 'Escuchando...';
+      statusDot.classList.add('active');
+    } else if (state === 'thinking') {
+      micIcon.textContent = '⏳';
+      micLabel.textContent = 'Procesando...';
+      statusDot.classList.add('active');
+    } else if (state === 'speaking') {
+      micBtn.classList.add('speaking');
+      micIcon.textContent = '🔊';
+      micLabel.textContent = 'Hablando...';
+      statusDot.classList.add('active');
+    } else {
+      micIcon.textContent = '🎙️';
+      micLabel.textContent = 'Toca para hablar';
+      btnWrapper.classList.remove('listening');
+    }
+  }
+
+  function speak(text) {
+    if (isSpeaking) speechSynth.cancel();
+    isSpeaking = true;
+    setStatus(text, 'speaking');
+
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'es-MX';
+    utter.rate = 1.0;
+    utter.pitch = 1.0;
+
+    // Try to pick a Spanish voice
+    const voices = speechSynth.getVoices();
+    const esVoice = voices.find(v => v.lang.startsWith('es')) || null;
+    if (esVoice) utter.voice = esVoice;
+
+    utter.onend = () => {
+      isSpeaking = false;
+      setStatus('Listo. Toca el botón para otra pregunta.', 'idle');
+    };
+    utter.onerror = () => {
+      isSpeaking = false;
+      setStatus('Error al reproducir. Intenta de nuevo.', 'idle');
+    };
+
+    speechSynth.speak(utter);
+  }
+
+  async function askGemini(question) {
+    const apiKey = apiKeyInput.value.trim();
+    if (!apiKey) {
+      setStatus('⚠️ Ingresa tu Gemini API Key primero.', 'idle');
+      return;
+    }
+
+    setStatus('Consultando a Gemini...', 'thinking');
+
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+            contents: [{ role: 'user', parts: [{ text: question }] }]
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.error) {
+        setStatus(`Error API: ${data.error.message}`, 'idle');
+        return;
+      }
+
+      const answer = data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No obtuve respuesta.';
+      speak(answer);
+
+    } catch (err) {
+      setStatus(`Error de conexión: ${err.message}`, 'idle');
+    }
+  }
+
+  function startListening() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      setStatus('⚠️ Este navegador no soporta reconocimiento de voz. Usa Chrome.', 'idle');
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRecognition();
+    recognition.lang = 'es-MX';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      isListening = true;
+      setStatus('Te escucho... habla ahora.', 'listening');
+    };
+
+    recognition.onresult = (e) => {
+      const transcript = e.results[0][0].transcript;
+      setStatus(`Pregunta: "${transcript}"`, 'thinking');
+      isListening = false;
+      askGemini(transcript);
+    };
+
+    recognition.onerror = (e) => {
+      isListening = false;
+      const msgs = {
+        'no-speech': 'No detecté voz. Intenta de nuevo.',
+        'not-allowed': '⚠️ Permiso de micrófono denegado.',
+        'network': 'Error de red en reconocimiento de voz.'
+      };
+      setStatus(msgs[e.error] || `Error: ${e.error}`, 'idle');
+    };
+
+    recognition.onend = () => {
+      if (isListening) {
+        isListening = false;
+        setStatus('No detecté nada. Toca para intentar de nuevo.', 'idle');
+      }
+    };
+
+    recognition.start();
+  }
+
+  function handleMicClick() {
+    if (isSpeaking) {
+      speechSynth.cancel();
+      isSpeaking = false;
+      setStatus('Audio detenido.', 'idle');
+      return;
+    }
+    if (isListening) {
+      recognition?.stop();
+      isListening = false;
+      setStatus('Cancelado.', 'idle');
+      return;
+    }
+    startListening();
+  }
+
+  // Load voices
+  speechSynth.onvoiceschanged = () => { speechSynth.getVoices(); };
+
+  // API key persistente en localStorage
+  const DEFAULT_KEY = 'AIzaSyC6olOYgeZF7cYX6uuIg3DxT5WeteYOE8';
+  apiKeyInput.addEventListener('input', () => {
+    localStorage.setItem('aduabot_key', apiKeyInput.value);
+  });
+  const saved = localStorage.getItem('aduabot_key') || DEFAULT_KEY;
+  apiKeyInput.value = saved;
+</script>
+</body>
+</html>
