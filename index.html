@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot v3.7 — AduaMex</title>
+<title>AduaBot v4.0 — AduaMex</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{ --b:#00cfff; --dark:#03080f; --white:#e0f8ff; --red:#ff2255; }
@@ -65,7 +65,7 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
     <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.7 · TIJUANA MX</p>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v4.0 · TIJUANA MX</p>
 </div>
 
 <input type="hidden" id="apiKeyStored" />
@@ -132,14 +132,15 @@ btn.addEventListener('mouseup', stop);
 btn.addEventListener('touchstart', start);
 btn.addEventListener('touchend', stop);
 
-/* CONSULTA IA - MODELO CORREGIDO */
+/* CONSULTA IA - MODELO UNIVERSAL */
 async function askGemini(pregunta) {
     const key = document.getElementById('apiKeyStored').value;
     cb.classList.add('s-thinking');
     sTxt.textContent = "AduaBot consultando...";
 
-    /* USAMOS EL ID TÉCNICO PARA "GEMINI 2.5 FLASH" */
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${key}`;
+    /* CAMBIO CLAVE: Usamos 'gemini-1.5-flash-latest' que es el nombre 
+       que Google AI Studio asigna por defecto a las cuentas nuevas. */
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
 
     try {
         const response = await fetch(URL, {
@@ -153,15 +154,15 @@ async function askGemini(pregunta) {
         });
 
         const data = await response.json();
-        cb.classList.remove('s-thinking');
-
+        
         if (data.candidates && data.candidates[0]) {
+            cb.classList.remove('s-thinking');
             const txt = data.candidates[0].content.parts[0].text;
             sTxt.textContent = txt;
             speak(txt);
         } else {
-            // Si falla el primero, intentamos con el ID alternativo automáticamente
-            retryWithAlternative(pregunta, key);
+            /* REINTENTO AUTOMÁTICO CON NOMBRE ALTERNATIVO SI EL PRIMERO FALLA */
+            retryWithAlt(pregunta, key);
         }
     } catch (err) {
         cb.classList.remove('s-thinking');
@@ -169,10 +170,10 @@ async function askGemini(pregunta) {
     }
 }
 
-async function retryWithAlternative(pregunta, key) {
-    const URL_ALT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+async function retryWithAlt(pregunta, key) {
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${key}`;
     try {
-        const response = await fetch(URL_ALT, {
+        const response = await fetch(URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -180,14 +181,18 @@ async function retryWithAlternative(pregunta, key) {
             })
         });
         const data = await response.json();
+        cb.classList.remove('s-thinking');
         if (data.candidates) {
             const txt = data.candidates[0].content.parts[0].text;
             sTxt.textContent = txt;
             speak(txt);
         } else {
-            sTxt.textContent = "Modelo no disponible en tu región. Verifica tu panel de Google Cloud.";
+            sTxt.textContent = "Error: Verifica que tu API Key sea de Google AI Studio (aistudio.google.com) y no de Vertex AI.";
         }
-    } catch (e) { sTxt.textContent = "Error de sistema."; }
+    } catch (e) { 
+        cb.classList.remove('s-thinking');
+        sTxt.textContent = "Error de sistema."; 
+    }
 }
 
 function speak(t) {
