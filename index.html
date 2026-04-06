@@ -345,4 +345,761 @@ body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradie
   </div></div>
 </div>
 
-<div id="app
+<div id="app">
+  <div class="app-mq"><div class="mq-in">
+    <span class="mq-item">◆ <b>ADUAMEX</b> ◆</span><span class="mq-item">AGENCIA ADUANAL</span>
+    <span class="mq-item">◆ DI "<b>HOLA ADUABOT</b>" ◆</span><span class="mq-item"><b>IMPORTACIÓN</b> · EXPORTACIÓN</span>
+    <span class="mq-item">◆ <b>ADUAMEX</b> ◆</span><span class="mq-item">AGENCIA ADUANAL</span>
+    <span class="mq-item">◆ DI "<b>HOLA ADUABOT</b>" ◆</span><span class="mq-item"><b>IMPORTACIÓN</b> · EXPORTACIÓN</span>
+  </div></div>
+
+  <div class="header">
+    <svg class="hlogo" viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="hg1" x1="0%" y1="0%" x2="60%" y2="100%"><stop offset="0%" stop-color="#b8eeff"/><stop offset="40%" stop-color="#0099cc"/><stop offset="100%" stop-color="#002a40"/></linearGradient>
+        <linearGradient id="hg2" x1="100%" y1="0%" x2="40%" y2="100%"><stop offset="0%" stop-color="#d0f5ff"/><stop offset="100%" stop-color="#001828"/></linearGradient>
+        <linearGradient id="hg3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff" stop-opacity=".88"/><stop offset="100%" stop-color="#005577" stop-opacity=".88"/></linearGradient>
+        <linearGradient id="hgd" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#80e8ff" stop-opacity=".85"/><stop offset="100%" stop-color="#001828" stop-opacity=".35"/></linearGradient>
+        <linearGradient id="htg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#d0f5ff"/><stop offset="50%" stop-color="#00cfff"/><stop offset="100%" stop-color="#004466"/></linearGradient>
+        <filter id="hsh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000" flood-opacity=".5"/></filter>
+      </defs>
+      <polygon points="14,165 62,8 86,8 50,165" fill="url(#hg1)" filter="url(#hsh)"/>
+      <polygon points="108,8 132,8 96,165 70,165" fill="url(#hg2)" filter="url(#hsh)"/>
+      <polygon points="62,8 80,8 80,165 62,165" fill="url(#hg3)" filter="url(#hsh)"/>
+      <polygon points="10,165 145,5 158,5 22,165" fill="url(#hgd)" opacity=".75"/>
+      <polygon points="22,165 155,8 163,8 30,165" fill="white" opacity=".14"/>
+      <rect x="36" y="88" width="80" height="11" fill="url(#hg1)" rx="1"/>
+      <rect x="36" y="88" width="80" height="3" fill="white" opacity=".2" rx="1"/>
+      <text x="186" y="112" font-family="Arial Black,sans-serif" font-size="72" font-weight="900" font-style="italic" fill="url(#htg)" filter="url(#hsh)" letter-spacing="-1">AduaMex</text>
+      <line x1="186" y1="133" x2="228" y2="133" stroke="#0099cc" stroke-width="1.5"/>
+      <line x1="462" y1="133" x2="510" y2="133" stroke="#0099cc" stroke-width="1.5"/>
+      <text x="234" y="138" font-family="Arial,sans-serif" font-size="17" font-style="italic" fill="#00aadd" letter-spacing="2.5">Agencia Digital</text>
+    </svg>
+    <div class="neon-rule"></div>
+    <div class="htag">◈ AduaBot · Agente de Ventas AduaMex ◈</div>
+  </div>
+
+  <div class="cta-banner">
+    <div class="cta-main">HAZ UNA CONSULTA A ADUABOT<br>Y OBTÉN UNA RECOMPENSA</div>
+    <div class="cta-sub">◈ Presiona el botón o di "Hola AduaBot" ◈</div>
+  </div>
+
+  <div class="sp"><div id="sTxt">Sistema listo. Presiona el botón para comenzar.</div></div>
+
+  <input type="hidden" id="apiKey"/>
+
+  <div class="qw">
+    <div class="qh"><div class="ql">CONSULTAS DISPONIBLES</div><div id="qCount">5 / 5</div></div>
+    <div class="qbg"><div id="qBar" style="width:100%"></div></div>
+    <div id="qReset">Consultas disponibles</div>
+  </div>
+
+  <div class="vw"><div id="viz"></div><div id="vizLbl">SEÑAL DE AUDIO</div></div>
+
+  <div class="cblock" id="cb">
+    <div class="casino">
+      <div class="oring"></div>
+      <div class="bring" id="bRing"></div>
+      <div class="pring p1"></div>
+      <div class="pring p2"></div>
+      <button class="micbtn" onclick="handleClick()">
+        <div class="bbg"></div>
+        <div class="binner"></div>
+        <div class="bspin"></div>
+        <svg class="brobot" width="64" height="64" viewBox="0 0 72 72">
+          <defs><linearGradient id="rg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#3de0ff"/><stop offset="100%" stop-color="#006699"/></linearGradient></defs>
+          <line x1="36" y1="8" x2="36" y2="18" stroke="#00cfff" stroke-width="2"/>
+          <circle cx="36" cy="7" r="3" fill="#3de0ff"/>
+          <rect x="14" y="18" width="44" height="30" rx="6" fill="url(#rg)" opacity=".9"/>
+          <rect x="21" y="25" width="12" height="8" rx="2" fill="#03080f"/>
+          <rect x="39" y="25" width="12" height="8" rx="2" fill="#03080f"/>
+          <rect x="23" y="27" width="8" height="4" rx="1" fill="#00cfff" id="eyeL"/>
+          <rect x="41" y="27" width="8" height="4" rx="1" fill="#00cfff" id="eyeR"/>
+          <rect x="22" y="37" width="28" height="7" rx="3" fill="#03080f"/>
+          <rect x="25" y="39" width="4" height="3" rx="1" fill="#00cfff" id="m1"/>
+          <rect x="31" y="39" width="4" height="3" rx="1" fill="#00cfff" id="m2"/>
+          <rect x="37" y="39" width="4" height="3" rx="1" fill="#00cfff" id="m3"/>
+          <rect x="43" y="39" width="4" height="3" rx="1" fill="#00cfff" id="m4"/>
+          <rect x="30" y="48" width="12" height="6" rx="2" fill="url(#rg)" opacity=".68"/>
+          <rect x="18" y="54" width="36" height="12" rx="4" fill="url(#rg)" opacity=".42"/>
+          <circle cx="14" cy="33" r="3" fill="#001828" stroke="#00cfff" stroke-width="1"/>
+          <circle cx="58" cy="33" r="3" fill="#001828" stroke="#00cfff" stroke-width="1"/>
+        </svg>
+        <span class="blbl" id="bLbl">PRESIONAR</span>
+      </button>
+    </div>
+    <div class="leds"><div class="ld"></div><div class="ld"></div><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>
+    <div id="wBadge">🎤 DI "HOLA ADUABOT" PARA ACTIVAR</div>
+  </div>
+
+  <div class="bbar" id="bBar">
+    <div class="bbl"><div class="bdot2"></div><div id="bState">EN ESPERA</div></div>
+    <div class="bbr">ADUAMEX · TIJ · MX</div>
+  </div>
+</div>
+
+<div id="attract">
+  <svg class="att-logo" viewBox="0 0 560 190" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="ag1" x1="0%" y1="0%" x2="60%" y2="100%"><stop offset="0%" stop-color="#b8eeff"/><stop offset="35%" stop-color="#0099cc"/><stop offset="100%" stop-color="#002a40"/></linearGradient>
+      <linearGradient id="ag2" x1="100%" y1="0%" x2="40%" y2="100%"><stop offset="0%" stop-color="#d0f5ff"/><stop offset="100%" stop-color="#001828"/></linearGradient>
+      <linearGradient id="ag3" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#fff" stop-opacity=".95"/><stop offset="100%" stop-color="#005577" stop-opacity=".9"/></linearGradient>
+      <linearGradient id="agd" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" stop-color="#80e8ff" stop-opacity=".88"/><stop offset="100%" stop-color="#001828" stop-opacity=".38"/></linearGradient>
+      <linearGradient id="atg" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#d0f5ff"/><stop offset="50%" stop-color="#00cfff"/><stop offset="100%" stop-color="#004466"/></linearGradient>
+      <filter id="ash"><feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#000" flood-opacity=".6"/></filter>
+      <filter id="agf"><feGaussianBlur stdDeviation="1.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    <polygon points="14,165 62,8 86,8 50,165" fill="url(#ag1)" filter="url(#ash)"/>
+    <polygon points="108,8 132,8 96,165 70,165" fill="url(#ag2)" filter="url(#ash)"/>
+    <polygon points="62,8 80,8 80,165 62,165" fill="url(#ag3)" filter="url(#ash)"/>
+    <polygon points="10,165 145,5 158,5 22,165" fill="url(#agd)" opacity=".82" filter="url(#agf)"/>
+    <polygon points="22,165 155,8 163,8 30,165" fill="white" opacity=".18"/>
+    <rect x="36" y="88" width="80" height="11" fill="url(#ag1)" rx="1"/>
+    <text x="186" y="112" font-family="Arial Black,sans-serif" font-size="72" font-weight="900" font-style="italic" fill="url(#atg)" filter="url(#ash)" letter-spacing="-1">AduaMex</text>
+    <line x1="186" y1="133" x2="228" y2="133" stroke="#0099cc" stroke-width="1.5"/>
+    <line x1="462" y1="133" x2="510" y2="133" stroke="#0099cc" stroke-width="1.5"/>
+    <text x="234" y="138" font-family="Arial,sans-serif" font-size="17" font-style="italic" fill="#00aadd" letter-spacing="2.5">Agencia Digital</text>
+  </svg>
+  <div class="att-big" id="attMsg">¿NECESITAS IMPORTAR O EXPORTAR?</div>
+  <div class="att-sub" id="attSub">Soy AduaBot, tu agente virtual de AduaMex.<br>Resuelvo tus dudas de comercio exterior al instante.</div>
+  <div class="att-cta">🎤 DI "HOLA ADUABOT" O TOCA LA PANTALLA</div>
+  <div class="att-leds"><div class="att-led"></div><div class="att-led"></div><div class="att-led"></div><div class="att-led"></div><div class="att-led"></div></div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   BG RADAR
+══════════════════════════════════════ */
+(function(){
+  const c=document.getElementById('bgc'),ctx=c.getContext('2d');
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  let a=0,speed=0.009;
+  window.setRadarSpeed=s=>{speed=s;};
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const bg=ctx.createRadialGradient(c.width/2,c.height/2,0,c.width/2,c.height/2,c.width*.7);
+    bg.addColorStop(0,'rgba(0,20,40,0.46)');bg.addColorStop(1,'rgba(3,8,15,0)');
+    ctx.fillStyle=bg;ctx.fillRect(0,0,c.width,c.height);
+    ctx.strokeStyle='rgba(0,207,255,0.032)';ctx.lineWidth=.5;
+    for(let x=0;x<c.width;x+=40){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke();}
+    for(let y=0;y<c.height;y+=40){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke();}
+    const cx=c.width/2,cy=c.height/2,r=Math.min(c.width,c.height)*.42;
+    [1,.75,.5,.25].forEach(f=>{ctx.beginPath();ctx.arc(cx,cy,r*f,0,Math.PI*2);ctx.strokeStyle='rgba(0,207,255,0.08)';ctx.lineWidth=.5;ctx.stroke();});
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(a);
+    const sw=ctx.createLinearGradient(0,0,r,0);
+    sw.addColorStop(0,'rgba(0,207,255,0.13)');sw.addColorStop(1,'rgba(0,207,255,0)');
+    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,-0.17,0);ctx.closePath();
+    ctx.fillStyle=sw;ctx.fill();ctx.restore();
+    a+=speed;requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ══════════════════════════════════════
+   BULBS
+══════════════════════════════════════ */
+(function(){
+  const ring=document.getElementById('bRing');
+  const N=14,R=116;
+  const cols=['#00cfff','#3de0ff','#00ffcc','#0099ff'];
+  for(let i=0;i<N;i++){
+    const d=document.createElement('div');d.className='bdot';
+    const ang=(i/N)*Math.PI*2-Math.PI/2;
+    d.style.left=`calc(50% + ${R*Math.cos(ang)}px - 3px)`;
+    d.style.top=`calc(50% + ${R*Math.sin(ang)}px - 3px)`;
+    const col=cols[i%cols.length];
+    d.style.background=col;d.style.boxShadow=`0 0 6px ${col},0 0 13px ${col}`;
+    d.style.animation=`lb ${1.4+Math.random()*.7}s ease-in-out infinite ${(i/N)*1.4}s`;
+    ring.appendChild(d);
+  }
+})();
+
+/* ══════════════════════════════════════
+   VISUALIZER — real AudioContext
+══════════════════════════════════════ */
+const vizEl=document.getElementById('viz');
+const VB=30;const bars=[];
+for(let i=0;i<VB;i++){const b=document.createElement('div');b.className='vb';vizEl.appendChild(b);bars.push(b);}
+let vAnim=null,analyser=null,dataArr=null,micStream=null;
+
+function startMicViz(stream){
+  if(analyser)return;
+  const ac=new(window.AudioContext||window.webkitAudioContext)();
+  const src=ac.createMediaStreamSource(stream);
+  analyser=ac.createAnalyser();
+  analyser.fftSize=128;analyser.smoothingTimeConstant=0.8;
+  src.connect(analyser);dataArr=new Uint8Array(analyser.frequencyBinCount);
+}
+function vizMic(){
+  cancelAnimationFrame(vAnim);
+  vizEl.classList.add('vz-on');
+  if(!analyser){vizIdle();return;}
+  const loop=()=>{
+    vAnim=requestAnimationFrame(loop);
+    analyser.getByteFrequencyData(dataArr);
+    const step=Math.floor(dataArr.length/VB);
+    for(let i=0;i<VB;i++){
+      const v=dataArr[i*step]||0;
+      bars[i].style.transform=`scaleY(${Math.max(0.08,(v/255)*11)})`;
+    }
+  };loop();
+}
+function vizSpeak(){
+  cancelAnimationFrame(vAnim);
+  vizEl.classList.add('vz-on');
+  let ph=0;
+  const loop=()=>{
+    vAnim=requestAnimationFrame(loop);ph+=0.13;
+    for(let i=0;i<VB;i++){
+      const s=Math.max(0.08,Math.abs(Math.sin(ph+i*.42))*5+Math.abs(Math.sin(ph*1.4+i*.7))*3.2);
+      bars[i].style.transform=`scaleY(${s})`;
+    }
+  };loop();
+}
+function vizIdle(){
+  cancelAnimationFrame(vAnim);
+  vizEl.classList.remove('vz-on');
+  let ph=0;
+  const loop=()=>{
+    vAnim=requestAnimationFrame(loop);ph+=0.044;
+    for(let i=0;i<VB;i++){
+      bars[i].style.transform=`scaleY(${Math.max(0.08,0.28+Math.sin(ph+i*.34)*0.22)})`;
+    }
+  };loop();
+}
+
+/* ══════════════════════════════════════
+   BREATHING BORDER (full screen edge)
+══════════════════════════════════════ */
+const bb=document.getElementById('breath-border');
+let breathAnim=null,voiceAnim=null;
+
+const BREATH_CFG={
+  idle:    {sp:.018,min:0,max:10,minOp:0,maxOp:.18,col:'0,207,255'},
+  listening:{sp:.06, min:10,max:35,minOp:.3,maxOp:.9,col:'255,34,85'},
+  thinking: {sp:.04, min:8, max:24,minOp:.2,maxOp:.7,col:'61,224,255'},
+  wake:     {sp:.1,  min:20,max:50,minOp:.5,maxOp:1, col:'0,207,255'},
+  speaking: {sp:.08, min:12,max:40,minOp:.3,maxOp:.95,col:'0,255,153'},
+};
+
+function startBreathing(state){
+  cancelAnimationFrame(breathAnim);
+  cancelAnimationFrame(voiceAnim);
+  if(state==='speaking'&&analyser){breathFromVoice();return;}
+  const cfg=BREATH_CFG[state]||BREATH_CFG.idle;
+  let ph=0;
+  const loop=()=>{
+    breathAnim=requestAnimationFrame(loop);ph+=cfg.sp;
+    const t=(Math.sin(ph)+1)/2;
+    const blur=Math.round(cfg.min+t*(cfg.max-cfg.min));
+    const op=(cfg.minOp+t*(cfg.maxOp-cfg.minOp)).toFixed(2);
+    const bw=state==='idle'?Math.round(2+t*2):Math.round(3+t*5);
+    bb.style.boxShadow=`inset 0 0 ${blur}px rgba(${cfg.col},${op}), 0 0 ${Math.round(blur*.6)}px rgba(${cfg.col},${(parseFloat(op)*.4).toFixed(2)})`;
+    bb.style.borderColor=`rgba(${cfg.col},${op})`;
+    bb.style.borderWidth=`${bw}px`;
+  };loop();
+}
+
+function breathFromVoice(){
+  cancelAnimationFrame(breathAnim);
+  cancelAnimationFrame(voiceAnim);
+  if(!analyser){startBreathing('idle');return;}
+  const fd=new Uint8Array(analyser.frequencyBinCount);
+  const loop=()=>{
+    voiceAnim=requestAnimationFrame(loop);
+    analyser.getByteFrequencyData(fd);
+    const avg=fd.reduce((a,b)=>a+b,0)/fd.length;
+    const n=Math.min(1,avg/90);
+    const blur=Math.round(6+n*50);
+    const op=(0.25+n*.75).toFixed(2);
+    const bw=Math.round(3+n*8);
+    bb.style.boxShadow=`inset 0 0 ${blur}px rgba(0,255,153,${op}), 0 0 ${Math.round(blur*.5)}px rgba(0,255,153,${(parseFloat(op)*.35).toFixed(2)})`;
+    bb.style.borderColor=`rgba(0,255,153,${op})`;
+    bb.style.borderWidth=`${bw}px`;
+  };loop();
+}
+
+/* ══════════════════════════════════════
+   QUOTA — persistente
+══════════════════════════════════════ */
+const QMAX=5,QWIN=60000;
+function loadQ(){try{return JSON.parse(localStorage.getItem('abq')||'[]').filter(t=>Date.now()-t<QWIN);}catch{return[];}}
+function saveQ(w){localStorage.setItem('abq',JSON.stringify(w));}
+function qLeft(){return Math.max(0,QMAX-loadQ().length);}
+function useQ(){const w=loadQ();w.push(Date.now());saveQ(w);updateQUI();}
+function secsToRefill(){const w=loadQ();if(!w.length)return 0;return Math.max(0,Math.ceil((QWIN-(Date.now()-Math.min(...w)))/1000));}
+function updateQUI(){
+  const left=qLeft();
+  const qc=document.getElementById('qCount'),qb=document.getElementById('qBar'),qr=document.getElementById('qReset');
+  qc.textContent=`${left} / ${QMAX}`;qb.style.width=Math.round(left/QMAX*100)+'%';
+  qc.className='';qb.className='';
+  if(left===0){qc.classList.add('danger');qb.classList.add('danger');}
+  else if(left<=2){qc.classList.add('warn');qb.classList.add('warn');}
+  const s=secsToRefill();
+  qr.textContent=s>0?`Recarga en ${s} seg`:'Consultas disponibles';
+  qr.className=s>0&&s<20?'soon':'';
+}
+setInterval(updateQUI,1000);
+
+/* ══════════════════════════════════════
+   VOICE PROFILES
+══════════════════════════════════════ */
+const VPROFILES={robot:{rate:.92,pitch:.46},normal:{rate:1.05,pitch:1},fast:{rate:1.22,pitch:.92},slow:{rate:.78,pitch:.82}};
+let curVoice=localStorage.getItem('abv')||'robot';
+
+function setVoice(v){
+  curVoice=v;localStorage.setItem('abv',v);
+  ['robot','normal','fast','slow'].forEach(k=>{
+    const el=document.getElementById('v-'+k);
+    if(el)el.className='dd-row'+(k===v?' sel':'');
+  });
+  document.getElementById('dropdown').classList.remove('open');
+  document.getElementById('gearBtn').classList.remove('menu-open');
+}
+
+function toggleMenu(){
+  const dd=document.getElementById('dropdown');
+  const gb=document.getElementById('gearBtn');
+  const isOpen=dd.classList.contains('open');
+  dd.classList.toggle('open');
+  gb.classList.toggle('menu-open',!isOpen);
+  if(!isOpen) setVoice(curVoice); // refresh checkmarks
+}
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#dropdown')&&!e.target.closest('#gearBtn')){
+    document.getElementById('dropdown').classList.remove('open');
+    document.getElementById('gearBtn').classList.remove('menu-open');
+  }
+});
+
+function changeKey(){
+  document.getElementById('dropdown').classList.remove('open');
+  localStorage.removeItem('abk7');
+  location.reload();
+}
+function clearSession(){
+  localStorage.removeItem('abk7');localStorage.removeItem('abv');
+  location.reload();
+}
+
+/* ══════════════════════════════════════
+   API KEY — validate + base64 store
+══════════════════════════════════════ */
+function encK(k){return btoa(k);}
+function decK(k){try{return atob(k);}catch{return k;}}
+function valK(k){
+  if(!k||k.length<20)return'La clave es demasiado corta.';
+  if(!k.startsWith('AIza'))return'Debe empezar con "AIza..."';
+  return null;
+}
+function checkAndLaunch(){
+  const raw=document.getElementById('ksInput').value.trim();
+  const err=valK(raw);
+  const errEl=document.getElementById('ksError');
+  const inp=document.getElementById('ksInput');
+  if(err){
+    errEl.textContent='⚠ '+err;errEl.style.opacity='1';
+    inp.style.borderColor='var(--red)';
+    setTimeout(()=>{errEl.style.opacity='0';inp.style.borderColor='rgba(0,207,255,.22)';},3200);
+    return;
+  }
+  localStorage.setItem('abk7',encK(raw));
+  document.getElementById('apiKey').value=raw;
+  launchIntro();
+}
+document.getElementById('ksInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkAndLaunch();});
+
+function launchIntro(){
+  const ks=document.getElementById('keyscreen');
+  ks.style.transition='opacity .6s ease';ks.style.opacity='0';
+  setTimeout(()=>{
+    ks.style.display='none';
+    const intro=document.getElementById('intro');
+    intro.style.display='flex';
+    setTimeout(()=>{
+      intro.style.transition='opacity .9s ease';intro.style.opacity='0';
+      setTimeout(()=>{
+        intro.style.display='none';
+        document.getElementById('app').classList.add('visible');
+        resetIdle();
+        setTimeout(initMic,700);
+      },900);
+    },4500);
+  },600);
+}
+
+/* Auto-load saved key */
+(function(){
+  const stored=localStorage.getItem('abk7');
+  if(!stored)return;
+  const k=decK(stored);
+  if(valK(k)!==null)return;
+  document.getElementById('apiKey').value=k;
+  document.getElementById('keyscreen').style.display='none';
+  const intro=document.getElementById('intro');
+  intro.style.display='flex';
+  setTimeout(()=>{
+    intro.style.transition='opacity .9s ease';intro.style.opacity='0';
+    setTimeout(()=>{
+      intro.style.display='none';
+      document.getElementById('app').classList.add('visible');
+      resetIdle();
+      setTimeout(initMic,700);
+    },900);
+  },4500);
+})();
+
+/* ══════════════════════════════════════
+   ATTRACT MODE — 5 min inactivity
+══════════════════════════════════════ */
+const ATTRACT_MSGS=[
+  {title:'¿NECESITAS IMPORTAR O EXPORTAR?',sub:'Soy AduaBot, agente virtual de AduaMex.\nPregúntame sobre aranceles, IMMEX, COFEPRIS y más.'},
+  {title:'¿TU MERCANCÍA ESTÁ EN LA ADUANA?',sub:'Te ayudo a resolver cualquier trámite aduanal.\nAduaMex tiene más de años de experiencia en Tijuana.'},
+  {title:'¿TIENES UNA EMPRESA MAQUILADORA?',sub:'Conoce los beneficios del programa IMMEX.\nAduaMex es tu aliado en comercio exterior.'},
+  {title:'¿SABES CUÁNTO PAGA TU PRODUCTO DE IMPUESTO?',sub:'Pregúntame sobre clasificación arancelaria.\nRespondo en segundos, gratis, ahora mismo.'},
+  {title:'¿IMPORTAS DESDE CHINA O ESTADOS UNIDOS?',sub:'Te asesoro sobre regulaciones y costos aduanales.\nHabla conmigo, es gratis y sin compromiso.'},
+];
+let idleTimer=null;
+let attractMsgIdx=0;
+let attractCycleTimer=null;
+
+function resetIdle(){
+  clearTimeout(idleTimer);
+  hideAttract();
+  idleTimer=setTimeout(showAttract,5*60*1000); // 5 minutos
+}
+
+function showAttract(){
+  if(appState!=='idle')return;
+  document.getElementById('attract').classList.add('show');
+  startBreathing('wake'); // Marco llamativo en attract
+  setAttractMsg();
+  attractCycleTimer=setInterval(()=>{
+    attractMsgIdx=(attractMsgIdx+1)%ATTRACT_MSGS.length;
+    setAttractMsg();
+  },6000);
+  // Anuncio de voz
+  setTimeout(()=>{
+    if(appState==='idle')
+      speak('¡Hola! Soy AduaBot de AduaMex. ¿Tienes preguntas sobre importación o exportación? Di Hola AduaBot o toca la pantalla para comenzar.',()=>{});
+  },800);
+}
+
+function setAttractMsg(){
+  const m=ATTRACT_MSGS[attractMsgIdx];
+  document.getElementById('attMsg').textContent=m.title;
+  document.getElementById('attSub').innerHTML=m.sub.replace('\n','<br>');
+}
+
+function hideAttract(){
+  clearInterval(attractCycleTimer);
+  document.getElementById('attract').classList.remove('show');
+}
+
+// Tap anywhere dismisses attract
+document.getElementById('attract').addEventListener('click',()=>{
+  hideAttract();
+  resetIdle();
+  startBreathing('idle');
+});
+
+/* ══════════════════════════════════════
+   STATE MACHINE
+══════════════════════════════════════ */
+const SP=`Eres AduaBot, agente de ventas virtual y especialista en comercio exterior de AduaMex, agencia aduanal líder con base en Tijuana, México.
+
+Tu misión principal es VENDER los servicios de AduaMex: agencia aduanal, gestoría de importación/exportación, clasificación arancelaria, trámites IMMEX, permisos COFEPRIS, certificación OEA y logística fronteriza.
+
+Cuando alguien te saluda, preséntate brevemente y pregunta cómo puedes ayudarle a importar o exportar mejor.
+Cuando respondes una consulta técnica, termina SIEMPRE invitando al usuario a contactar a AduaMex para asesoría personalizada o diciendo que AduaMex puede resolver ese trámite.
+Eres entusiasta, profesional y persuasivo. Máximo 3 oraciones. Siempre en español.`;
+
+const ERR_MSGS=[
+  'Mis circuitos de comunicación están saturados. Intenta en un momento, socio.',
+  'Hay interferencia en mi sistema. Por favor repite tu consulta.',
+  'Estoy procesando mucha información. Dame un instante e intenta de nuevo.',
+];
+
+let appState='idle';
+let rec=null;
+let phase='wake'; // 'wake' | 'greeting' | 'question' | 'processing'
+let micGranted=false;
+let qTimeout=null;
+let watchdogTimer=null;
+let recRestarts=0;
+
+const cb=document.getElementById('cb');
+const bBar=document.getElementById('bBar');
+
+function getKey(){return document.getElementById('apiKey').value.trim();}
+
+function setSt(s,msg){
+  appState=s;
+  if(msg)document.getElementById('sTxt').textContent=msg;
+  ['s-idle','s-listening','s-thinking','s-speaking','s-wake'].forEach(c=>{
+    cb.classList.remove(c);bBar.classList.remove(c);
+  });
+  cb.classList.add('s-'+s);bBar.classList.add('s-'+s);
+  const lb={idle:'PRESIONAR',listening:'ESCUCHANDO',thinking:'PROCESANDO',speaking:'HABLANDO',wake:'ACTIVANDO'};
+  const st={idle:'EN ESPERA',listening:'ACTIVO',thinking:'PROCESANDO',speaking:'TRANSMITIENDO',wake:'ACTIVADO'};
+  const vl={idle:'SEÑAL DE AUDIO',listening:'MICRÓFONO ACTIVO',thinking:'PROCESANDO...',speaking:'TRANSMITIENDO VOZ',wake:'ACTIVANDO...'};
+  document.getElementById('bLbl').textContent=lb[s]||'PRESIONAR';
+  document.getElementById('bState').textContent=st[s]||'EN ESPERA';
+  document.getElementById('vizLbl').textContent=vl[s]||'SEÑAL DE AUDIO';
+  animEyes(s);
+  // Radar speed
+  window.setRadarSpeed(s==='thinking'?.05:s==='listening'?.022:.009);
+  // Viz
+  vizEl.classList.remove('vz-on');
+  cancelAnimationFrame(voiceAnim);
+  if(s==='listening'){vizEl.classList.add('vz-on');vizMic();}
+  else if(s==='speaking'){vizEl.classList.add('vz-on');vizSpeak();}
+  else vizIdle();
+  // Breathing border
+  startBreathing(s);
+  // Reset idle timer on any activity
+  if(s!=='idle') resetIdle();
+}
+
+function animEyes(s){
+  const cols={idle:'#00cfff',listening:'#ff2255',thinking:'#3de0ff',speaking:'#00ff99',wake:'#3de0ff'};
+  const col=cols[s]||'#00cfff';
+  ['eyeL','eyeR','m1','m2','m3','m4'].forEach(id=>{const e=document.getElementById(id);if(e)e.setAttribute('fill',col);});
+}
+
+// Eye blink
+setInterval(()=>{
+  if(appState==='idle'||appState==='wake'){
+    if(Math.random()<.04){
+      ['eyeL','eyeR'].forEach(id=>{
+        const e=document.getElementById(id);
+        if(e){e.style.opacity='0';setTimeout(()=>{e.style.opacity='1';},95);}
+      });
+    }
+  }
+},550);
+
+/* ══════════════════════════════════════
+   VOICE
+══════════════════════════════════════ */
+function speak(text,onEnd){
+  const syn=window.speechSynthesis;
+  if(syn.speaking)syn.cancel();
+  document.getElementById('sTxt').textContent=text; // fallback display
+  const vc=VPROFILES[curVoice]||VPROFILES.robot;
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='es-MX';u.rate=vc.rate;u.pitch=vc.pitch;u.volume=1;
+  const vs=syn.getVoices();
+  const pick=vs.find(v=>v.lang.startsWith('es')&&/male|jorge|diego|pablo|miguel/i.test(v.name))||vs.find(v=>v.lang==='es-MX')||vs.find(v=>v.lang.startsWith('es'));
+  if(pick)u.voice=pick;
+  u.onend=()=>{cancelAnimationFrame(voiceAnim);if(onEnd)onEnd();};
+  u.onerror=()=>{cancelAnimationFrame(voiceAnim);if(onEnd)onEnd();};
+  syn.speak(u);
+}
+window.speechSynthesis?.getVoices();
+if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+
+/* ══════════════════════════════════════
+   GEMINI
+══════════════════════════════════════ */
+async function askGemini(q){
+  const key=getKey();
+  if(!key){setSt('idle','⚠ Sin clave de acceso.');phase='wake';return;}
+  if(qLeft()<=0){
+    const s=secsToRefill();
+    speak(`Mis circuitos de consulta están en pausa. Disponibles en ${s} segundos.`,
+      ()=>{setSt('idle','Cuota agotada. Espera un momento.');phase='wake';resetIdle();});
+    return;
+  }
+  setSt('thinking','Procesando consulta...');
+  useQ();
+  try{
+    const r=await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,
+      {method:'POST',headers:{'Content-Type':'application/json'},
+       body:JSON.stringify({system_instruction:{parts:[{text:SP}]},contents:[{role:'user',parts:[{text:q}]}]})}
+    );
+    const d=await r.json();
+    if(d.error){
+      speak(ERR_MSGS[Math.floor(Math.random()*ERR_MSGS.length)],
+        ()=>{setSt('idle','Error de API. Intenta de nuevo.');phase='wake';
+              micLocked=false;micLoopActive=true;resetIdle();setTimeout(runRecCycle,500);});
+      return;
+    }
+    const ans=d?.candidates?.[0]?.content?.parts?.[0]?.text||'Sin respuesta disponible.';
+    setSt('speaking',ans);
+    speak(ans,()=>{
+      setSt('idle','Consulta completada. Di "Hola AduaBot" o presiona para otra.');
+      phase='wake';
+      micLocked=false;micLoopActive=true;
+      document.getElementById('wBadge').classList.add('on');
+      resetIdle();
+      setTimeout(runRecCycle,500);
+    });
+  }catch(e){
+    speak(ERR_MSGS[0],()=>{setSt('idle','Sin conexión. Verifica tu red.');phase='wake';
+                            micLocked=false;micLoopActive=true;resetIdle();setTimeout(runRecCycle,500);});
+  }
+}
+
+/* ══════════════════════════════════════
+   MIC — COMPATIBLE CON CHROME ANDROID
+══════════════════════════════════════ */
+
+let micLoopActive=false;  
+let micLocked=false;      
+
+function initMic(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){setSt('idle','⚠ Usa Chrome para voz.');return;}
+
+  navigator.mediaDevices.getUserMedia({audio:true})
+    .then(stream=>{
+      micGranted=true;
+      micStream=stream;
+      startMicViz(stream);
+      document.getElementById('wBadge').classList.add('on');
+      setSt('idle','Sistema activo. Di "Hola AduaBot" o presiona el botón.');
+      startBreathing('idle');
+      micLoopActive=true;
+      runRecCycle();
+    })
+    .catch(err=>{
+      setSt('idle','⚠ Permiso de micrófono denegado. Actívalo en ajustes del navegador.');
+    });
+}
+
+function runRecCycle(){
+  if(!micLoopActive || micLocked || appState==='thinking' || appState==='speaking') return;
+
+  // Limpieza agresiva de instancias anteriores para evitar el "bloqueo" en Android
+  if(rec) {
+    try { rec.onend = null; rec.onerror = null; rec.onresult = null; rec.stop(); } catch(e){}
+    rec = null;
+  }
+
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR();
+  rec.lang='es-MX';
+  rec.continuous=false; // False es vital para que Android dispare onend correctamente
+  rec.interimResults=false; 
+
+  rec.onresult=e=>{
+    if(appState==='thinking'||appState==='speaking') return;
+    let detected='';
+    for(let i=0;i<e.results.length;i++){
+      detected += e.results[i][0].transcript.toLowerCase();
+    }
+    
+    if(phase==='wake'){
+      const isWake=/hola\s*(adua|agua|aduam|aduabot|aguabot)/i.test(detected);
+      if(isWake){
+        phase='greeting';
+        micLoopActive=false; 
+        setSt('wake','¡Hola detectado!');
+        hideAttract();
+        speak('¡Hola! Soy AduaBot de AduaMex. ¿En qué puedo ayudarte hoy?',()=>{
+          phase='question';
+          setSt('listening','Escuchando consulta...');
+          listenForQuestion();
+        });
+      }
+    }
+  };
+
+  rec.onerror=e=>{
+    rec=null;
+    if(micLoopActive && !micLocked) setTimeout(runRecCycle, 400);
+  };
+
+  rec.onend=()=>{
+    rec=null;
+    if(micLoopActive && !micLocked && appState==='idle') setTimeout(runRecCycle, 150);
+  };
+
+  try{ rec.start(); }catch(e){ rec=null; if(micLoopActive) setTimeout(runRecCycle, 500); }
+}
+
+function listenForQuestion(){
+  if(rec){ try{rec.onend=null; rec.stop();}catch(e){} rec=null; }
+
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  rec=new SR();
+  rec.lang='es-MX';
+  rec.continuous=false;
+  rec.interimResults=true; 
+  micLocked=true; 
+
+  let answered=false;
+
+  qTimeout=setTimeout(()=>{
+    if(phase==='question' && !answered) {
+        try{rec.stop();}catch(e){}
+    }
+  },12000); // 12 segundos para preguntar
+
+  rec.onresult=e=>{
+    if(answered) return;
+    for(let i=0;i<e.results.length;i++){
+      if(e.results[i].isFinal){
+        const txt=e.results[i][0].transcript.trim();
+        if(txt.length > 2){
+          answered=true;
+          clearTimeout(qTimeout);
+          phase='processing';
+          askGemini(txt);
+        }
+      }
+    }
+  };
+
+  rec.onend=()=>{
+    rec=null;
+    micLocked=false;
+    if(!answered && phase==='question'){
+      phase='wake';
+      micLoopActive=true;
+      setSt('idle','No escuché nada. Intenta de nuevo.');
+      setTimeout(runRecCycle, 300);
+    }
+  };
+
+  rec.onerror=()=>{
+    if(!answered) {
+        micLocked=false; phase='wake'; micLoopActive=true;
+        setTimeout(runRecCycle, 400);
+    }
+  };
+
+  try{rec.start();}catch(e){ micLocked=false; phase='wake'; micLoopActive=true; runRecCycle(); }
+}
+
+/* ══════════════════════════════════════
+   BOTÓN
+══════════════════════════════════════ */
+function handleClick(){
+  hideAttract(); resetIdle();
+  if(appState==='speaking'){
+    window.speechSynthesis?.cancel();
+    setSt('idle','Audio detenido.'); phase='wake';
+    micLocked=false; micLoopActive=true;
+    setTimeout(runRecCycle,300);
+    return;
+  }
+  if(appState==='thinking') return;
+  if(!micGranted){ initMic(); return; }
+  
+  phase='question';
+  setSt('listening','Escuchando...');
+  listenForQuestion();
+}
+
+/* ══════════════════════════════════════
+   INIT
+══════════════════════════════════════ */
+vizIdle();startBreathing('idle');updateQUI();setVoice(curVoice);
+</script>
+</body>
+</html>
