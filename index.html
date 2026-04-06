@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot v3 — AduaMex</title>
+<title>AduaBot Pro — AduaMex</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{ --b:#00cfff; --dark:#03080f; --white:#e0f8ff; --red:#ff2255; }
@@ -11,18 +11,18 @@
 body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
 #bgc{position:fixed; inset:0; z-index:0;}
 
-/* KEYSCREEN */
+/* PANTALLA DE ACCESO (SEGURIDAD) */
 #keyscreen{position:fixed; inset:0; z-index:300; background:#03080f; display:flex; align-items:center; justify-content:center; transition: 0.5s;}
 .ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
-#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center;}
+#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center; font-family: monospace; user-select: text; -webkit-user-select: text;}
 .ks-btn{width:100%; padding:15px; background:var(--b); color:#000; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
-/* APP */
-#app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:0.8s;}
+/* APP INTERFACE */
+#app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; max-width:500px; margin:0 auto; opacity:0; transition:0.8s;}
 #app.visible{opacity:1;}
 
 .sp{width:100%; border:1px solid rgba(0,207,255,0.3); background:rgba(0,207,255,0.05); padding:15px; min-height:100px; display:flex; align-items:center; justify-content:center; border-radius:8px; margin:20px 0;}
-#sTxt{font-size:1rem; color:var(--white); text-align:center; line-height:1.4;}
+#sTxt{font-size:1rem; color:var(--white); text-align:center; line-height:1.4; text-shadow: 0 0 5px rgba(0,207,255,0.5);}
 
 .micbtn{width:180px; height:180px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; outline:none;}
 .bbg{position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle, #001828, #03080f); border:2px solid var(--b); transition: 0.2s;}
@@ -40,16 +40,17 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v3.0</h1>
-    <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
-    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR</button>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT ACCESO</h1>
+    <p style="font-size:0.6rem; color:rgba(0,207,255,0.6)">LA CLAVE SE GUARDA SOLO EN ESTE DISPOSITIVO</p>
+    <input id="ksInput" type="password" placeholder="PEGA TU API KEY AQUÍ" />
+    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR SISTEMA</button>
   </div>
 </div>
 
 <div id="app">
-  <div style="text-align:center;">
+  <div style="text-align:center; margin-top:20px;">
     <h2 style="font-family:'Bebas Neue'; font-size:2.5rem;">ADUAMEX</h2>
-    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">AGENTE ADUANAL INTELIGENTE</p>
+    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">AGENTE ADUANAL IA</p>
   </div>
 
   <div class="sp">
@@ -69,10 +70,10 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
     <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.4 · TIJUANA MX</p>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.6 · TIJUANA MX</p>
 </div>
 
-<input type="hidden" id="apiKey" />
+<input type="hidden" id="apiKeyStored" />
 
 <script>
 const btn = document.getElementById('pttBtn');
@@ -84,6 +85,7 @@ let rec = null;
 let isHolding = false;
 let speechLog = "";
 
+/* --- MOTOR DE VOZ --- */
 function initMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
@@ -135,12 +137,13 @@ btn.addEventListener('mouseup', stop);
 btn.addEventListener('touchstart', start);
 btn.addEventListener('touchend', stop);
 
+/* --- CONSULTA IA --- */
 async function askGemini(pregunta) {
-    const key = document.getElementById('apiKey').value;
+    const key = document.getElementById('apiKeyStored').value;
     cb.classList.add('s-thinking');
-    sTxt.textContent = "Consultando a la base de datos de AduaMex...";
+    sTxt.textContent = "Consultando a AduaMex...";
 
-    /* MODELO ESTÁNDAR UNIVERSAL PARA EVITAR ERRORES DE VERSIÓN */
+    // Usamos gemini-1.5-flash que es el más estable para este tipo de apps
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
     try {
@@ -149,7 +152,7 @@ async function askGemini(pregunta) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `Eres AduaBot, experto en aduanas de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Invita a contactar a AduaMex.` }]
+                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Al final invita a contactar a AduaMex.` }]
                 }]
             })
         });
@@ -162,12 +165,11 @@ async function askGemini(pregunta) {
             sTxt.textContent = txt;
             speak(txt);
         } else {
-            console.error("Error API:", data);
-            sTxt.textContent = "Error: " + (data.error?.message || "Revisa la API Key.");
+            sTxt.textContent = "Error: " + (data.error?.message || "Revisa tu conexión o API Key.");
         }
     } catch (err) {
         cb.classList.remove('s-thinking');
-        sTxt.textContent = "Fallo de conexión.";
+        sTxt.textContent = "Error de red.";
     }
 }
 
@@ -177,14 +179,28 @@ function speak(t) {
     window.speechSynthesis.speak(m);
 }
 
+/* --- LOGIN Y PERSISTENCIA --- */
 function checkAndLaunch() {
     const k = document.getElementById('ksInput').value.trim();
-    if(k.length < 10) return alert("Ingresa tu Clave");
-    document.getElementById('apiKey').value = k;
+    if(k.length < 15) return alert("Ingresa una clave válida");
+    
+    // Guardar en el input oculto y en el almacenamiento local del navegador
+    document.getElementById('apiKeyStored').value = k;
+    localStorage.setItem('aduabot_key', k);
+    
     document.getElementById('keyscreen').style.display = 'none';
     document.getElementById('app').classList.add('visible');
 }
 
+// Intentar cargar la clave automáticamente si ya se ingresó antes
+window.onload = () => {
+    const saved = localStorage.getItem('aduabot_key');
+    if(saved) {
+        document.getElementById('ksInput').value = saved;
+    }
+};
+
+/* --- FONDO --- */
 (function(){
   const c=document.getElementById('bgc'),ctx=c.getContext('2d');
   function r(){c.width=window.innerWidth;c.height=window.innerHeight;}
