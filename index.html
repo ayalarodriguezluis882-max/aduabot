@@ -14,7 +14,7 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 /* KEYSCREEN */
 #keyscreen{position:fixed; inset:0; z-index:300; background:#03080f; display:flex; align-items:center; justify-content:center; transition: 0.5s;}
 .ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
-#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center; font-family:monospace;}
+#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center;}
 .ks-btn{width:100%; padding:15px; background:var(--b); color:#000; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
 /* APP */
@@ -40,9 +40,9 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT CLAVE</h1>
-    <input id="ksInput" type="password" placeholder="PEGA TU API KEY AQUÍ" />
-    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR SISTEMA</button>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">SISTEMA ADUABOT</h1>
+    <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
+    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR</button>
   </div>
 </div>
 
@@ -69,7 +69,7 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
     <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.0 · TIJUANA MX</p>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.1 · TIJUANA MX</p>
 </div>
 
 <input type="hidden" id="apiKey" />
@@ -84,7 +84,7 @@ let rec = null;
 let isHolding = false;
 let speechLog = "";
 
-/* CONFIG MIC */
+/* MIC CONFIG */
 function initMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
@@ -103,7 +103,6 @@ function initMic() {
     return r;
 }
 
-/* EVENTOS MÓVIL */
 function start(e) {
     e.preventDefault();
     if(isHolding) return;
@@ -137,14 +136,14 @@ btn.addEventListener('mouseup', stop);
 btn.addEventListener('touchstart', start);
 btn.addEventListener('touchend', stop);
 
-/* IA LLAMADA CORREGIDA */
+/* LLAMADA CORREGIDA A GEMINI (v1beta) */
 async function askGemini(pregunta) {
     const key = document.getElementById('apiKey').value;
     cb.classList.add('s-thinking');
-    sTxt.textContent = "Procesando con AduaMex IA...";
+    sTxt.textContent = "Procesando...";
 
-    // Usamos la versión v1 que es la de producción más estable
-    const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
+    // Ajuste de URL y modelo exacto para evitar el error de la captura
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
     try {
         const response = await fetch(URL, {
@@ -152,7 +151,7 @@ async function askGemini(pregunta) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde en menos de 30 palabras a esta duda de aduanas: ${pregunta}. Al final invita a visitarnos.` }]
+                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Al final invita a visitarnos en AduaMex.` }]
                 }]
             })
         });
@@ -165,13 +164,12 @@ async function askGemini(pregunta) {
             sTxt.textContent = txt;
             speak(txt);
         } else {
-            // Esto nos dirá si la API Key está mal o si hay otro error de Google
-            console.error("Detalle del error:", data);
-            sTxt.textContent = "Error: " + (data.error?.message || "Revisa tu API Key o conexión.");
+            console.error("Error data:", data);
+            sTxt.textContent = "Error: " + (data.error?.message || "Error en la API");
         }
     } catch (err) {
         cb.classList.remove('s-thinking');
-        sTxt.textContent = "Fallo de conexión. Intenta de nuevo.";
+        sTxt.textContent = "Fallo de conexión.";
     }
 }
 
@@ -189,7 +187,7 @@ function checkAndLaunch() {
     document.getElementById('app').classList.add('visible');
 }
 
-/* BACKGROUND */
+/* BACKGROUND RADAR */
 (function(){
   const c=document.getElementById('bgc'),ctx=c.getContext('2d');
   function r(){c.width=window.innerWidth;c.height=window.innerHeight;}
