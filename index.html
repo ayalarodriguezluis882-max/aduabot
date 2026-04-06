@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot v4.5 — AduaMex</title>
+<title>AduaBot 2.5 Pro — AduaMex</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{ --b:#00cfff; --dark:#03080f; --white:#e0f8ff; --red:#ff2255; }
@@ -11,13 +11,13 @@
 body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
 #bgc{position:fixed; inset:0; z-index:0;}
 
-/* KEYSCREEN */
+/* ACCESO */
 #keyscreen{position:fixed; inset:0; z-index:300; background:#03080f; display:flex; align-items:center; justify-content:center; transition: 0.5s;}
 .ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
 #ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center; -webkit-user-select: text; user-select: text;}
 .ks-btn{width:100%; padding:15px; background:var(--b); color:#000; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
-/* APP INTERFACE */
+/* APP */
 #app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:0.8s; max-width:500px; margin:0 auto;}
 #app.visible{opacity:1;}
 
@@ -40,16 +40,16 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v4.5</h1>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT 2.5 FLASH</h1>
     <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
-    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR</button>
+    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR SISTEMA</button>
   </div>
 </div>
 
 <div id="app">
   <div style="text-align:center; margin-top:20px;">
     <h2 style="font-family:'Bebas Neue'; font-size:2.5rem;">ADUAMEX</h2>
-    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">AGENTE ADUANAL INTELIGENTE</p>
+    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">MODELO 2.5 FLASH - JUNE 2025</p>
   </div>
 
   <div class="sp"><div id="sTxt">MANTÉN PRESIONADO PARA CONSULTAR</div></div>
@@ -67,7 +67,7 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
     <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">MODELO FLASH 2.0+ · TIJUANA MX</p>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v4.0 · TIJUANA MX</p>
 </div>
 
 <input type="hidden" id="apiKeyStored" />
@@ -82,7 +82,7 @@ let rec = null;
 let isHolding = false;
 let speechLog = "";
 
-/* --- MIC CONFIG --- */
+/* --- MOTOR DE VOZ --- */
 function initMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
@@ -134,15 +134,14 @@ btn.addEventListener('mouseup', stop);
 btn.addEventListener('touchstart', start);
 btn.addEventListener('touchend', stop);
 
-/* --- LLAMADA CORREGIDA A GEMINI --- */
+/* --- CONSULTA IA - MODELO 2.5 FLASH --- */
 async function askGemini(pregunta) {
     const key = document.getElementById('apiKeyStored').value;
     cb.classList.add('s-thinking');
-    sTxt.textContent = "Consultando a la aduana digital...";
+    sTxt.textContent = "Consultando a la base de datos...";
 
-    /* MODELO SEGURO: Usamos 'gemini-2.0-flash-latest' que es el que acepta 
-       las cuotas de '2.5 Flash' en AI Studio */
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-latest:generateContent?key=${key}`;
+    /* NOMBRE DEL MODELO SEGÚN TU LISTA JSON */
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${key}`;
 
     try {
         const response = await fetch(URL, {
@@ -150,7 +149,7 @@ async function askGemini(pregunta) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde de forma muy breve (máximo 25 palabras) a: ${pregunta}. Al final invita a contactar a AduaMex.` }]
+                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde brevemente (máximo 25 palabras) a: ${pregunta}. Invita a contactar a AduaMex.` }]
                 }]
             })
         });
@@ -163,34 +162,13 @@ async function askGemini(pregunta) {
             sTxt.textContent = txt;
             speak(txt);
         } else {
-            // Reintento automático con el nombre base si el 'latest' falla
-            askAlternative(pregunta, key);
+            console.error(data);
+            sTxt.textContent = "Error: " + (data.error?.message || "Revisa tu API Key.");
         }
     } catch (err) {
         cb.classList.remove('s-thinking');
-        sTxt.textContent = "Fallo de conexión.";
+        sTxt.textContent = "Error de red.";
     }
-}
-
-async function askAlternative(pregunta, key) {
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${key}`;
-    try {
-        const response = await fetch(URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: `Responde brevemente a: ${pregunta}` }] }]
-            })
-        });
-        const data = await response.json();
-        if (data.candidates) {
-            const txt = data.candidates[0].content.parts[0].text;
-            sTxt.textContent = txt;
-            speak(txt);
-        } else {
-            sTxt.textContent = "Error: Verifica tu API Key. Debe ser de Google AI Studio (aistudio.google.com).";
-        }
-    } catch (e) { sTxt.textContent = "Error de sistema."; }
 }
 
 function speak(t) {
@@ -201,7 +179,7 @@ function speak(t) {
 
 function checkAndLaunch() {
     const k = document.getElementById('ksInput').value.trim();
-    if(k.length < 10) return alert("Ingresa tu Clave");
+    if(k.length < 15) return alert("Ingresa tu clave");
     document.getElementById('apiKeyStored').value = k;
     localStorage.setItem('aduabot_key', k);
     document.getElementById('keyscreen').style.display = 'none';
@@ -213,7 +191,7 @@ window.onload = () => {
     if(saved) document.getElementById('ksInput').value = saved;
 };
 
-/* --- RADAR --- */
+/* RADAR */
 (function(){
   const c=document.getElementById('bgc'),ctx=c.getContext('2d');
   function r(){c.width=window.innerWidth;c.height=window.innerHeight;}
