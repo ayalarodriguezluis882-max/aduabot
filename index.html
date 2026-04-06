@@ -2,269 +2,312 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot OS v5.2 — AduaMex UNEA</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+
+<title>ADUABOT OS</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
 <style>
 :root{
-  --b:#00cfff; --b-glow:rgba(0,207,255,0.5);
-  --dark:#02060c; --white:#e0f8ff;
-  --red:#ff2255; --green:#00ff99;
+  --b:#00cfff; --b-glow:rgba(0,207,255,0.4);
+  --dark:#010409; --white:#e0f8ff;
+  --red:#ff2255;
 }
-*{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;}
-body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
 
-/* MARCO RESPIRACIÓN */
-#frame-glow {
+/* BLOQUEO DE SCROLL Y GESTOS DE PÁGINA WEB */
+html, body { 
+    overflow: hidden; 
+    overscroll-behavior: none; 
+    height: 100%; 
+    width: 100%;
+    position: fixed; /* Evita el rebote en iOS */
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+body{
+    background: var(--dark);
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--b);
+}
+
+/* INTERFAZ DE SISTEMA OPERATIVO (PANTALLA CARGA) */
+#boot-sequence {
+    position: fixed; inset: 0; z-index: 1000;
+    background: #000; color: var(--b);
+    font-family: 'Share Tech Mono', monospace;
+    padding: 20px; font-size: 0.8rem;
+    display: flex; flex-direction: column;
+}
+
+/* MARCO TÉCNICO (RESPIRACIÓN) */
+#frame-os {
     position: fixed; inset: 0;
-    border: 3px solid var(--b);
-    box-shadow: inset 0 0 15px var(--b-glow);
+    border: 2px solid var(--b);
     z-index: 100; pointer-events: none;
-    animation: breathe 4s ease-in-out infinite;
+    animation: breathe 3s ease-in-out infinite;
 }
 @keyframes breathe {
-    0%, 100% { opacity: 0.3; box-shadow: inset 0 0 10px var(--b-glow); }
-    50% { opacity: 0.9; box-shadow: inset 0 0 40px var(--b), 0 0 20px var(--b); }
+    0%, 100% { opacity: 0.4; box-shadow: inset 0 0 15px var(--b-glow); }
+    50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 10px var(--b); }
 }
 
-#bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0, 207, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 207, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; }
-
-#os-shell {
-    position: relative; z-index: 10; width: 100vw; height: 100vh;
-    background: rgba(2, 6, 12, 0.85); display: flex; flex-direction: column; padding: 25px; backdrop-filter: blur(5px);
+/* DASHBOARD PRINCIPAL */
+#app-shell {
+    position: relative; z-index: 10;
+    height: 100vh; width: 100vw;
+    display: flex; flex-direction: column;
+    padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
+    background: radial-gradient(circle at center, #0a1a2f 0%, #010409 100%);
 }
 
-.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--b); padding-bottom: 15px; }
-.brand h1 { font-family: 'Bebas Neue'; font-size: 3rem; letter-spacing: 5px; color: var(--b); text-shadow: 0 0 10px var(--b); }
-.brand p { font-size: 0.8rem; letter-spacing: 4px; color: var(--white); opacity: 0.7; }
-
-/* ENERGÍA / TOKENS */
-.token-system { width: 200px; text-align: right; }
-.token-label { font-family: 'Bebas Neue'; font-size: 0.7rem; margin-bottom: 5px; display: block; }
-.token-bar-bg { height: 8px; background: rgba(0,207,255,0.1); border: 1px solid var(--b); overflow: hidden; }
-#token-fill { height: 100%; width: 100%; background: var(--b); transition: 0.4s; box-shadow: 0 0 10px var(--b); }
-
-.main-display { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px; }
-
-#status-msg {
-    font-size: 1.2rem; text-align: center; max-width: 80%; color: var(--white);
-    min-height: 4em; padding: 20px; border: 1px solid rgba(0,207,255,0.1); background: rgba(0,0,0,0.3);
+.top-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 15px 0; border-bottom: 1px solid rgba(0,207,255,0.3);
 }
 
-/* ROBOT PTT */
-.robot-trigger { position: relative; width: 200px; height: 200px; cursor: pointer; }
-.outer-ring { position: absolute; inset: -10px; border: 2px dashed var(--b); border-radius: 50%; animation: spin 12s linear infinite; opacity: 0.5; }
+.status-bits { font-family: 'Share Tech Mono'; font-size: 0.6rem; letter-spacing: 1px; }
+
+/* MONITOR DE DATOS */
+.monitor {
+    flex-grow: 1; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; gap: 30px;
+}
+
+#output-console {
+    width: 100%; min-height: 120px;
+    background: rgba(0, 207, 255, 0.03);
+    border: 1px solid rgba(0, 207, 255, 0.1);
+    padding: 15px; border-radius: 4px;
+    text-align: center; font-size: 1.1rem; color: var(--white);
+    text-shadow: 0 0 5px var(--b-glow);
+}
+
+/* NÚCLEO DE PODER (BOTÓN PTT) */
+.core-engine {
+    position: relative; width: 220px; height: 220px;
+    display: flex; align-items: center; justify-content: center;
+}
+
+.core-ring {
+    position: absolute; inset: 0;
+    border: 2px solid var(--b); border-radius: 50%;
+    border-top-color: transparent; animation: spin 4s linear infinite;
+}
 @keyframes spin { to { transform: rotate(360deg); } }
 
-.mic-btn {
-    width: 100%; height: 100%; border-radius: 50%;
-    background: radial-gradient(circle, #0a1a2f, #02060c);
-    border: 3px solid var(--b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5;
+.main-btn {
+    width: 170px; height: 170px; border-radius: 50%;
+    background: #000; border: 4px solid var(--b);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    box-shadow: 0 0 30px var(--b-glow); transition: 0.3s;
 }
 
-.s-listening .mic-btn { border-color: var(--red); box-shadow: 0 0 50px var(--red); }
-.s-thinking .mic-btn { border-color: var(--white); animation: pulse-white 0.8s infinite; }
-@keyframes pulse-white { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+.s-listening .main-btn { border-color: var(--red); box-shadow: 0 0 50px var(--red); transform: scale(0.95); }
+.s-thinking .main-btn { border-color: #fff; animation: pulse 1s infinite; }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
 
-#keyscreen { position: fixed; inset: 0; z-index: 500; background: var(--dark); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
-#ksInput { padding: 15px; width: 300px; background: #0a1a2f; border: 1px solid var(--b); color: white; text-align: center; font-family: monospace; user-select: text; -webkit-user-select: text;}
-.ks-btn { padding: 15px 30px; background: var(--b); color: #000; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; letter-spacing: 2px; }
+/* BARRA DE ENERGÍA */
+.power-level { width: 100%; max-width: 300px; }
+.bar-wrap { height: 6px; background: rgba(255,255,255,0.1); margin-top: 5px; position: relative; }
+#bar-fill { height: 100%; width: 100%; background: var(--b); box-shadow: 0 0 10px var(--b); transition: 0.3s; }
 
-.footer { text-align: center; font-size: 0.6rem; opacity: 0.4; letter-spacing: 4px; padding-top: 10px; }
+/* KEYSCREEN */
+#keyscreen {
+    position: fixed; inset: 0; z-index: 2000; background: #000;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+}
+.ks-input {
+    background: transparent; border: 1px solid var(--b); padding: 15px;
+    color: white; width: 280px; text-align: center; font-family: 'Share Tech Mono';
+}
+.ks-btn { background: var(--b); color: #000; padding: 15px 40px; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; }
+
 .hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<div id="frame-glow"></div>
-<div id="bg-grid"></div>
+<div id="frame-os"></div>
 
 <div id="keyscreen">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:10px; font-size: 3rem;">ADUABOT 5.2</h1>
-    <p style="color: var(--white); opacity: 0.5; font-size: 0.7rem;">UNEA - FERIA DE COMERCIO EXTERIOR</p>
-    <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
-    <button class="ks-btn" onclick="unlock()">INICIALIZAR NÚCLEO</button>
+    <div style="text-align: center; margin-bottom: 20px;">
+        <h1 style="font-family:'Bebas Neue'; font-size: 3rem; letter-spacing: 5px;">ADUABOT v6.0</h1>
+        <p style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 3px;">UNEA CAMPUS - TRÁFICO Y LOGÍSTICA</p>
+    </div>
+    <input type="password" id="apiKey" class="ks-input" placeholder="ACCESS KEY">
+    <button class="ks-btn" onclick="initSystem()">CONECTAR NÚCLEO</button>
 </div>
 
-<div id="os-shell" class="hidden">
-    <div class="header">
-        <div class="brand">
-            <h1>ADUAMEX</h1>
-            <p>AGENTE DE VENTAS EXPERTO // ASESORÍA GLOBAL</p>
+<div id="app-shell" class="hidden">
+    <div class="top-bar">
+        <div>
+            <h2 style="font-family:'Bebas Neue'; font-size: 1.8rem; line-height: 1;">ADUAMEX</h2>
+            <div class="status-bits">STATUS: ONLINE // AI: ACTIVE</div>
         </div>
-        <div class="token-system">
-            <span class="token-label">CORE ENERGY</span>
-            <div class="token-bar-bg"><div id="token-fill"></div></div>
-            <span id="token-pct" style="font-size:0.6rem; letter-spacing:2px;">100%</span>
+        <div class="token-system" style="text-align: right;">
+            <div class="status-bits">CORE ENERGY</div>
+            <div class="bar-wrap" style="width: 120px;"><div id="bar-fill"></div></div>
         </div>
     </div>
 
-    <div class="main-display">
-        <div id="status-msg">SISTEMA LISTO. MANTÉN PRESIONADO PARA HABLAR CON EL ASESOR.</div>
+    <div class="monitor">
+        <div id="output-console">SISTEMA INICIALIZADO. ESPERANDO COMANDOS DE VOZ...</div>
 
-        <div class="robot-trigger" id="main-trigger">
-            <div class="outer-ring"></div>
-            <div class="mic-btn">
-                <svg width="70" height="70" viewBox="0 0 24 24" fill="currentColor">
+        <div class="core-engine" id="ptt-trigger">
+            <div class="core-ring"></div>
+            <div class="main-btn">
+                <svg width="60" height="60" viewBox="0 0 24 24" fill="var(--b)">
                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                     <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                 </svg>
-                <span style="font-family:'Bebas Neue'; font-size:1.4rem; margin-top:10px;" id="btn-label">CONECTAR</span>
+                <span id="btn-text" style="font-family:'Bebas Neue'; font-size: 1.1rem; margin-top: 10px;">HABLAR</span>
             </div>
         </div>
-        
-        <p style="font-size: 0.8rem; color: var(--white); opacity: 0.6;">ASESORÍA EN IMPORTACIÓN, EXPORTACIÓN Y LOGÍSTICA</p>
+
+        <div class="power-level" style="text-align: center;">
+            <p class="status-bits" style="margin-bottom: 10px; opacity: 0.6;">ASESORÍA EXPERTA EN COMERCIO EXTERIOR</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%;"></div>
+                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.3;"></div>
+                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.1;"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="footer">
-        ADUAMEX OS v5.2 // UNEA CAMPUS // MODO: HOMBRE ROBÓTICO ACTIVO
+    <div style="padding: 10px; text-align: center; border-top: 1px solid rgba(0,207,255,0.1);">
+        <p class="status-bits" style="opacity: 0.3;">PROPERTY OF ADUAMEX S.A. DE C.V.</p>
     </div>
 </div>
 
 <script>
-let API_KEY = "";
-let currentTokens = 100;
-let isHolding = false;
-let rec = null;
-let speechLog = "";
+let KEY = "";
+let energy = 100;
+let isBusy = false;
+let recognition = null;
+let transcript = "";
 
-// DESBLOQUEO
-function unlock() {
-    const val = document.getElementById('ksInput').value;
-    if(val.length < 15) return alert("API Key no válida");
-    API_KEY = val;
+// INICIO DE SISTEMA
+function initSystem() {
+    const input = document.getElementById('apiKey').value;
+    if(input.length < 10) return alert("LLAVE DENEGADA");
+    KEY = input;
     document.getElementById('keyscreen').classList.add('hidden');
-    document.getElementById('os-shell').classList.remove('hidden');
-}
-
-// BARRA DE ENERGÍA (TOKENS)
-function updateEnergy(usage) {
-    currentTokens -= usage;
-    if(currentTokens < 0) currentTokens = 0;
-    const fill = document.getElementById('token-fill');
-    fill.style.width = currentTokens + "%";
-    document.getElementById('token-pct').textContent = Math.round(currentTokens) + "%";
+    document.getElementById('app-shell').classList.remove('hidden');
     
-    if(currentTokens <= 0) {
-        document.getElementById('status-msg').textContent = "RECARGANDO NÚCLEO... ESPERA 10 SEGUNDOS.";
-        setTimeout(() => { currentTokens = 100; updateEnergy(0); document.getElementById('status-msg').textContent = "NÚCLEO RECARGADO."; }, 10000);
+    // Forzar modo pantalla completa si es posible
+    if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen();
     }
 }
 
-/* --- RECONOCIMIENTO --- */
-function initMic() {
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if (!SR) return null;
-    const r = new SR();
+// CONTROL DE ENERGÍA
+function consumeEnergy(amt) {
+    energy -= amt;
+    if(energy < 0) energy = 0;
+    document.getElementById('bar-fill').style.width = energy + "%";
+    if(energy <= 0) {
+        document.getElementById('output-console').textContent = "ERROR: ENERGÍA INSUFICIENTE. RECARGANDO...";
+        setTimeout(() => { energy = 100; consumeEnergy(0); }, 5000);
+    }
+}
+
+// LÓGICA DE VOZ (PTT)
+function setupSpeech() {
+    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!Speech) return null;
+    const r = new Speech();
     r.lang = 'es-MX';
     r.continuous = true;
     r.interimResults = true;
     r.onresult = (e) => {
         let interim = "";
         for (let i = e.resultIndex; i < e.results.length; ++i) {
-            if (e.results[i].isFinal) speechLog += e.results[i][0].transcript;
+            if (e.results[i].isFinal) transcript += e.results[i][0].transcript;
             else interim += e.results[i][0].transcript;
         }
-        document.getElementById('status-msg').textContent = speechLog || interim;
+        document.getElementById('output-console').textContent = transcript || interim;
     };
     return r;
 }
 
-const trigger = document.getElementById('main-trigger');
-const cb = document.getElementById('os-shell');
+const trigger = document.getElementById('ptt-trigger');
+const shell = document.getElementById('app-shell');
 
-function startListen(e) {
+function startPTT(e) {
     e.preventDefault();
-    if(isHolding || currentTokens <= 0) return;
-    isHolding = true;
-    speechLog = "";
-    cb.classList.add('s-listening');
-    document.getElementById('btn-label').textContent = "ESCUCHANDO";
-    rec = initMic();
-    if(rec) rec.start();
+    if(isBusy || energy <= 0) return;
+    isBusy = true;
+    transcript = "";
+    shell.classList.add('s-listening');
+    document.getElementById('btn-text').textContent = "ESCUCHANDO";
+    recognition = setupSpeech();
+    if(recognition) recognition.start();
 }
 
-function stopListen(e) {
+function stopPTT(e) {
     e.preventDefault();
-    if(!isHolding) return;
-    isHolding = false;
-    cb.classList.remove('s-listening');
-    document.getElementById('btn-label').textContent = "ANALIZANDO";
-    if(rec) {
-        rec.stop();
+    if(!isBusy) return;
+    isBusy = false;
+    shell.classList.remove('s-listening');
+    document.getElementById('btn-text').textContent = "HABLAR";
+    if(recognition) {
+        recognition.stop();
         setTimeout(() => {
-            const query = document.getElementById('status-msg').textContent;
-            if(query.length > 2 && query !== "RECARGANDO NÚCLEO...") callGemini(query);
+            const finalQ = document.getElementById('output-console').textContent;
+            if(finalQ.length > 2) processQuery(finalQ);
         }, 500);
     }
 }
 
-trigger.addEventListener('mousedown', startListen);
-trigger.addEventListener('mouseup', stopListen);
-trigger.addEventListener('touchstart', startListen);
-trigger.addEventListener('touchend', stopListen);
+trigger.addEventListener('mousedown', startPTT);
+trigger.addEventListener('mouseup', stopPTT);
+trigger.addEventListener('touchstart', startPTT);
+trigger.addEventListener('touchend', stopPTT);
 
-/* --- GEMINI LLAMADA --- */
-async function callGemini(q) {
-    cb.classList.add('s-thinking');
-    updateEnergy(5);
-
-    // Ajustamos el prompt para que el robot sea un vendedor experto
-    const promptRefinado = `Eres AduaBot, el mejor asesor de ventas de AduaMex. Estás en una feria en la universidad UNEA. Tu objetivo es vender servicios de agencia aduanal, IMMEX, y logística. Responde de forma experta, profesional y breve (máximo 30 palabras) a esta consulta: ${q}. Siempre termina invitando a pasar al stand de AduaMex para una cotización.`;
-
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-
+async function processQuery(q) {
+    shell.classList.add('s-thinking');
+    consumeEnergy(5);
+    
+    const context = `Eres AduaBot, el experto de AduaMex en la feria UNEA. Vende los servicios de AduaMex. Sé profesional, varonil y directo. Máximo 25 palabras. Al final di: "Visítanos en el stand". Pregunta: ${q}`;
+    
     try {
-        const response = await fetch(URL, {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${KEY}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: promptRefinado }] }] })
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ contents: [{ parts: [{ text: context }] }] })
         });
-        const data = await response.json();
-        cb.classList.remove('s-thinking');
-        document.getElementById('btn-label').textContent = "CONECTAR";
-
+        const data = await res.json();
+        shell.classList.remove('s-thinking');
+        
         if(data.candidates) {
-            const txt = data.candidates[0].content.parts[0].text;
-            document.getElementById('status-msg').textContent = txt;
-            updateEnergy(txt.length / 25);
-            speak(txt);
+            const reply = data.candidates[0].content.parts[0].text;
+            document.getElementById('output-console').textContent = reply;
+            speak(reply);
         }
-    } catch (e) {
-        cb.classList.remove('s-thinking');
-        document.getElementById('status-msg').textContent = "ERROR EN EL ENLACE SATELITAL.";
+    } catch (err) {
+        shell.classList.remove('s-thinking');
+        document.getElementById('output-console').textContent = "ERROR DE CONEXIÓN CON EL NÚCLEO.";
     }
 }
 
-/* --- VOZ MASCULINA ROBÓTICA (LA SOLUCIÓN) --- */
 function speak(t) {
-    const syn = window.speechSynthesis;
-    if(syn.speaking) syn.cancel();
-    
+    const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(t);
     u.lang = 'es-MX';
+    u.pitch = 0.5; // Voz de hombre grave
+    u.rate = 0.9;
     
-    // Configuración para que suene ROBÓTICO Y HOMBRE
-    u.pitch = 0.5; // Más bajo = más grave/hombre
-    u.rate = 0.9;  // Un poco más lento para que se entienda la autoridad
-    u.volume = 1;
-
-    // Buscamos voces masculinas en el sistema
-    const voices = syn.getVoices();
-    // Prioridad a voces con nombre de hombre o españolas
-    const maleVoice = voices.find(v => 
-        (v.lang.includes('es') && (v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.includes('Diego'))) ||
-        (v.lang.includes('es') && v.name.includes('Google')) || 
-        (v.name.toLowerCase().includes('male'))
-    );
-
-    if(maleVoice) u.voice = maleVoice;
+    const voices = synth.getVoices();
+    const male = voices.find(v => v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.toLowerCase().includes('male'));
+    if(male) u.voice = male;
     
-    syn.speak(u);
+    synth.speak(u);
 }
-
-// Necesario para cargar voces en algunos navegadores
-window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 </script>
+
 </body>
 </html>
