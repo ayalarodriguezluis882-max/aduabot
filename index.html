@@ -3,44 +3,35 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot — AduaMex</title>
+<title>AduaBot Pro — AduaMex</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --b:#00cfff; --b2:#3de0ff; --b3:#006699;
-  --dark:#03080f; --white:#e0f8ff;
-  --red:#ff2255; --green:#00ff99;
-}
-/* Evitar que el móvil seleccione texto al mantener presionado */
+:root{ --b:#00cfff; --dark:#03080f; --white:#e0f8ff; --red:#ff2255; }
 *{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;}
 body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
-#bgc{position:fixed; inset:0; pointer-events:none; z-index:0;}
+#bgc{position:fixed; inset:0; z-index:0;}
 
 /* KEYSCREEN */
-#keyscreen{position:fixed; inset:0; z-index:300; background:radial-gradient(ellipse at center,#001828 0%,#03080f 70%); display:flex; align-items:center; justify-content:center; transition: opacity 0.5s;}
+#keyscreen{position:fixed; inset:0; z-index:300; background:#03080f; display:flex; align-items:center; justify-content:center; transition: 0.5s;}
 .ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
-#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.05); border:1px solid var(--b); color:white; outline:none; text-align:center;}
-.ks-btn{width:100%; padding:15px; background:var(--b3); color:white; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
+#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center; font-family:monospace;}
+.ks-btn{width:100%; padding:15px; background:var(--b); color:#000; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
-/* APP INTERFACE */
-#app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:opacity 0.8s;}
+/* APP */
+#app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:0.8s;}
 #app.visible{opacity:1;}
 
-.sp{width:100%; border:1px solid rgba(0,207,255,0.2); background:rgba(0,207,255,0.03); padding:15px; min-height:80px; display:flex; align-items:center; justify-content:center; border-radius:4px;}
-#sTxt{font-size:0.9rem; color:var(--white); text-align:center; line-height:1.4;}
+.sp{width:100%; border:1px solid rgba(0,207,255,0.3); background:rgba(0,207,255,0.05); padding:15px; min-height:100px; display:flex; align-items:center; justify-content:center; border-radius:8px; margin:20px 0;}
+#sTxt{font-size:1rem; color:var(--white); text-align:center; line-height:1.4; text-shadow: 0 0 5px rgba(0,207,255,0.5);}
 
-/* PTT BUTTON */
-.cblock{display:flex; flex-direction:column; align-items:center;}
-.casino{position:relative; width:240px; height:240px; display:flex; align-items:center; justify-content:center;}
-.micbtn{width:180px; height:180px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; outline:none;}
-.bbg{position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 36% 30%,#001828,#03080f); border:2px solid var(--b); transition: 0.2s;}
+.micbtn{width:180px; height:180px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; outline:none;}
+.bbg{position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle, #001828, #03080f); border:2px solid var(--b); transition: 0.2s;}
 
-/* ESTADOS */
-.s-listening .bbg{border-color:var(--red); box-shadow: 0 0 50px rgba(255,34,85,0.5);}
-.s-thinking .bbg{border-color:var(--b2); box-shadow: 0 0 50px rgba(61,224,255,0.5); animation: pulse 1s infinite;}
-@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:0.5} }
+.s-listening .bbg{border-color:var(--red); box-shadow: 0 0 40px var(--red);}
+.s-thinking .bbg{border-color:var(--white); box-shadow: 0 0 40px var(--b); animation: pulse 0.8s infinite;}
+@keyframes pulse{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.05)} }
 
-.blbl{font-family:'Bebas Neue',sans-serif; font-size:0.8rem; letter-spacing:0.2em; color:var(--b); margin-top:8px;}
+.blbl{font-family:'Bebas Neue',sans-serif; font-size:0.9rem; letter-spacing:2px; color:var(--b); margin-top:10px; z-index:5;}
 </style>
 </head>
 <body>
@@ -49,40 +40,36 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v2.5</h1>
-    <input id="ksInput" type="password" placeholder="INGRESA GEMINI API KEY" />
-    <button class="ks-btn" onclick="checkAndLaunch()">INICIAR SISTEMA</button>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT CLAVE</h1>
+    <input id="ksInput" type="password" placeholder="PEGA TU API KEY AQUÍ" />
+    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR SISTEMA</button>
   </div>
 </div>
 
 <div id="app">
   <div style="text-align:center;">
-    <h2 style="font-family:'Bebas Neue'; font-size:2rem; color:var(--b2);">ADUAMEX</h2>
-    <p style="font-size:0.6rem; letter-spacing:4px; opacity:0.6;">AGENCIA ADUANAL DIGITAL</p>
+    <h2 style="font-family:'Bebas Neue'; font-size:2.5rem;">ADUAMEX</h2>
+    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">AGENTE ADUANAL IA</p>
   </div>
 
   <div class="sp">
-    <div id="sTxt">MANTÉN EL BOTÓN PARA HABLAR</div>
+    <div id="sTxt">MANTÉN PRESIONADO PARA CONSULTAR</div>
   </div>
 
-  <div class="cblock" id="cb">
-    <div class="casino">
-      <div style="position:absolute; width:230px; height:230px; border:1px solid rgba(0,207,255,0.1); border-radius:50%;"></div>
-      <button class="micbtn" id="pttBtn">
-        <div class="bbg"></div>
-        <svg width="60" height="60" viewBox="0 0 72 72" style="position:relative; z-index:3;">
-            <rect x="14" y="18" width="44" height="30" rx="6" fill="#00cfff" />
-            <rect x="22" y="26" width="8" height="6" rx="1" fill="#03080f" />
-            <rect x="42" y="26" width="8" height="6" rx="1" fill="#03080f" />
-            <rect x="26" y="38" width="20" height="4" rx="2" fill="#03080f" />
-        </svg>
-        <span class="blbl" id="bLbl">MANTENER</span>
-      </button>
-    </div>
-    <p style="font-size:0.5rem; margin-top:15px; letter-spacing:2px; color:var(--b2);">PUSH TO TALK SYSTEM</p>
+  <div class="cblock" id="cb" style="text-align:center;">
+    <button class="micbtn" id="pttBtn">
+      <div class="bbg"></div>
+      <svg width="60" height="60" viewBox="0 0 72 72" style="position:relative;">
+          <rect x="14" y="18" width="44" height="30" rx="6" fill="#00cfff" />
+          <circle cx="28" cy="30" r="3" fill="#000" />
+          <circle cx="44" cy="30" r="3" fill="#000" />
+          <path d="M26 40 Q36 45 46 40" stroke="#000" stroke-width="2" fill="none" />
+      </svg>
+    </button>
+    <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <div style="font-size:0.5rem; opacity:0.4; letter-spacing:2px;">TIJUANA · BAJA CALIFORNIA · MÉXICO</div>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.0 · TIJUANA MX</p>
 </div>
 
 <input type="hidden" id="apiKey" />
@@ -90,158 +77,132 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 <script>
 const btn = document.getElementById('pttBtn');
 const sTxt = document.getElementById('sTxt');
-const bLbl = document.getElementById('bLbl');
 const cb = document.getElementById('cb');
+const bLbl = document.getElementById('bLbl');
 
 let rec = null;
 let isHolding = false;
-let capturedText = "";
+let speechLog = "";
 
-/* INICIALIZAR RECONOCIMIENTO */
-function setupRecognition() {
+/* CONFIG MIC */
+function initMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
-    
     const r = new SR();
     r.lang = 'es-MX';
     r.continuous = true;
     r.interimResults = true;
-
     r.onresult = (e) => {
         let interim = "";
         for (let i = e.resultIndex; i < e.results.length; ++i) {
-            if (e.results[i].isFinal) capturedText += e.results[i][0].transcript;
+            if (e.results[i].isFinal) speechLog += e.results[i][0].transcript;
             else interim += e.results[i][0].transcript;
         }
-        // Mostramos lo que va entendiendo en tiempo real
-        sTxt.textContent = capturedText || interim || "...";
+        sTxt.textContent = speechLog || interim || "...";
     };
     return r;
 }
 
-/* ACCIONES DE PULSACIÓN */
-function startAction(e) {
+/* EVENTOS MÓVIL */
+function start(e) {
     e.preventDefault();
-    if (isHolding) return;
-    
+    if(isHolding) return;
     isHolding = true;
-    capturedText = "";
-    sTxt.textContent = "Te escucho, dime tu duda...";
+    speechLog = "";
+    sTxt.textContent = "Te escucho...";
     cb.classList.add('s-listening');
     bLbl.textContent = "SOLTAR";
-
-    rec = setupRecognition();
-    if (rec) rec.start();
+    rec = initMic();
+    if(rec) rec.start();
 }
 
-function stopAction(e) {
+function stop(e) {
     e.preventDefault();
-    if (!isHolding) return;
-    
+    if(!isHolding) return;
     isHolding = false;
     cb.classList.remove('s-listening');
     bLbl.textContent = "MANTENER";
-
-    if (rec) {
+    if(rec) {
         rec.stop();
-        // Esperamos un momento corto para capturar el último interim
         setTimeout(() => {
-            const query = sTxt.textContent.trim();
-            if (query.length > 3 && query !== "Te escucho, dime tu duda...") {
-                askGemini(query);
-            } else {
-                sTxt.textContent = "No detecté tu voz. Intenta de nuevo.";
-            }
-        }, 400);
+            const finalQ = sTxt.textContent.trim();
+            if(finalQ.length > 3) askGemini(finalQ);
+            else sTxt.textContent = "MANTÉN PRESIONADO PARA CONSULTAR";
+        }, 500);
     }
 }
 
-/* EVENTOS CROSS-PLATFORM */
-btn.addEventListener('mousedown', startAction);
-btn.addEventListener('mouseup', stopAction);
-btn.addEventListener('touchstart', startAction);
-btn.addEventListener('touchend', stopAction);
+btn.addEventListener('mousedown', start);
+btn.addEventListener('mouseup', stop);
+btn.addEventListener('touchstart', start);
+btn.addEventListener('touchend', stop);
 
-/* COMUNICACIÓN CON GEMINI */
-async function askGemini(q) {
+/* IA LLAMADA CORREGIDA */
+async function askGemini(pregunta) {
     const key = document.getElementById('apiKey').value;
-    if (!key) return;
-
     cb.classList.add('s-thinking');
-    sTxt.textContent = "Consultando a la base de datos...";
+    sTxt.textContent = "Procesando con AduaMex IA...";
+
+    // Usamos la versión v1 que es la de producción más estable
+    const URL = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${key}`;
 
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+        const response = await fetch(URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `Eres AduaBot, experto en aduanas de AduaMex en Tijuana. Responde de forma técnica pero breve (máximo 2 oraciones) a: ${q}. Siempre invita a contactar a AduaMex para el trámite.` }]
+                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde en menos de 30 palabras a esta duda de aduanas: ${pregunta}. Al final invita a visitarnos.` }]
                 }]
             })
         });
 
         const data = await response.json();
         cb.classList.remove('s-thinking');
-        
-        if(data.candidates && data.candidates[0]) {
-            const respuesta = data.candidates[0].content.parts[0].text;
-            sTxt.textContent = respuesta;
-            speak(respuesta);
-        } else {
-            sTxt.textContent = "Hubo un problema con la respuesta. Intenta de nuevo.";
-        }
 
+        if (data.candidates && data.candidates[0]) {
+            const txt = data.candidates[0].content.parts[0].text;
+            sTxt.textContent = txt;
+            speak(txt);
+        } else {
+            // Esto nos dirá si la API Key está mal o si hay otro error de Google
+            console.error("Detalle del error:", data);
+            sTxt.textContent = "Error: " + (data.error?.message || "Revisa tu API Key o conexión.");
+        }
     } catch (err) {
-        sTxt.textContent = "Error de conexión con el sistema AduaMex.";
         cb.classList.remove('s-thinking');
+        sTxt.textContent = "Fallo de conexión. Intenta de nuevo.";
     }
 }
 
 function speak(t) {
-    const msg = new SpeechSynthesisUtterance();
-    msg.text = t;
-    msg.lang = 'es-MX';
-    msg.rate = 1.0;
-    window.speechSynthesis.speak(msg);
+    const m = new SpeechSynthesisUtterance(t);
+    m.lang = 'es-MX';
+    window.speechSynthesis.speak(m);
 }
 
-/* ACCESO */
 function checkAndLaunch() {
     const k = document.getElementById('ksInput').value.trim();
-    if (k.length < 15) return alert("API Key no válida.");
+    if(k.length < 10) return alert("Ingresa tu Clave");
     document.getElementById('apiKey').value = k;
-    document.getElementById('keyscreen').style.opacity = '0';
-    setTimeout(() => {
-        document.getElementById('keyscreen').style.display = 'none';
-        document.getElementById('app').classList.add('visible');
-    }, 500);
+    document.getElementById('keyscreen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
 }
 
-/* FONDO RADAR ANIMADO */
+/* BACKGROUND */
 (function(){
   const c=document.getElementById('bgc'),ctx=c.getContext('2d');
-  function res(){c.width=window.innerWidth;c.height=window.innerHeight;}
-  res(); window.onresize=res;
+  function r(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  r(); window.onresize=r;
   let a=0;
-  function draw(){
+  function d(){
     ctx.clearRect(0,0,c.width,c.height);
-    ctx.strokeStyle='rgba(0,207,255,0.05)';
-    ctx.lineWidth=1;
-    // Círculos radar
-    const cx=c.width/2, cy=c.height/2;
-    for(let i=1; i<4; i++){
-        ctx.beginPath(); ctx.arc(cx,cy,i*100,0,Math.PI*2); ctx.stroke();
-    }
-    // Barrido
-    ctx.save(); ctx.translate(cx,cy); ctx.rotate(a);
-    ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,400,-0.3,0);
-    const g=ctx.createLinearGradient(0,0,400,0);
-    g.addColorStop(0,'rgba(0,207,255,0.1)'); g.addColorStop(1,'transparent');
-    ctx.fillStyle=g; ctx.fill(); ctx.restore();
-    a+=0.015; requestAnimationFrame(draw);
+    ctx.save(); ctx.translate(c.width/2,c.height/2); ctx.rotate(a);
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,300,-0.3,0);
+    ctx.fillStyle='rgba(0,207,255,0.03)'; ctx.fill(); ctx.restore();
+    a+=0.01; requestAnimationFrame(d);
   }
-  draw();
+  d();
 })();
 </script>
 </body>
