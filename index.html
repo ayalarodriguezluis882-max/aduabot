@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot 2.5 — AduaMex</title>
+<title>AduaBot v3 — AduaMex</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{ --b:#00cfff; --dark:#03080f; --white:#e0f8ff; --red:#ff2255; }
@@ -11,11 +11,13 @@
 body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
 #bgc{position:fixed; inset:0; z-index:0;}
 
+/* KEYSCREEN */
 #keyscreen{position:fixed; inset:0; z-index:300; background:#03080f; display:flex; align-items:center; justify-content:center; transition: 0.5s;}
 .ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
 #ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center;}
 .ks-btn{width:100%; padding:15px; background:var(--b); color:#000; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
+/* APP */
 #app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:0.8s;}
 #app.visible{opacity:1;}
 
@@ -38,16 +40,16 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v2.5 FLASH</h1>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v3.0</h1>
     <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
-    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR SISTEMA</button>
+    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR</button>
   </div>
 </div>
 
 <div id="app">
   <div style="text-align:center;">
     <h2 style="font-family:'Bebas Neue'; font-size:2.5rem;">ADUAMEX</h2>
-    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">MODELO 2.5 FLASH ACTIVADO</p>
+    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">AGENTE ADUANAL INTELIGENTE</p>
   </div>
 
   <div class="sp">
@@ -67,7 +69,7 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
     <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.3 · TIJUANA MX</p>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.4 · TIJUANA MX</p>
 </div>
 
 <input type="hidden" id="apiKey" />
@@ -136,10 +138,10 @@ btn.addEventListener('touchend', stop);
 async function askGemini(pregunta) {
     const key = document.getElementById('apiKey').value;
     cb.classList.add('s-thinking');
-    sTxt.textContent = "Consultando a la aduana digital...";
+    sTxt.textContent = "Consultando a la base de datos de AduaMex...";
 
-    /* MODELO AJUSTADO SEGÚN TU CAPTURA DE PANTALLA */
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${key}`;
+    /* MODELO ESTÁNDAR UNIVERSAL PARA EVITAR ERRORES DE VERSIÓN */
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
 
     try {
         const response = await fetch(URL, {
@@ -147,7 +149,7 @@ async function askGemini(pregunta) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Invita a contactar a AduaMex.` }]
+                    parts: [{ text: `Eres AduaBot, experto en aduanas de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Invita a contactar a AduaMex.` }]
                 }]
             })
         });
