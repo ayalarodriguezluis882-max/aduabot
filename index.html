@@ -7,426 +7,242 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --b:#00cfff;--b2:#3de0ff;--b3:#006699;
-  --dark:#03080f;--white:#e0f8ff;
-  --red:#ff2255;--green:#00ff99;
+  --b:#00cfff; --b2:#3de0ff; --b3:#006699;
+  --dark:#03080f; --white:#e0f8ff;
+  --red:#ff2255; --green:#00ff99;
 }
-*{margin:0;padding:0;box-sizing:border-box;}
-body{background:var(--dark);min-height:100vh;font-family:'Rajdhani',sans-serif;color:var(--b);overflow:hidden;}
-#bgc{position:fixed;inset:0;pointer-events:none;z-index:0;}
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,.06) 3px,rgba(0,0,0,.06) 4px);pointer-events:none;z-index:2;}
+/* Evitar que el móvil seleccione texto al mantener presionado */
+*{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;}
+body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
+#bgc{position:fixed; inset:0; pointer-events:none; z-index:0;}
 
-#breath-border{position:fixed;inset:0;z-index:4;pointer-events:none;box-shadow:inset 0 0 0px rgba(0,207,255,0);border:3px solid rgba(0,207,255,0);transition:none;}
-.scan{position:fixed;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(0,207,255,.12),transparent);animation:sc 9s linear infinite;pointer-events:none;z-index:3;}
-@keyframes sc{0%{transform:translateY(0);opacity:0}4%{opacity:1}96%{opacity:1}100%{transform:translateY(100vh);opacity:0}}
-.cd{position:fixed;width:44px;height:44px;opacity:.38;z-index:5;}
-.cd.tl{top:10px;left:10px;border-top:1px solid var(--b);border-left:1px solid var(--b);}
-.cd.tr{top:10px;right:10px;border-top:1px solid var(--b);border-right:1px solid var(--b);}
-.cd.bl{bottom:10px;left:10px;border-bottom:1px solid var(--b);border-left:1px solid var(--b);}
-.cd.br{bottom:10px;right:10px;border-bottom:1px solid var(--b);border-right:1px solid var(--b);}
+/* KEYSCREEN */
+#keyscreen{position:fixed; inset:0; z-index:300; background:radial-gradient(ellipse at center,#001828 0%,#03080f 70%); display:flex; align-items:center; justify-content:center; transition: opacity 0.5s;}
+.ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
+#ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.05); border:1px solid var(--b); color:white; outline:none; text-align:center;}
+.ks-btn{width:100%; padding:15px; background:var(--b3); color:white; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
-#keyscreen{position:fixed;inset:0;z-index:300;background:radial-gradient(ellipse at center,#001828 0%,#03080f 70%);display:flex;align-items:center;justify-content:center;}
-.ks-inner{display:flex;flex-direction:column;align-items:center;gap:14px;padding:24px 20px;max-width:420px;width:100%;opacity:0;animation:fup .7s ease forwards .3s;}
-@keyframes fup{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
-.ks-logo{width:clamp(180px,52vw,300px);filter:drop-shadow(0 0 22px rgba(0,207,255,.75));}
-.ks-title h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(.85rem,3.6vw,1.2rem);letter-spacing:.48em;background:linear-gradient(90deg,#006699,#3de0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center;}
-.ks-title p{font-size:.58rem;letter-spacing:.38em;color:rgba(0,207,255,.38);margin-top:4px;text-align:center;}
-.ks-box{width:100%;border:1px solid rgba(0,207,255,.26);background:rgba(0,207,255,.025);padding:18px 16px;position:relative;}
-.ks-box::before{content:'';position:absolute;top:0;right:0;width:10px;height:10px;border-top:1px solid var(--b);border-right:1px solid var(--b);opacity:.45;}
-.ks-lbl{font-family:'Bebas Neue',sans-serif;font-size:.57rem;letter-spacing:.4em;color:rgba(0,207,255,.36);margin-bottom:8px;}
-#ksInput{width:100%;background:rgba(0,207,255,.035);border:1px solid rgba(0,207,255,.22);color:var(--b2);font-family:'Rajdhani',sans-serif;font-size:.95rem;padding:12px 14px;outline:none;letter-spacing:.04em;transition:border-color .2s;}
-#ksInput:focus{border-color:var(--b);}
-#ksInput::placeholder{color:rgba(0,207,255,.18);}
-.ks-hint{font-size:.55rem;letter-spacing:.16em;color:rgba(0,207,255,.22);margin-top:6px;}
-#ksError{font-size:.68rem;color:var(--red);min-height:15px;opacity:0;transition:opacity .3s;text-align:center;}
-.ks-btn{width:100%;background:linear-gradient(135deg,rgba(0,38,62,.92),rgba(0,16,30,.96));border:1px solid rgba(0,207,255,.35);color:var(--b2);font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.45em;padding:14px;cursor:pointer;transition:box-shadow .2s;-webkit-tap-highlight-color:transparent;}
-.ks-btn:active{box-shadow:0 0 18px rgba(0,207,255,.38);}
-.ks-footer{font-size:.5rem;letter-spacing:.26em;color:rgba(0,207,255,.16);text-align:center;}
-
-#intro{position:fixed;inset:0;z-index:200;background:radial-gradient(ellipse at center,#001828 0%,#03080f 70%);display:none;flex-direction:column;align-items:center;justify-content:center;}
-.mq{width:100%;overflow:hidden;background:linear-gradient(90deg,#001020,#002a40,#001020);padding:4px 0;border-top:1px solid rgba(0,207,255,.2);border-bottom:1px solid rgba(0,207,255,.2);}
-.mq-in{display:inline-flex;white-space:nowrap;animation:mq 13s linear infinite;}
-@keyframes mq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.mq-item{font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.32em;color:var(--b);padding:0 20px;opacity:.7;}
-.mq-item b{color:var(--b2);}
-.intro-c{display:flex;flex-direction:column;align-items:center;padding:20px;gap:7px;opacity:0;animation:fup .7s ease forwards .3s;}
-.ilogo{width:clamp(210px,60vw,360px);filter:drop-shadow(0 0 24px rgba(0,207,255,.72));animation:lglow 2.2s ease-in-out infinite 1s;}
-@keyframes lglow{0%,100%{filter:drop-shadow(0 0 18px rgba(0,207,255,.5))}50%{filter:drop-shadow(0 0 44px rgba(61,224,255,1))}}
-.intro-cta{text-align:center;font-family:'Bebas Neue',sans-serif;font-size:clamp(.9rem,4vw,1.5rem);letter-spacing:.1em;background:linear-gradient(90deg,var(--b3),var(--b2),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;opacity:0;animation:fup .6s ease forwards .9s;}
-.intro-reward{font-size:.6rem;letter-spacing:.38em;color:rgba(0,207,255,.45);opacity:0;animation:fup .5s ease forwards 1.1s;}
-.intro-leds{display:flex;gap:7px;opacity:0;animation:fup .4s ease forwards 1.3s;}
-.iled{width:8px;height:8px;border-radius:50%;background:var(--b);box-shadow:0 0 8px var(--b),0 0 18px var(--b);}
-.iled:nth-child(1){animation:lb 1.2s ease-in-out infinite 0s}
-.iled:nth-child(2){animation:lb 1.2s ease-in-out infinite .18s}
-.iled:nth-child(3){animation:lb 1.2s ease-in-out infinite .36s}
-.iled:nth-child(4){animation:lb 1.2s ease-in-out infinite .18s}
-.iled:nth-child(5){animation:lb 1.2s ease-in-out infinite 0s}
-@keyframes lb{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.1;transform:scale(.48)}}
-.ibar-w{display:flex;flex-direction:column;align-items:center;gap:6px;opacity:0;animation:fup .4s ease forwards 1.5s;}
-.ibar-bg{width:clamp(170px,50vw,290px);height:2px;background:rgba(0,207,255,.08);overflow:hidden;}
-.ibar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--b3),var(--b2));animation:bf 2s cubic-bezier(.4,0,.2,1) forwards 1.7s;}
-@keyframes bf{to{width:100%}}
-.ibar-txt{font-size:.52rem;letter-spacing:.36em;color:rgba(0,207,255,.3);animation:blink .8s ease-in-out infinite 1.7s;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.14}}
-
-#app{position:relative;z-index:10;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:10px 12px 12px;opacity:0;transition:opacity .9s ease;max-width:500px;margin:0 auto;}
+/* APP INTERFACE */
+#app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:opacity 0.8s;}
 #app.visible{opacity:1;}
-.app-mq{width:100%;overflow:hidden;background:linear-gradient(90deg,#001020,#002a40,#001020);padding:3px 0;border-bottom:1px solid rgba(0,207,255,.14);margin-bottom:4px;}
 
-.header{width:100%;display:flex;flex-direction:column;align-items:center;gap:3px;position:relative;}
-.hlogo{width:clamp(158px,44vw,238px);filter:drop-shadow(0 0 8px rgba(0,207,255,.4));}
-.neon-rule{width:100%;height:1px;background:linear-gradient(90deg,transparent,var(--b),transparent);opacity:.35;}
-.htag{font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.44em;color:rgba(0,207,255,.35);}
+.sp{width:100%; border:1px solid rgba(0,207,255,0.2); background:rgba(0,207,255,0.03); padding:15px; min-height:80px; display:flex; align-items:center; justify-content:center; border-radius:4px;}
+#sTxt{font-size:0.9rem; color:var(--white); text-align:center; line-height:1.4;}
 
-#gearBtn{position:fixed;top:14px;right:14px;z-index:50;width:36px;height:36px;border-radius:50%;background:rgba(0,20,35,.85);border:1px solid rgba(0,207,255,.35);color:var(--b2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;transition:box-shadow .2s;}
-#gearBtn:active{box-shadow:0 0 14px rgba(0,207,255,.5);}
-#gearBtn.menu-open{box-shadow:0 0 16px rgba(0,207,255,.6);border-color:var(--b);}
+/* PTT BUTTON */
+.cblock{display:flex; flex-direction:column; align-items:center;}
+.casino{position:relative; width:240px; height:240px; display:flex; align-items:center; justify-content:center;}
+.micbtn{width:180px; height:180px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; z-index:2; display:flex; flex-direction:column; align-items:center; justify-content:center; outline:none;}
+.bbg{position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 36% 30%,#001828,#03080f); border:2px solid var(--b); transition: 0.2s;}
 
-#dropdown{position:fixed;top:56px;right:12px;z-index:50;width:225px;background:linear-gradient(145deg,#001828,#030d18);border:1px solid rgba(0,207,255,.32);display:none;box-shadow:0 8px 32px rgba(0,0,0,.6),0 0 20px rgba(0,207,255,.15);}
-#dropdown.open{display:block;}
-.dd-sec{padding:7px 12px 3px;font-family:'Bebas Neue',sans-serif;font-size:.53rem;letter-spacing:.38em;color:rgba(0,207,255,.32);border-bottom:1px solid rgba(0,207,255,.1);}
-.dd-row{padding:11px 14px;font-size:.8rem;letter-spacing:.06em;color:var(--white);cursor:pointer;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(0,207,255,.06);transition:background .14s;-webkit-tap-highlight-color:transparent;}
-.dd-row:active,.dd-row.sel{background:rgba(0,207,255,.1);color:var(--b2);}
-.dd-dot{width:7px;height:7px;border-radius:50%;border:1px solid rgba(0,207,255,.28);flex-shrink:0;transition:all .2s;}
-.dd-row.sel .dd-dot{background:var(--b2);border-color:var(--b2);box-shadow:0 0 6px var(--b2);}
-.dd-div{height:1px;background:rgba(0,207,255,.1);}
-.dd-danger{padding:10px 14px;font-size:.75rem;color:rgba(255,34,85,.65);cursor:pointer;display:flex;align-items:center;gap:10px;-webkit-tap-highlight-color:transparent;}
-.dd-danger:active{background:rgba(255,34,85,.07);}
+/* ESTADOS */
+.s-listening .bbg{border-color:var(--red); box-shadow: 0 0 50px rgba(255,34,85,0.5);}
+.s-thinking .bbg{border-color:var(--b2); box-shadow: 0 0 50px rgba(61,224,255,0.5); animation: pulse 1s infinite;}
+@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:0.5} }
 
-.cta-banner{width:100%;background:linear-gradient(135deg,rgba(0,36,58,.92),rgba(0,16,30,.96));border:1px solid rgba(0,207,255,.26);padding:9px 12px;text-align:center;position:relative;}
-.cta-banner::before{content:'';position:absolute;top:0;right:0;width:9px;height:9px;border-top:1px solid rgba(0,207,255,.5);border-right:1px solid rgba(0,207,255,.5);}
-.cta-banner::after{content:'';position:absolute;bottom:0;left:0;width:9px;height:9px;border-bottom:1px solid rgba(0,207,255,.5);border-left:1px solid rgba(0,207,255,.5);}
-.cta-main{font-family:'Bebas Neue',sans-serif;font-size:clamp(.9rem,4vw,1.4rem);letter-spacing:.09em;background:linear-gradient(90deg,var(--b3),var(--b2),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1.1;animation:ctap 2.5s ease-in-out infinite;}
-@keyframes ctap{0%,100%{opacity:1}50%{opacity:.65}}
-.cta-sub{font-size:.55rem;letter-spacing:.34em;color:rgba(0,207,255,.38);margin-top:2px;}
-
-.sp{width:100%;border:1px solid rgba(0,207,255,.15);background:rgba(0,207,255,.02);padding:9px 12px;min-height:44px;display:flex;align-items:center;justify-content:center;position:relative;}
-.sp::before{content:'TRANSMISIÓN';position:absolute;top:-8px;left:10px;background:var(--dark);padding:0 5px;font-size:.44rem;letter-spacing:.36em;color:rgba(0,207,255,.24);}
-#sTxt{font-size:.76rem;color:var(--white);text-align:center;line-height:1.5;letter-spacing:.04em;font-weight:600;}
-
-.qw{width:100%;display:flex;flex-direction:column;gap:4px;}
-.qh{display:flex;justify-content:space-between;}
-.ql{font-family:'Bebas Neue',sans-serif;font-size:.54rem;letter-spacing:.36em;color:rgba(0,207,255,.3);}
-#qCount{font-family:'Bebas Neue',sans-serif;font-size:.66rem;letter-spacing:.16em;color:var(--b2);transition:color .4s;}
-#qCount.warn{color:#ffaa00;text-shadow:0 0 6px #ffaa00;}
-#qCount.danger{color:var(--red);text-shadow:0 0 6px var(--red);animation:blink .5s infinite;}
-.qbg{width:100%;height:5px;background:rgba(0,207,255,.06);border:1px solid rgba(0,207,255,.1);border-radius:3px;overflow:hidden;}
-#qBar{height:100%;background:linear-gradient(90deg,var(--b3),var(--b2));border-radius:3px;transition:width .6s ease;will-change:width;}
-#qBar.warn{background:linear-gradient(90deg,#885500,#ffaa00);}
-#qBar.danger{background:linear-gradient(90deg,#880022,var(--red));}
-#qReset{font-size:.48rem;letter-spacing:.2em;color:rgba(0,207,255,.2);text-align:right;}
-#qReset.soon{color:#ffaa00;}
-
-.vw{width:100%;display:flex;flex-direction:column;align-items:center;gap:4px;}
-#vizLbl{font-size:.48rem;letter-spacing:.34em;color:rgba(0,207,255,.22);}
-#viz{width:100%;height:34px;display:flex;align-items:flex-end;justify-content:center;gap:2px;border:1px solid rgba(0,207,255,.07);background:rgba(0,0,0,.26);padding:2px 4px;overflow:hidden;}
-.vb{width:4px;border-radius:2px 2px 0 0;background:linear-gradient(to top,var(--b3),var(--b));height:3px;transform-origin:bottom;transform:scaleY(1);will-change:transform;flex-shrink:0;}
-.vz-on .vb{background:linear-gradient(to top,var(--b3),var(--b2));box-shadow:0 0 4px rgba(0,207,255,.4);}
-
-.cblock{display:flex;flex-direction:column;align-items:center;}
-.casino{position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;}
-.oring{position:absolute;width:240px;height:240px;border-radius:50%;border:1px solid rgba(0,207,255,.1);}
-.bring{position:absolute;width:232px;height:232px;border-radius:50%;animation:spinr 18s linear infinite;will-change:transform;}
-@keyframes spinr{to{transform:rotate(360deg)}}
-.bdot{position:absolute;width:6px;height:6px;border-radius:50%;}
-.pring{position:absolute;border-radius:50%;border:1px solid transparent;opacity:0;will-change:transform,opacity;}
-.pring.p1{width:202px;height:202px;}
-.pring.p2{width:237px;height:237px;}
-.s-listening .pring.p1{animation:pout .9s ease-out infinite;border-color:var(--red);}
-.s-listening .pring.p2{animation:pout .9s ease-out infinite .26s;border-color:var(--red);}
-.s-speaking  .pring.p1{animation:pout .52s ease-out infinite;border-color:var(--green);}
-.s-speaking  .pring.p2{animation:pout .52s ease-out infinite .18s;border-color:var(--green);}
-.s-thinking  .pring.p1{animation:pout 1.2s ease-out infinite;border-color:var(--b2);}
-.s-wake      .pring.p1,.s-wake .pring.p2{animation:pout .38s ease-out infinite;border-color:var(--b);}
-@keyframes pout{0%{transform:scale(.82);opacity:.9}100%{transform:scale(1.22);opacity:0}}
-
-.micbtn{width:178px;height:178px;border-radius:50%;border:none;background:none;cursor:pointer;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;-webkit-tap-highlight-color:transparent;user-select:none;outline:none;}
-.bbg{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 36% 30%,#001828,#03080f);border:2px solid var(--b);box-shadow:0 0 28px rgba(0,207,255,.22),inset 0 0 28px rgba(0,207,255,.05);transition:border-color .22s,box-shadow .22s;will-change:box-shadow;}
-.s-listening .bbg{border-color:var(--red);box-shadow:0 0 45px rgba(255,34,85,.72),inset 0 0 28px rgba(255,34,85,.11);}
-.s-speaking  .bbg{border-color:var(--green);box-shadow:0 0 45px rgba(0,255,153,.72),inset 0 0 28px rgba(0,255,153,.11);}
-.s-thinking  .bbg{border-color:var(--b2);box-shadow:0 0 45px rgba(61,224,255,.72),inset 0 0 28px rgba(61,224,255,.11);}
-.s-wake      .bbg{border-color:var(--b2);box-shadow:0 0 62px rgba(0,207,255,.92),inset 0 0 35px rgba(0,207,255,.18);}
-.binner{position:absolute;inset:12px;border-radius:50%;border:1px solid rgba(0,207,255,.12);}
-.bspin{position:absolute;inset:22px;border-radius:50%;border:1px dashed rgba(0,207,255,.08);animation:spinr 22s linear infinite;will-change:transform;}
-.brobot{position:relative;z-index:1;}
-.blbl{font-family:'Bebas Neue',sans-serif;font-size:.6rem;letter-spacing:.22em;color:rgba(0,207,255,.32);position:relative;z-index:1;transition:color .2s;}
-.s-listening .blbl{color:var(--red);}
-.s-speaking  .blbl{color:var(--green);}
-.s-thinking  .blbl,.s-wake .blbl{color:var(--b2);}
-
-.leds{display:flex;gap:6px;margin-top:8px;}
-.ld{width:6px;height:6px;border-radius:50%;background:#001828;border:1px solid rgba(0,207,255,.14);transition:all .14s;}
-.s-listening .ld{background:var(--red);box-shadow:0 0 8px var(--red);border-color:var(--red);}
-.s-speaking  .ld{background:var(--green);box-shadow:0 0 8px var(--green);border-color:var(--green);}
-.s-thinking  .ld,.s-wake .ld{background:var(--b2);box-shadow:0 0 8px var(--b2);border-color:var(--b2);}
-.ld:nth-child(1){animation:dw 1.1s ease-in-out infinite 0s}
-.ld:nth-child(2){animation:dw 1.1s ease-in-out infinite .13s}
-.ld:nth-child(3){animation:dw 1.1s ease-in-out infinite .26s}
-.ld:nth-child(4){animation:dw 1.1s ease-in-out infinite .13s}
-.ld:nth-child(5){animation:dw 1.1s ease-in-out infinite 0s}
-@keyframes dw{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.25)}}
-
-#wBadge{font-size:.5rem;letter-spacing:.26em;color:rgba(0,207,255,.22);text-align:center;margin-top:3px;transition:all .3s;}
-#wBadge.on{color:var(--b2);text-shadow:0 0 8px var(--b);}
-
-.bbar{width:100%;display:flex;align-items:center;justify-content:space-between;}
-.bbl{display:flex;align-items:center;gap:6px;}
-.bdot2{width:5px;height:5px;border-radius:50%;background:rgba(0,207,255,.16);transition:all .2s;}
-.s-listening .bdot2{background:var(--red);box-shadow:0 0 6px var(--red);animation:bbd .5s infinite;}
-.s-speaking  .bdot2{background:var(--green);box-shadow:0 0 6px var(--green);animation:bbd .8s infinite;}
-.s-thinking  .bdot2,.s-wake .bdot2{background:var(--b2);box-shadow:0 0 6px var(--b2);animation:bbd .6s infinite;}
-@keyframes bbd{0%,100%{opacity:1}50%{opacity:.08}}
-#bState{font-family:'Bebas Neue',sans-serif;font-size:.62rem;letter-spacing:.3em;color:rgba(0,207,255,.24);}
-.bbr{font-size:.46rem;letter-spacing:.14em;color:rgba(0,207,255,.1);}
-
-#attract{position:fixed;inset:0;z-index:100;background:rgba(3,8,15,.92);display:none;flex-direction:column;align-items:center;justify-content:center;gap:18px;animation:fadeIn .8s ease;}
-@keyframes fadeIn{from{opacity:0}to{opacity:1}}
-#attract.show{display:flex;}
-.att-logo{width:clamp(200px,55vw,320px);filter:drop-shadow(0 0 28px rgba(0,207,255,.8));animation:lglow 2s ease-in-out infinite;}
-.att-big{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,6vw,2.4rem);letter-spacing:.12em;text-align:center;background:linear-gradient(90deg,var(--b3),var(--b2),var(--b));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:ctap 1.5s ease-in-out infinite;}
-.att-sub{font-size:clamp(.65rem,2.5vw,.85rem);letter-spacing:.3em;color:rgba(0,207,255,.55);text-align:center;line-height:1.7;padding:0 20px;}
-.att-cta{font-family:'Bebas Neue',sans-serif;font-size:clamp(1rem,4vw,1.5rem);letter-spacing:.2em;color:var(--b2);text-align:center;animation:pulse-cta 1.2s ease-in-out infinite;}
-@keyframes pulse-cta{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.7}}
+.blbl{font-family:'Bebas Neue',sans-serif; font-size:0.8rem; letter-spacing:0.2em; color:var(--b); margin-top:8px;}
 </style>
 </head>
 <body>
 
-<div id="breath-border"></div>
 <canvas id="bgc"></canvas>
-<div class="scan"></div>
-<div class="cd tl"></div><div class="cd tr"></div>
-<div class="cd bl"></div><div class="cd br"></div>
-
-<button id="gearBtn" onclick="toggleMenu()">⚙</button>
-<div id="dropdown">
-  <div class="dd-sec">VOZ DEL SISTEMA</div>
-  <div class="dd-row sel" id="v-robot" onclick="setVoice('robot')"><div class="dd-dot"></div>🤖 Robótica · Grave</div>
-  <div class="dd-row" id="v-normal" onclick="setVoice('normal')"><div class="dd-dot"></div>💬 Natural · Fluida</div>
-  <div class="dd-div"></div>
-  <div class="dd-sec">SISTEMA</div>
-  <div class="dd-row" onclick="changeKey()"><div class="dd-dot" style="background:rgba(0,207,255,.18)"></div>🔑 Cambiar API Key</div>
-  <div class="dd-danger" onclick="clearSession()">⊗ &nbsp;Cerrar sesión</div>
-</div>
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <div class="ks-title"><h1>◈ SISTEMA ADUABOT ◈</h1><p>INGRESA TU CLAVE PARA CONTINUAR</p></div>
-    <div class="ks-box">
-      <div class="ks-lbl">CLAVE DE API GEMINI</div>
-      <input id="ksInput" type="password" placeholder="AIza..." autocomplete="off"/>
-    </div>
-    <div id="ksError"></div>
-    <button class="ks-btn" onclick="checkAndLaunch()">▶ &nbsp; INICIAR SISTEMA</button>
-  </div>
-</div>
-
-<div id="intro">
-  <div class="mq"><div class="mq-in"><span class="mq-item">◆ <b>ADUAMEX</b> ◆ AGENCIA ADUANAL TIJUANA</span></div></div>
-  <div class="intro-c">
-    <div class="intro-cta">HAZ UNA CONSULTA A ADUABOT</div>
-    <div class="ibar-w"><div class="ibar-bg"><div class="ibar-fill"></div></div><div class="ibar-txt">INICIALIZANDO...</div></div>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v2.5</h1>
+    <input id="ksInput" type="password" placeholder="INGRESA GEMINI API KEY" />
+    <button class="ks-btn" onclick="checkAndLaunch()">INICIAR SISTEMA</button>
   </div>
 </div>
 
 <div id="app">
-  <div class="app-mq"><div class="mq-in"><span class="mq-item">◆ <b>ADUAMEX</b> ◆ MANTÉN PRESIONADO PARA HABLAR</span></div></div>
-  <div class="header">
-    <div class="htag">◈ AduaBot · Agente de Ventas AduaMex ◈</div>
-    <div class="neon-rule"></div>
+  <div style="text-align:center;">
+    <h2 style="font-family:'Bebas Neue'; font-size:2rem; color:var(--b2);">ADUAMEX</h2>
+    <p style="font-size:0.6rem; letter-spacing:4px; opacity:0.6;">AGENCIA ADUANAL DIGITAL</p>
   </div>
 
-  <div class="cta-banner">
-    <div class="cta-main">¿DUDAS DE IMPORTACIÓN?</div>
-    <div class="cta-sub">◈ Mantén presionado el botón central para hablar ◈</div>
+  <div class="sp">
+    <div id="sTxt">MANTÉN EL BOTÓN PARA HABLAR</div>
   </div>
-
-  <div class="sp"><div id="sTxt">Sistema listo. Mantén el botón para consultar.</div></div>
-  <input type="hidden" id="apiKey"/>
-
-  <div class="qw">
-    <div class="qh"><div class="ql">CONSULTAS</div><div id="qCount">5 / 5</div></div>
-    <div class="qbg"><div id="qBar" style="width:100%"></div></div>
-  </div>
-
-  <div class="vw"><div id="viz"></div></div>
 
   <div class="cblock" id="cb">
     <div class="casino">
-      <div class="oring"></div>
-      <div class="bring" id="bRing"></div>
-      <div class="pring p1"></div>
-      <div class="pring p2"></div>
-      <button class="micbtn" id="mainMicBtn">
+      <div style="position:absolute; width:230px; height:230px; border:1px solid rgba(0,207,255,0.1); border-radius:50%;"></div>
+      <button class="micbtn" id="pttBtn">
         <div class="bbg"></div>
-        <div class="binner"></div>
-        <div class="bspin"></div>
-        <svg class="brobot" width="64" height="64" viewBox="0 0 72 72">
-            <rect x="14" y="18" width="44" height="30" rx="6" fill="#3de0ff" opacity=".9"/>
-            <rect x="23" y="27" width="8" height="4" rx="1" fill="#03080f" id="eyeL"/>
-            <rect x="41" y="27" width="8" height="4" rx="1" fill="#03080f" id="eyeR"/>
+        <svg width="60" height="60" viewBox="0 0 72 72" style="position:relative; z-index:3;">
+            <rect x="14" y="18" width="44" height="30" rx="6" fill="#00cfff" />
+            <rect x="22" y="26" width="8" height="6" rx="1" fill="#03080f" />
+            <rect x="42" y="26" width="8" height="6" rx="1" fill="#03080f" />
+            <rect x="26" y="38" width="20" height="4" rx="2" fill="#03080f" />
         </svg>
-        <span class="blbl" id="bLbl">PRESIONAR</span>
+        <span class="blbl" id="bLbl">MANTENER</span>
       </button>
     </div>
-    <div class="leds"><div class="ld"></div><div class="ld"></div><div class="ld"></div><div class="ld"></div><div class="ld"></div></div>
-    <div id="wBadge">MODO: PUSH-TO-TALK</div>
+    <p style="font-size:0.5rem; margin-top:15px; letter-spacing:2px; color:var(--b2);">PUSH TO TALK SYSTEM</p>
   </div>
 
-  <div class="bbar" id="bBar">
-    <div class="bbl"><div class="bdot2"></div><div id="bState">EN ESPERA</div></div>
-    <div class="bbr">ADUAMEX · TIJ · MX</div>
-  </div>
+  <div style="font-size:0.5rem; opacity:0.4; letter-spacing:2px;">TIJUANA · BAJA CALIFORNIA · MÉXICO</div>
 </div>
 
+<input type="hidden" id="apiKey" />
+
 <script>
-/* ELEMENTOS */
-const mainBtn = document.getElementById('mainMicBtn');
+const btn = document.getElementById('pttBtn');
 const sTxt = document.getElementById('sTxt');
 const bLbl = document.getElementById('bLbl');
+const cb = document.getElementById('cb');
+
 let rec = null;
-let appState = 'idle';
 let isHolding = false;
-let finalTranscript = "";
+let capturedText = "";
 
-/* INICIAR RECONOCIMIENTO (MODO PTT) */
-function startRecording() {
-    if(appState === 'thinking' || appState === 'speaking') return;
-    
+/* INICIALIZAR RECONOCIMIENTO */
+function setupRecognition() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SR) return alert("Usa Chrome para voz.");
-
-    isHolding = true;
-    finalTranscript = "";
-    setSt('listening', 'Escuchando... suelta al terminar.');
+    if (!SR) return null;
     
-    rec = new SR();
-    rec.lang = 'es-MX';
-    rec.continuous = true; // Permite hablar largo mientras se presiona
-    rec.interimResults = true;
+    const r = new SR();
+    r.lang = 'es-MX';
+    r.continuous = true;
+    r.interimResults = true;
 
-    rec.onresult = (e) => {
+    r.onresult = (e) => {
         let interim = "";
         for (let i = e.resultIndex; i < e.results.length; ++i) {
-            if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
+            if (e.results[i].isFinal) capturedText += e.results[i][0].transcript;
             else interim += e.results[i][0].transcript;
         }
-        sTxt.textContent = finalTranscript || interim || "Escuchando...";
+        // Mostramos lo que va entendiendo en tiempo real
+        sTxt.textContent = capturedText || interim || "...";
     };
-
-    rec.onerror = (e) => { if(isHolding) console.error("Error Mic:", e.error); };
-    
-    try { rec.start(); } catch(e) { console.error(e); }
+    return r;
 }
 
-function stopRecording() {
-    if(!isHolding) return;
+/* ACCIONES DE PULSACIÓN */
+function startAction(e) {
+    e.preventDefault();
+    if (isHolding) return;
+    
+    isHolding = true;
+    capturedText = "";
+    sTxt.textContent = "Te escucho, dime tu duda...";
+    cb.classList.add('s-listening');
+    bLbl.textContent = "SOLTAR";
+
+    rec = setupRecognition();
+    if (rec) rec.start();
+}
+
+function stopAction(e) {
+    e.preventDefault();
+    if (!isHolding) return;
+    
     isHolding = false;
-    
-    if(rec) {
-        rec.stop();
-        rec = null;
-    }
+    cb.classList.remove('s-listening');
+    bLbl.textContent = "MANTENER";
 
-    if(finalTranscript.trim().length > 2) {
-        askGemini(finalTranscript);
-    } else {
-        setSt('idle', 'Consulta muy corta. Intenta de nuevo.');
+    if (rec) {
+        rec.stop();
+        // Esperamos un momento corto para capturar el último interim
+        setTimeout(() => {
+            const query = sTxt.textContent.trim();
+            if (query.length > 3 && query !== "Te escucho, dime tu duda...") {
+                askGemini(query);
+            } else {
+                sTxt.textContent = "No detecté tu voz. Intenta de nuevo.";
+            }
+        }, 400);
     }
 }
 
-/* EVENTOS DE BOTÓN (MOUSE Y TOUCH) */
-mainBtn.addEventListener('mousedown', (e) => { e.preventDefault(); startRecording(); });
-mainBtn.addEventListener('mouseup', (e) => { e.preventDefault(); stopRecording(); });
-mainBtn.addEventListener('touchstart', (e) => { e.preventDefault(); startRecording(); });
-mainBtn.addEventListener('touchend', (e) => { e.preventDefault(); stopRecording(); });
+/* EVENTOS CROSS-PLATFORM */
+btn.addEventListener('mousedown', startAction);
+btn.addEventListener('mouseup', stopAction);
+btn.addEventListener('touchstart', startAction);
+btn.addEventListener('touchend', stopAction);
 
-/* RADAR & VISUALS */
+/* COMUNICACIÓN CON GEMINI */
+async function askGemini(q) {
+    const key = document.getElementById('apiKey').value;
+    if (!key) return;
+
+    cb.classList.add('s-thinking');
+    sTxt.textContent = "Consultando a la base de datos...";
+
+    try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{ text: `Eres AduaBot, experto en aduanas de AduaMex en Tijuana. Responde de forma técnica pero breve (máximo 2 oraciones) a: ${q}. Siempre invita a contactar a AduaMex para el trámite.` }]
+                }]
+            })
+        });
+
+        const data = await response.json();
+        cb.classList.remove('s-thinking');
+        
+        if(data.candidates && data.candidates[0]) {
+            const respuesta = data.candidates[0].content.parts[0].text;
+            sTxt.textContent = respuesta;
+            speak(respuesta);
+        } else {
+            sTxt.textContent = "Hubo un problema con la respuesta. Intenta de nuevo.";
+        }
+
+    } catch (err) {
+        sTxt.textContent = "Error de conexión con el sistema AduaMex.";
+        cb.classList.remove('s-thinking');
+    }
+}
+
+function speak(t) {
+    const msg = new SpeechSynthesisUtterance();
+    msg.text = t;
+    msg.lang = 'es-MX';
+    msg.rate = 1.0;
+    window.speechSynthesis.speak(msg);
+}
+
+/* ACCESO */
+function checkAndLaunch() {
+    const k = document.getElementById('ksInput').value.trim();
+    if (k.length < 15) return alert("API Key no válida.");
+    document.getElementById('apiKey').value = k;
+    document.getElementById('keyscreen').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('keyscreen').style.display = 'none';
+        document.getElementById('app').classList.add('visible');
+    }, 500);
+}
+
+/* FONDO RADAR ANIMADO */
 (function(){
   const c=document.getElementById('bgc'),ctx=c.getContext('2d');
-  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
-  resize();window.addEventListener('resize',resize);
-  let a=0,speed=0.009;
-  window.setRadarSpeed=s=>{speed=s;};
+  function res(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  res(); window.onresize=res;
+  let a=0;
   function draw(){
     ctx.clearRect(0,0,c.width,c.height);
-    const cx=c.width/2,cy=c.height/2,r=Math.min(c.width,c.height)*.42;
-    ctx.save();ctx.translate(cx,cy);ctx.rotate(a);
-    const sw=ctx.createLinearGradient(0,0,r,0);
-    sw.addColorStop(0,'rgba(0,207,255,0.1)');sw.addColorStop(1,'rgba(0,207,255,0)');
-    ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,r,-0.17,0);ctx.closePath();
-    ctx.fillStyle=sw;ctx.fill();ctx.restore();
-    a+=speed;requestAnimationFrame(draw);
+    ctx.strokeStyle='rgba(0,207,255,0.05)';
+    ctx.lineWidth=1;
+    // Círculos radar
+    const cx=c.width/2, cy=c.height/2;
+    for(let i=1; i<4; i++){
+        ctx.beginPath(); ctx.arc(cx,cy,i*100,0,Math.PI*2); ctx.stroke();
+    }
+    // Barrido
+    ctx.save(); ctx.translate(cx,cy); ctx.rotate(a);
+    ctx.beginPath(); ctx.moveTo(0,0); ctx.arc(0,0,400,-0.3,0);
+    const g=ctx.createLinearGradient(0,0,400,0);
+    g.addColorStop(0,'rgba(0,207,255,0.1)'); g.addColorStop(1,'transparent');
+    ctx.fillStyle=g; ctx.fill(); ctx.restore();
+    a+=0.015; requestAnimationFrame(draw);
   }
   draw();
 })();
-
-/* GEMINI INTEGRATION */
-async function askGemini(q){
-  const key=document.getElementById('apiKey').value;
-  if(!key) return setSt('idle', 'Falta API Key');
-  
-  setSt('thinking', 'Consultando a AduaMex...');
-  useQ();
-
-  try {
-    const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        system_instruction:{parts:[{text:"Eres AduaBot de AduaMex. Experto en aduanas Tijuana. Máximo 2 oraciones persuasivas. Siempre invita a contactar a AduaMex."}]},
-        contents:[{role:'user',parts:[{text:q}]}]
-      })
-    });
-    const d=await r.json();
-    const ans=d?.candidates?.[0]?.content?.parts?.[0]?.text || "Error de conexión.";
-    setSt('speaking', ans);
-    speak(ans, () => setSt('idle', 'Listo para otra consulta.'));
-  } catch(e) {
-    setSt('idle', 'Error de red.');
-  }
-}
-
-function speak(text, onEnd) {
-    const syn = window.speechSynthesis;
-    if(syn.speaking) syn.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.lang = 'es-MX';
-    u.onend = onEnd;
-    syn.speak(u);
-}
-
-function setSt(s, msg) {
-    appState = s;
-    if(msg) sTxt.textContent = msg;
-    const cb = document.getElementById('cb');
-    const bBar = document.getElementById('bBar');
-    ['s-idle','s-listening','s-thinking','s-speaking'].forEach(c => {
-        cb.classList.remove(c); bBar.classList.remove(c);
-    });
-    cb.classList.add('s-' + s);
-    bLbl.textContent = s === 'listening' ? 'SOLTAR' : 'MANTENER';
-    document.getElementById('bState').textContent = s.toUpperCase();
-}
-
-/* QUOTA & KEY MGMT (Simplificado para el ejemplo) */
-function useQ(){
-    let left = parseInt(document.getElementById('qCount').textContent);
-    if(left > 0) document.getElementById('qCount').textContent = (left - 1) + " / 5";
-    document.getElementById('qBar').style.width = ((left-1)*20) + "%";
-}
-
-function checkAndLaunch(){
-    const k = document.getElementById('ksInput').value;
-    if(k.length < 10) return;
-    document.getElementById('apiKey').value = k;
-    document.getElementById('keyscreen').style.display='none';
-    document.getElementById('app').classList.add('visible');
-}
-
-function toggleMenu(){ document.getElementById('dropdown').classList.toggle('open'); }
-function setVoice(v){ toggleMenu(); }
-function changeKey(){ location.reload(); }
-function clearSession(){ location.reload(); }
 </script>
 </body>
 </html>
