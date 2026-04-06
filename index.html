@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot Pro — AduaMex</title>
+<title>AduaBot 2.5 — AduaMex</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{ --b:#00cfff; --dark:#03080f; --white:#e0f8ff; --red:#ff2255; }
@@ -11,18 +11,16 @@
 body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
 #bgc{position:fixed; inset:0; z-index:0;}
 
-/* KEYSCREEN */
 #keyscreen{position:fixed; inset:0; z-index:300; background:#03080f; display:flex; align-items:center; justify-content:center; transition: 0.5s;}
 .ks-inner{display:flex; flex-direction:column; align-items:center; gap:15px; width:90%; max-width:400px;}
 #ksInput{width:100%; padding:15px; background:rgba(0,207,255,0.1); border:1px solid var(--b); color:white; text-align:center;}
 .ks-btn{width:100%; padding:15px; background:var(--b); color:#000; border:none; font-family:'Bebas Neue'; font-size:1.2rem; cursor:pointer;}
 
-/* APP */
 #app{position:relative; z-index:10; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:space-between; padding:20px; opacity:0; transition:0.8s;}
 #app.visible{opacity:1;}
 
 .sp{width:100%; border:1px solid rgba(0,207,255,0.3); background:rgba(0,207,255,0.05); padding:15px; min-height:100px; display:flex; align-items:center; justify-content:center; border-radius:8px; margin:20px 0;}
-#sTxt{font-size:1rem; color:var(--white); text-align:center; line-height:1.4; text-shadow: 0 0 5px rgba(0,207,255,0.5);}
+#sTxt{font-size:1rem; color:var(--white); text-align:center; line-height:1.4;}
 
 .micbtn{width:180px; height:180px; border-radius:50%; border:none; background:none; cursor:pointer; position:relative; display:flex; align-items:center; justify-content:center; outline:none;}
 .bbg{position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle, #001828, #03080f); border:2px solid var(--b); transition: 0.2s;}
@@ -40,16 +38,16 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
 
 <div id="keyscreen">
   <div class="ks-inner">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">SISTEMA ADUABOT</h1>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:4px;">ADUABOT v2.5 FLASH</h1>
     <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
-    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR</button>
+    <button class="ks-btn" onclick="checkAndLaunch()">CONECTAR SISTEMA</button>
   </div>
 </div>
 
 <div id="app">
   <div style="text-align:center;">
     <h2 style="font-family:'Bebas Neue'; font-size:2.5rem;">ADUAMEX</h2>
-    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">AGENTE ADUANAL IA</p>
+    <p style="font-size:0.7rem; letter-spacing:5px; color:var(--b);">MODELO 2.5 FLASH ACTIVADO</p>
   </div>
 
   <div class="sp">
@@ -69,7 +67,7 @@ body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif
     <div class="blbl" id="bLbl">MANTENER</div>
   </div>
 
-  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.1 · TIJUANA MX</p>
+  <p style="font-size:0.6rem; opacity:0.5; letter-spacing:2px;">SISTEMA PTT v3.3 · TIJUANA MX</p>
 </div>
 
 <input type="hidden" id="apiKey" />
@@ -84,7 +82,6 @@ let rec = null;
 let isHolding = false;
 let speechLog = "";
 
-/* MIC CONFIG */
 function initMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
@@ -125,7 +122,7 @@ function stop(e) {
         rec.stop();
         setTimeout(() => {
             const finalQ = sTxt.textContent.trim();
-            if(finalQ.length > 3) askGemini(finalQ);
+            if(finalQ.length > 2 && finalQ !== "Te escucho...") askGemini(finalQ);
             else sTxt.textContent = "MANTÉN PRESIONADO PARA CONSULTAR";
         }, 500);
     }
@@ -136,14 +133,13 @@ btn.addEventListener('mouseup', stop);
 btn.addEventListener('touchstart', start);
 btn.addEventListener('touchend', stop);
 
-/* LLAMADA CORREGIDA A GEMINI (v1beta) */
 async function askGemini(pregunta) {
     const key = document.getElementById('apiKey').value;
     cb.classList.add('s-thinking');
-    sTxt.textContent = "Procesando...";
+    sTxt.textContent = "Consultando a la aduana digital...";
 
-    // Ajuste de URL y modelo exacto para evitar el error de la captura
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`;
+    /* MODELO AJUSTADO SEGÚN TU CAPTURA DE PANTALLA */
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${key}`;
 
     try {
         const response = await fetch(URL, {
@@ -151,7 +147,7 @@ async function askGemini(pregunta) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 contents: [{
-                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Al final invita a visitarnos en AduaMex.` }]
+                    parts: [{ text: `Eres AduaBot de AduaMex en Tijuana. Responde brevemente a: ${pregunta}. Invita a contactar a AduaMex.` }]
                 }]
             })
         });
@@ -164,8 +160,8 @@ async function askGemini(pregunta) {
             sTxt.textContent = txt;
             speak(txt);
         } else {
-            console.error("Error data:", data);
-            sTxt.textContent = "Error: " + (data.error?.message || "Error en la API");
+            console.error("Error API:", data);
+            sTxt.textContent = "Error: " + (data.error?.message || "Revisa la API Key.");
         }
     } catch (err) {
         cb.classList.remove('s-thinking');
@@ -187,7 +183,6 @@ function checkAndLaunch() {
     document.getElementById('app').classList.add('visible');
 }
 
-/* BACKGROUND RADAR */
 (function(){
   const c=document.getElementById('bgc'),ctx=c.getContext('2d');
   function r(){c.width=window.innerWidth;c.height=window.innerHeight;}
