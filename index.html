@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>AduaBot OS — AduaMex</title>
+<title>AduaBot OS v5.2 — AduaMex UNEA</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -11,162 +11,66 @@
   --dark:#02060c; --white:#e0f8ff;
   --red:#ff2255; --green:#00ff99;
 }
-*{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
-body{
-    background:var(--dark);
-    min-height:100vh;
-    font-family:'Rajdhani',sans-serif;
-    color:var(--b);
-    overflow:hidden;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
+*{margin:0;padding:0;box-sizing:border-box; -webkit-tap-highlight-color:transparent; -webkit-touch-callout:none; -webkit-user-select:none; user-select:none;}
+body{background:var(--dark); min-height:100vh; font-family:'Rajdhani',sans-serif; color:var(--b); overflow:hidden;}
 
-/* MARCO CON RESPIRACIÓN (Neon Border) */
+/* MARCO RESPIRACIÓN */
 #frame-glow {
-    position: fixed;
-    inset: 0;
-    border: 4px solid var(--b);
-    box-shadow: inset 0 0 20px var(--b-glow), 0 0 20px var(--b-glow);
-    z-index: 100;
-    pointer-events: none;
+    position: fixed; inset: 0;
+    border: 3px solid var(--b);
+    box-shadow: inset 0 0 15px var(--b-glow);
+    z-index: 100; pointer-events: none;
     animation: breathe 4s ease-in-out infinite;
 }
 @keyframes breathe {
-    0%, 100% { opacity: 0.3; border-width: 2px; }
-    50% { opacity: 0.8; border-width: 5px; box-shadow: inset 0 0 40px var(--b), 0 0 30px var(--b); }
+    0%, 100% { opacity: 0.3; box-shadow: inset 0 0 10px var(--b-glow); }
+    50% { opacity: 0.9; box-shadow: inset 0 0 40px var(--b), 0 0 20px var(--b); }
 }
 
-/* BACKGROUND GRID */
-#bg-grid {
-    position: fixed;
-    inset: 0;
-    background-image: 
-        linear-gradient(rgba(0, 207, 255, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 207, 255, 0.05) 1px, transparent 1px);
-    background-size: 40px 40px;
-    z-index: 0;
-}
+#bg-grid { position: fixed; inset: 0; background-image: linear-gradient(rgba(0, 207, 255, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 207, 255, 0.05) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; }
 
-/* CONTENEDOR PRINCIPAL */
 #os-shell {
-    position: relative;
-    z-index: 10;
-    width: 95vw;
-    height: 95vh;
-    border: 1px solid rgba(0, 207, 255, 0.2);
-    background: rgba(2, 6, 12, 0.8);
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    backdrop-filter: blur(10px);
+    position: relative; z-index: 10; width: 100vw; height: 100vh;
+    background: rgba(2, 6, 12, 0.85); display: flex; flex-direction: column; padding: 25px; backdrop-filter: blur(5px);
 }
 
-/* HEADER CON LOGOTIPO */
-.header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--b);
-    padding-bottom: 10px;
-    margin-bottom: 20px;
-}
-.brand h1 { font-family: 'Bebas Neue'; font-size: 2.5rem; letter-spacing: 4px; line-height: 1; }
-.brand p { font-size: 0.7rem; letter-spacing: 5px; color: var(--white); opacity: 0.6; }
+.header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--b); padding-bottom: 15px; }
+.brand h1 { font-family: 'Bebas Neue'; font-size: 3rem; letter-spacing: 5px; color: var(--b); text-shadow: 0 0 10px var(--b); }
+.brand p { font-size: 0.8rem; letter-spacing: 4px; color: var(--white); opacity: 0.7; }
 
-/* BARRA DE TOKENS (SISTEMA DE ENERGÍA) */
-.token-system { width: 250px; }
-.token-label { display: flex; justify-content: space-between; font-family: 'Bebas Neue'; font-size: 0.8rem; margin-bottom: 5px; }
-.token-bar-bg { height: 10px; background: rgba(0,207,255,0.1); border: 1px solid var(--b); position: relative; }
-#token-fill { height: 100%; width: 100%; background: var(--b); transition: width 0.5s ease; box-shadow: 0 0 10px var(--b); }
+/* ENERGÍA / TOKENS */
+.token-system { width: 200px; text-align: right; }
+.token-label { font-family: 'Bebas Neue'; font-size: 0.7rem; margin-bottom: 5px; display: block; }
+.token-bar-bg { height: 8px; background: rgba(0,207,255,0.1); border: 1px solid var(--b); overflow: hidden; }
+#token-fill { height: 100%; width: 100%; background: var(--b); transition: 0.4s; box-shadow: 0 0 10px var(--b); }
 
-/* PANTALLA CENTRAL */
-.main-display {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-}
+.main-display { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 40px; }
 
 #status-msg {
-    font-size: 1.4rem;
-    text-align: center;
-    max-width: 600px;
-    min-height: 3em;
-    color: var(--white);
-    text-shadow: 0 0 10px var(--b-glow);
+    font-size: 1.2rem; text-align: center; max-width: 80%; color: var(--white);
+    min-height: 4em; padding: 20px; border: 1px solid rgba(0,207,255,0.1); background: rgba(0,0,0,0.3);
 }
 
-/* BOTÓN ROBOT (CENTRO) */
-.robot-trigger {
-    position: relative;
-    width: 220px;
-    height: 220px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-
-.outer-ring {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border: 2px dashed var(--b);
-    border-radius: 50%;
-    animation: spin 10s linear infinite;
-}
+/* ROBOT PTT */
+.robot-trigger { position: relative; width: 200px; height: 200px; cursor: pointer; }
+.outer-ring { position: absolute; inset: -10px; border: 2px dashed var(--b); border-radius: 50%; animation: spin 12s linear infinite; opacity: 0.5; }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .mic-btn {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
+    width: 100%; height: 100%; border-radius: 50%;
     background: radial-gradient(circle, #0a1a2f, #02060c);
-    border: 3px solid var(--b);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    z-index: 5;
-    transition: all 0.3s;
+    border: 3px solid var(--b); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 5;
 }
 
-/* ESTADOS DEL BOTÓN */
-.s-listening .mic-btn { border-color: var(--red); box-shadow: 0 0 40px var(--red); }
-.s-thinking .mic-btn { border-color: var(--white); animation: blink 0.5s infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+.s-listening .mic-btn { border-color: var(--red); box-shadow: 0 0 50px var(--red); }
+.s-thinking .mic-btn { border-color: var(--white); animation: pulse-white 0.8s infinite; }
+@keyframes pulse-white { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-/* MENÚ DE VOCES */
-.voice-menu {
-    display: flex;
-    gap: 10px;
-    margin-top: 20px;
-}
-.voice-btn {
-    padding: 8px 15px;
-    border: 1px solid var(--b);
-    background: transparent;
-    color: var(--b);
-    font-family: 'Bebas Neue';
-    cursor: pointer;
-    transition: 0.3s;
-}
-.voice-btn.active { background: var(--b); color: var(--dark); }
+#keyscreen { position: fixed; inset: 0; z-index: 500; background: var(--dark); display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 20px; }
+#ksInput { padding: 15px; width: 300px; background: #0a1a2f; border: 1px solid var(--b); color: white; text-align: center; font-family: monospace; user-select: text; -webkit-user-select: text;}
+.ks-btn { padding: 15px 30px; background: var(--b); color: #000; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; letter-spacing: 2px; }
 
-/* KEYSCREEN */
-#keyscreen {
-    position: fixed; inset: 0; z-index: 500;
-    background: var(--dark);
-    display: flex; flex-direction: column; justify-content: center; align-items: center;
-    gap: 20px;
-}
-#ksInput { padding: 15px; width: 300px; background: #0a1a2f; border: 1px solid var(--b); color: white; text-align: center; }
-
-/* OCULTAR ELEMENTOS */
+.footer { text-align: center; font-size: 0.6rem; opacity: 0.4; letter-spacing: 4px; padding-top: 10px; }
 .hidden { display: none !important; }
 </style>
 </head>
@@ -176,99 +80,78 @@ body{
 <div id="bg-grid"></div>
 
 <div id="keyscreen">
-    <h1 style="font-family:'Bebas Neue'; letter-spacing:8px;">SISTEMA ADUABOT</h1>
-    <input id="ksInput" type="password" placeholder="API KEY REQUERIDA" />
-    <button class="voice-btn" onclick="unlock()">INICIALIZAR NÚCLEO</button>
+    <h1 style="font-family:'Bebas Neue'; letter-spacing:10px; font-size: 3rem;">ADUABOT 5.2</h1>
+    <p style="color: var(--white); opacity: 0.5; font-size: 0.7rem;">UNEA - FERIA DE COMERCIO EXTERIOR</p>
+    <input id="ksInput" type="password" placeholder="INGRESA TU API KEY" />
+    <button class="ks-btn" onclick="unlock()">INICIALIZAR NÚCLEO</button>
 </div>
 
 <div id="os-shell" class="hidden">
     <div class="header">
         <div class="brand">
             <h1>ADUAMEX</h1>
-            <p>AGENCIA ADUANAL DIGITAL — TIJUANA</p>
+            <p>AGENTE DE VENTAS EXPERTO // ASESORÍA GLOBAL</p>
         </div>
-        
         <div class="token-system">
-            <div class="token-label">
-                <span>NIVEL DE ENERGÍA (TOKENS)</span>
-                <span id="token-pct">100%</span>
-            </div>
-            <div class="token-bar-bg">
-                <div id="token-fill"></div>
-            </div>
+            <span class="token-label">CORE ENERGY</span>
+            <div class="token-bar-bg"><div id="token-fill"></div></div>
+            <span id="token-pct" style="font-size:0.6rem; letter-spacing:2px;">100%</span>
         </div>
     </div>
 
     <div class="main-display">
-        <div id="status-msg">SISTEMA EN ESPERA... MANTÉN PRESIONADO EL NÚCLEO PARA CONSULTAR</div>
+        <div id="status-msg">SISTEMA LISTO. MANTÉN PRESIONADO PARA HABLAR CON EL ASESOR.</div>
 
         <div class="robot-trigger" id="main-trigger">
             <div class="outer-ring"></div>
             <div class="mic-btn">
-                <svg width="60" height="60" viewBox="0 0 72 72">
-                    <path fill="currentColor" d="M36 44c5.52 0 10-4.48 10-10V18c0-5.52-4.48-10-10-10S26 12.48 26 18v16c0 5.52 4.48 10 10 10z"/>
-                    <path fill="currentColor" d="M54 34c0 9.94-8.06 18-18 18s-18-8.06-18-18H14c0 11.05 8.95 20 20 20v8h4v-8c11.05 0 20-8.95 20-20h-4z"/>
+                <svg width="70" height="70" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                    <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                 </svg>
-                <span style="font-family:'Bebas Neue'; font-size:1.2rem; margin-top:10px;" id="btn-label">CONECTAR</span>
+                <span style="font-family:'Bebas Neue'; font-size:1.4rem; margin-top:10px;" id="btn-label">CONECTAR</span>
             </div>
         </div>
-
-        <div class="voice-menu">
-            <button class="voice-btn active" onclick="setVoice('es-MX-Standard-A', this)">VOZ ALFA</button>
-            <button class="voice-btn" onclick="setVoice('es-MX-Standard-B', this)">VOZ BETA</button>
-            <button class="voice-btn" onclick="setVoice('es-MX-Standard-C', this)">VOZ GAMA</button>
-        </div>
+        
+        <p style="font-size: 0.8rem; color: var(--white); opacity: 0.6;">ASESORÍA EN IMPORTACIÓN, EXPORTACIÓN Y LOGÍSTICA</p>
     </div>
 
-    <div style="text-align:center; font-size:0.6rem; opacity:0.4; letter-spacing:3px;">
-        ADUABOT OS v5.0 // ENCRYPTION ENABLED // GEMINI 2.5 FLASH CORE
+    <div class="footer">
+        ADUAMEX OS v5.2 // UNEA CAMPUS // MODO: HOMBRE ROBÓTICO ACTIVO
     </div>
 </div>
 
 <script>
 let API_KEY = "";
 let currentTokens = 100;
-let selectedVoice = 'es-MX-Standard-A';
 let isHolding = false;
 let rec = null;
 let speechLog = "";
 
-// UNLOCK SYSTEM
+// DESBLOQUEO
 function unlock() {
     const val = document.getElementById('ksInput').value;
-    if(val.length < 10) return alert("Key Inválida");
+    if(val.length < 15) return alert("API Key no válida");
     API_KEY = val;
     document.getElementById('keyscreen').classList.add('hidden');
     document.getElementById('os-shell').classList.remove('hidden');
-    document.getElementById('app').classList.add('visible');
 }
 
-// TOKEN SYSTEM (Simulado basado en longitud de consulta/respuesta)
-function updateTokens(usage) {
+// BARRA DE ENERGÍA (TOKENS)
+function updateEnergy(usage) {
     currentTokens -= usage;
     if(currentTokens < 0) currentTokens = 0;
-    
     const fill = document.getElementById('token-fill');
-    const pct = document.getElementById('token-pct');
-    
     fill.style.width = currentTokens + "%";
-    pct.textContent = Math.round(currentTokens) + "%";
-
-    if(currentTokens < 20) fill.style.background = "#ff2255";
+    document.getElementById('token-pct').textContent = Math.round(currentTokens) + "%";
     
-    // Recarga automática después de 30 segundos si está bajo
     if(currentTokens <= 0) {
-        document.getElementById('status-msg').textContent = "SISTEMA AGOTADO. RECARGANDO ENERGÍA...";
-        setTimeout(() => {
-            currentTokens = 100;
-            updateTokens(0);
-            fill.style.background = "#00cfff";
-            document.getElementById('status-msg').textContent = "SISTEMA RECARGADO. LISTO.";
-        }, 15000);
+        document.getElementById('status-msg').textContent = "RECARGANDO NÚCLEO... ESPERA 10 SEGUNDOS.";
+        setTimeout(() => { currentTokens = 100; updateEnergy(0); document.getElementById('status-msg').textContent = "NÚCLEO RECARGADO."; }, 10000);
     }
 }
 
-// VOZ Y MICRÓFONO
+/* --- RECONOCIMIENTO --- */
 function initMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if (!SR) return null;
@@ -288,15 +171,15 @@ function initMic() {
 }
 
 const trigger = document.getElementById('main-trigger');
-const shell = document.getElementById('os-shell');
+const cb = document.getElementById('os-shell');
 
 function startListen(e) {
     e.preventDefault();
     if(isHolding || currentTokens <= 0) return;
     isHolding = true;
     speechLog = "";
-    shell.classList.add('s-listening');
-    document.getElementById('btn-label').textContent = "RECIBIENDO";
+    cb.classList.add('s-listening');
+    document.getElementById('btn-label').textContent = "ESCUCHANDO";
     rec = initMic();
     if(rec) rec.start();
 }
@@ -305,13 +188,13 @@ function stopListen(e) {
     e.preventDefault();
     if(!isHolding) return;
     isHolding = false;
-    shell.classList.remove('s-listening');
-    document.getElementById('btn-label').textContent = "PROCESANDO";
+    cb.classList.remove('s-listening');
+    document.getElementById('btn-label').textContent = "ANALIZANDO";
     if(rec) {
         rec.stop();
         setTimeout(() => {
             const query = document.getElementById('status-msg').textContent;
-            if(query.length > 2) callGemini(query);
+            if(query.length > 2 && query !== "RECARGANDO NÚCLEO...") callGemini(query);
         }, 500);
     }
 }
@@ -321,9 +204,13 @@ trigger.addEventListener('mouseup', stopListen);
 trigger.addEventListener('touchstart', startListen);
 trigger.addEventListener('touchend', stopListen);
 
+/* --- GEMINI LLAMADA --- */
 async function callGemini(q) {
-    shell.classList.add('s-thinking');
-    updateTokens(5); // Consumo por consulta
+    cb.classList.add('s-thinking');
+    updateEnergy(5);
+
+    // Ajustamos el prompt para que el robot sea un vendedor experto
+    const promptRefinado = `Eres AduaBot, el mejor asesor de ventas de AduaMex. Estás en una feria en la universidad UNEA. Tu objetivo es vender servicios de agencia aduanal, IMMEX, y logística. Responde de forma experta, profesional y breve (máximo 30 palabras) a esta consulta: ${q}. Siempre termina invitando a pasar al stand de AduaMex para una cotización.`;
 
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
 
@@ -331,38 +218,53 @@ async function callGemini(q) {
         const response = await fetch(URL, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: `Eres AduaBot de AduaMex. Responde brevemente: ${q}` }] }]
-            })
+            body: JSON.stringify({ contents: [{ parts: [{ text: promptRefinado }] }] })
         });
         const data = await response.json();
-        shell.classList.remove('s-thinking');
+        cb.classList.remove('s-thinking');
         document.getElementById('btn-label').textContent = "CONECTAR";
 
         if(data.candidates) {
             const txt = data.candidates[0].content.parts[0].text;
             document.getElementById('status-msg').textContent = txt;
-            updateTokens(txt.length / 20); // Consumo proporcional a la respuesta
+            updateEnergy(txt.length / 25);
             speak(txt);
         }
     } catch (e) {
-        shell.classList.remove('s-thinking');
-        document.getElementById('status-msg').textContent = "ERROR DE ENLACE.";
+        cb.classList.remove('s-thinking');
+        document.getElementById('status-msg').textContent = "ERROR EN EL ENLACE SATELITAL.";
     }
 }
 
+/* --- VOZ MASCULINA ROBÓTICA (LA SOLUCIÓN) --- */
 function speak(t) {
-    const utterance = new SpeechSynthesisUtterance(t);
-    utterance.lang = 'es-MX';
-    // Aquí podrías mapear las voces del sistema si el navegador las soporta
-    window.speechSynthesis.speak(utterance);
+    const syn = window.speechSynthesis;
+    if(syn.speaking) syn.cancel();
+    
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = 'es-MX';
+    
+    // Configuración para que suene ROBÓTICO Y HOMBRE
+    u.pitch = 0.5; // Más bajo = más grave/hombre
+    u.rate = 0.9;  // Un poco más lento para que se entienda la autoridad
+    u.volume = 1;
+
+    // Buscamos voces masculinas en el sistema
+    const voices = syn.getVoices();
+    // Prioridad a voces con nombre de hombre o españolas
+    const maleVoice = voices.find(v => 
+        (v.lang.includes('es') && (v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.includes('Diego'))) ||
+        (v.lang.includes('es') && v.name.includes('Google')) || 
+        (v.name.toLowerCase().includes('male'))
+    );
+
+    if(maleVoice) u.voice = maleVoice;
+    
+    syn.speak(u);
 }
 
-function setVoice(v, btn) {
-    selectedVoice = v;
-    document.querySelectorAll('.voice-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-}
+// Necesario para cargar voces en algunos navegadores
+window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 </script>
 </body>
 </html>
