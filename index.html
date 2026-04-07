@@ -1,133 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <link rel="icon" type="image/png" href="logo-aduamex.png">
+    <link rel="apple-touch-icon" href="logo-aduamex.png">
+    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="AduaBot OS">
+    <meta name="mobile-web-app-capable" content="yes">
 
-<title>ADUABOT OS</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <title>ADUABOT OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-<style>
-:root{
-  --b:#00cfff; --b-glow:rgba(0,207,255,0.4);
-  --dark:#010409; --white:#e0f8ff;
-  --red:#ff2255;
-}
-
-/* BLOQUEO DE SCROLL Y GESTOS DE PÁGINA WEB */
-html, body { 
-    overflow: hidden; 
-    overscroll-behavior: none; 
-    height: 100%; 
-    width: 100%;
-    position: fixed; /* Evita el rebote en iOS */
-}
-
-*{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-
-body{
-    background: var(--dark);
-    font-family: 'Rajdhani', sans-serif;
-    color: var(--b);
-}
-
-/* INTERFAZ DE SISTEMA OPERATIVO (PANTALLA CARGA) */
-#boot-sequence {
-    position: fixed; inset: 0; z-index: 1000;
-    background: #000; color: var(--b);
-    font-family: 'Share Tech Mono', monospace;
-    padding: 20px; font-size: 0.8rem;
-    display: flex; flex-direction: column;
-}
-
-/* MARCO TÉCNICO (RESPIRACIÓN) */
-#frame-os {
-    position: fixed; inset: 0;
-    border: 2px solid var(--b);
-    z-index: 100; pointer-events: none;
-    animation: breathe 3s ease-in-out infinite;
-}
-@keyframes breathe {
-    0%, 100% { opacity: 0.4; box-shadow: inset 0 0 15px var(--b-glow); }
-    50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 10px var(--b); }
-}
-
-/* DASHBOARD PRINCIPAL */
-#app-shell {
-    position: relative; z-index: 10;
-    height: 100vh; width: 100vw;
-    display: flex; flex-direction: column;
-    padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-    background: radial-gradient(circle at center, #0a1a2f 0%, #010409 100%);
-}
-
-.top-bar {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 0; border-bottom: 1px solid rgba(0,207,255,0.3);
-}
-
-.status-bits { font-family: 'Share Tech Mono'; font-size: 0.6rem; letter-spacing: 1px; }
-
-/* MONITOR DE DATOS */
-.monitor {
-    flex-grow: 1; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; gap: 30px;
-}
-
-#output-console {
-    width: 100%; min-height: 120px;
-    background: rgba(0, 207, 255, 0.03);
-    border: 1px solid rgba(0, 207, 255, 0.1);
-    padding: 15px; border-radius: 4px;
-    text-align: center; font-size: 1.1rem; color: var(--white);
-    text-shadow: 0 0 5px var(--b-glow);
-}
-
-/* NÚCLEO DE PODER (BOTÓN PTT) */
-.core-engine {
-    position: relative; width: 220px; height: 220px;
-    display: flex; align-items: center; justify-content: center;
-}
-
-.core-ring {
-    position: absolute; inset: 0;
-    border: 2px solid var(--b); border-radius: 50%;
-    border-top-color: transparent; animation: spin 4s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-.main-btn {
-    width: 170px; height: 170px; border-radius: 50%;
-    background: #000; border: 4px solid var(--b);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    box-shadow: 0 0 30px var(--b-glow); transition: 0.3s;
-}
-
-.s-listening .main-btn { border-color: var(--red); box-shadow: 0 0 50px var(--red); transform: scale(0.95); }
-.s-thinking .main-btn { border-color: #fff; animation: pulse 1s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-
-/* BARRA DE ENERGÍA */
-.power-level { width: 100%; max-width: 300px; }
-.bar-wrap { height: 6px; background: rgba(255,255,255,0.1); margin-top: 5px; position: relative; }
-#bar-fill { height: 100%; width: 100%; background: var(--b); box-shadow: 0 0 10px var(--b); transition: 0.3s; }
-
-/* KEYSCREEN */
-#keyscreen {
-    position: fixed; inset: 0; z-index: 2000; background: #000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
-}
-.ks-input {
-    background: transparent; border: 1px solid var(--b); padding: 15px;
-    color: white; width: 280px; text-align: center; font-family: 'Share Tech Mono';
-}
-.ks-btn { background: var(--b); color: #000; padding: 15px 40px; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; }
-
-.hidden { display: none !important; }
-</style>
+    <style>
+        /* (Mantenemos todos tus estilos anteriores de la v6.0) */
+        :root{ --b:#00cfff; --b-glow:rgba(0,207,255,0.4); --dark:#010409; --white:#e0f8ff; }
+        html, body { overflow: hidden; overscroll-behavior: none; height: 100%; width: 100%; position: fixed; background: #000; }
+        *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+        body{ background: var(--dark); font-family: 'Rajdhani', sans-serif; color: var(--b); }
+        #frame-os { position: fixed; inset: 0; border: 2px solid var(--b); z-index: 100; pointer-events: none; animation: breathe 3s ease-in-out infinite; }
+        @keyframes breathe { 0%, 100% { opacity: 0.4; box-shadow: inset 0 0 15px var(--b-glow); } 50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 10px var(--b); } }
+        #app-shell { position: relative; z-index: 10; height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px; background: radial-gradient(circle at center, #0a1a2f 0%, #010409 100%); }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(0,207,255,0.3); }
+        .status-bits { font-family: 'Share Tech Mono'; font-size: 0.6rem; letter-spacing: 1px; }
+        .monitor { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; }
+        #output-console { width: 100%; min-height: 120px; background: rgba(0, 207, 255, 0.03); border: 1px solid rgba(0, 207, 255, 0.1); padding: 15px; border-radius: 4px; text-align: center; font-size: 1.1rem; color: var(--white); text-shadow: 0 0 5px var(--b-glow); }
+        .core-engine { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
+        .core-ring { position: absolute; inset: 0; border: 2px solid var(--b); border-radius: 50%; border-top-color: transparent; animation: spin 4s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .main-btn { width: 170px; height: 170px; border-radius: 50%; background: #000; border: 4px solid var(--b); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 30px var(--b-glow); transition: 0.3s; }
+        .s-listening .main-btn { border-color: #ff2255; box-shadow: 0 0 50px #ff2255; transform: scale(0.95); }
+        .s-thinking .main-btn { border-color: #fff; animation: pulse 1s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        #keyscreen { position: fixed; inset: 0; z-index: 2000; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+        .ks-input { background: transparent; border: 1px solid var(--b); padding: 15px; color: white; width: 280px; text-align: center; font-family: 'Share Tech Mono'; }
+        .ks-btn { background: var(--b); color: #000; padding: 15px 40px; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body>
 
@@ -135,8 +47,8 @@ body{
 
 <div id="keyscreen">
     <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="font-family:'Bebas Neue'; font-size: 3rem; letter-spacing: 5px;">ADUABOT v6.0</h1>
-        <p style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 3px;">UNEA CAMPUS - TRÁFICO Y LOGÍSTICA</p>
+        <h1 style="font-family:'Bebas Neue'; font-size: 3rem; letter-spacing: 5px;">ADUABOT v6.1</h1>
+        <p style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 3px;">UNEA CAMPUS - ADUAMEX OS</p>
     </div>
     <input type="password" id="apiKey" class="ks-input" placeholder="ACCESS KEY">
     <button class="ks-btn" onclick="initSystem()">CONECTAR NÚCLEO</button>
@@ -148,15 +60,14 @@ body{
             <h2 style="font-family:'Bebas Neue'; font-size: 1.8rem; line-height: 1;">ADUAMEX</h2>
             <div class="status-bits">STATUS: ONLINE // AI: ACTIVE</div>
         </div>
-        <div class="token-system" style="text-align: right;">
+        <div style="text-align: right;">
             <div class="status-bits">CORE ENERGY</div>
-            <div class="bar-wrap" style="width: 120px;"><div id="bar-fill"></div></div>
+            <div style="height: 6px; width: 120px; background: rgba(255,255,255,0.1); margin-top: 5px;"><div id="bar-fill" style="height: 100%; width: 100%; background: var(--b); transition: 0.3s;"></div></div>
         </div>
     </div>
 
     <div class="monitor">
-        <div id="output-console">SISTEMA INICIALIZADO. ESPERANDO COMANDOS DE VOZ...</div>
-
+        <div id="output-console">SISTEMA LISTO. ESPERANDO COMANDOS...</div>
         <div class="core-engine" id="ptt-trigger">
             <div class="core-ring"></div>
             <div class="main-btn">
@@ -167,147 +78,87 @@ body{
                 <span id="btn-text" style="font-family:'Bebas Neue'; font-size: 1.1rem; margin-top: 10px;">HABLAR</span>
             </div>
         </div>
-
-        <div class="power-level" style="text-align: center;">
-            <p class="status-bits" style="margin-bottom: 10px; opacity: 0.6;">ASESORÍA EXPERTA EN COMERCIO EXTERIOR</p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%;"></div>
-                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.3;"></div>
-                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.1;"></div>
-            </div>
-        </div>
-    </div>
-
-    <div style="padding: 10px; text-align: center; border-top: 1px solid rgba(0,207,255,0.1);">
-        <p class="status-bits" style="opacity: 0.3;">PROPERTY OF ADUAMEX S.A. DE C.V.</p>
+        <p class="status-bits" style="opacity: 0.6;">ASESORÍA EXPERTA EN COMERCIO EXTERIOR</p>
     </div>
 </div>
 
 <script>
-let KEY = "";
-let energy = 100;
-let isBusy = false;
-let recognition = null;
-let transcript = "";
+    let KEY = ""; let energy = 100; let isBusy = false; let recognition = null; let transcript = "";
 
-// INICIO DE SISTEMA
-function initSystem() {
-    const input = document.getElementById('apiKey').value;
-    if(input.length < 10) return alert("LLAVE DENEGADA");
-    KEY = input;
-    document.getElementById('keyscreen').classList.add('hidden');
-    document.getElementById('app-shell').classList.remove('hidden');
-    
-    // Forzar modo pantalla completa si es posible
-    if (document.documentElement.requestFullscreen) {
-        document.documentElement.requestFullscreen();
+    function initSystem() {
+        KEY = document.getElementById('apiKey').value;
+        if(KEY.length < 10) return alert("LLAVE DENEGADA");
+        document.getElementById('keyscreen').classList.add('hidden');
+        document.getElementById('app-shell').classList.remove('hidden');
     }
-}
 
-// CONTROL DE ENERGÍA
-function consumeEnergy(amt) {
-    energy -= amt;
-    if(energy < 0) energy = 0;
-    document.getElementById('bar-fill').style.width = energy + "%";
-    if(energy <= 0) {
-        document.getElementById('output-console').textContent = "ERROR: ENERGÍA INSUFICIENTE. RECARGANDO...";
-        setTimeout(() => { energy = 100; consumeEnergy(0); }, 5000);
+    function setupSpeech() {
+        const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if(!Speech) return null;
+        const r = new Speech(); r.lang = 'es-MX'; r.continuous = true; r.interimResults = true;
+        r.onresult = (e) => {
+            let interim = "";
+            for (let i = e.resultIndex; i < e.results.length; ++i) {
+                if (e.results[i].isFinal) transcript += e.results[i][0].transcript;
+                else interim += e.results[i][0].transcript;
+            }
+            document.getElementById('output-console').textContent = transcript || interim;
+        };
+        return r;
     }
-}
 
-// LÓGICA DE VOZ (PTT)
-function setupSpeech() {
-    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!Speech) return null;
-    const r = new Speech();
-    r.lang = 'es-MX';
-    r.continuous = true;
-    r.interimResults = true;
-    r.onresult = (e) => {
-        let interim = "";
-        for (let i = e.resultIndex; i < e.results.length; ++i) {
-            if (e.results[i].isFinal) transcript += e.results[i][0].transcript;
-            else interim += e.results[i][0].transcript;
+    const trigger = document.getElementById('ptt-trigger');
+    const shell = document.getElementById('app-shell');
+
+    function startPTT(e) {
+        e.preventDefault(); if(isBusy) return; isBusy = true; transcript = "";
+        shell.classList.add('s-listening');
+        recognition = setupSpeech(); if(recognition) recognition.start();
+    }
+
+    function stopPTT(e) {
+        e.preventDefault(); if(!isBusy) return; isBusy = false;
+        shell.classList.remove('s-listening');
+        if(recognition) {
+            recognition.stop();
+            setTimeout(() => {
+                const q = document.getElementById('output-console').textContent;
+                if(q.length > 2) processQuery(q);
+            }, 500);
         }
-        document.getElementById('output-console').textContent = transcript || interim;
-    };
-    return r;
-}
-
-const trigger = document.getElementById('ptt-trigger');
-const shell = document.getElementById('app-shell');
-
-function startPTT(e) {
-    e.preventDefault();
-    if(isBusy || energy <= 0) return;
-    isBusy = true;
-    transcript = "";
-    shell.classList.add('s-listening');
-    document.getElementById('btn-text').textContent = "ESCUCHANDO";
-    recognition = setupSpeech();
-    if(recognition) recognition.start();
-}
-
-function stopPTT(e) {
-    e.preventDefault();
-    if(!isBusy) return;
-    isBusy = false;
-    shell.classList.remove('s-listening');
-    document.getElementById('btn-text').textContent = "HABLAR";
-    if(recognition) {
-        recognition.stop();
-        setTimeout(() => {
-            const finalQ = document.getElementById('output-console').textContent;
-            if(finalQ.length > 2) processQuery(finalQ);
-        }, 500);
     }
-}
 
-trigger.addEventListener('mousedown', startPTT);
-trigger.addEventListener('mouseup', stopPTT);
-trigger.addEventListener('touchstart', startPTT);
-trigger.addEventListener('touchend', stopPTT);
+    trigger.addEventListener('mousedown', startPTT);
+    trigger.addEventListener('mouseup', stopPTT);
+    trigger.addEventListener('touchstart', startPTT);
+    trigger.addEventListener('touchend', stopPTT);
 
-async function processQuery(q) {
-    shell.classList.add('s-thinking');
-    consumeEnergy(5);
-    
-    const context = `Eres AduaBot, el experto de AduaMex en la feria UNEA. Vende los servicios de AduaMex. Sé profesional, varonil y directo. Máximo 25 palabras. Al final di: "Visítanos en el stand". Pregunta: ${q}`;
-    
-    try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${KEY}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ contents: [{ parts: [{ text: context }] }] })
-        });
-        const data = await res.json();
-        shell.classList.remove('s-thinking');
-        
-        if(data.candidates) {
-            const reply = data.candidates[0].content.parts[0].text;
-            document.getElementById('output-console').textContent = reply;
-            speak(reply);
-        }
-    } catch (err) {
-        shell.classList.remove('s-thinking');
-        document.getElementById('output-console').textContent = "ERROR DE CONEXIÓN CON EL NÚCLEO.";
+    async function processQuery(q) {
+        shell.classList.add('s-thinking');
+        try {
+            const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${KEY}`, {
+                method: 'POST', headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Eres AduaBot de AduaMex. Responde breve (20 palabras) como experto: ${q}` }] }] })
+            });
+            const data = await res.json();
+            shell.classList.remove('s-thinking');
+            if(data.candidates) {
+                const reply = data.candidates[0].content.parts[0].text;
+                document.getElementById('output-console').textContent = reply;
+                speak(reply);
+            }
+        } catch (err) { shell.classList.remove('s-thinking'); }
     }
-}
 
-function speak(t) {
-    const synth = window.speechSynthesis;
-    const u = new SpeechSynthesisUtterance(t);
-    u.lang = 'es-MX';
-    u.pitch = 0.5; // Voz de hombre grave
-    u.rate = 0.9;
-    
-    const voices = synth.getVoices();
-    const male = voices.find(v => v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.toLowerCase().includes('male'));
-    if(male) u.voice = male;
-    
-    synth.speak(u);
-}
+    function speak(t) {
+        const synth = window.speechSynthesis;
+        const u = new SpeechSynthesisUtterance(t);
+        u.lang = 'es-MX'; u.pitch = 0.5; u.rate = 0.9;
+        const voices = synth.getVoices();
+        const male = voices.find(v => v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.toLowerCase().includes('male'));
+        if(male) u.voice = male;
+        synth.speak(u);
+    }
 </script>
-
 </body>
 </html>
