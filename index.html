@@ -10,34 +10,91 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="AduaBot OS">
-    <meta name="mobile-web-app-capable" content="yes">
 
-    <title>ADUABOT OS</title>
+    <title>ADUABOT OS v6.2</title>
     <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
     <style>
-        /* (Mantenemos todos tus estilos anteriores de la v6.0) */
         :root{ --b:#00cfff; --b-glow:rgba(0,207,255,0.4); --dark:#010409; --white:#e0f8ff; }
-        html, body { overflow: hidden; overscroll-behavior: none; height: 100%; width: 100%; position: fixed; background: #000; }
+        
+        html, body { 
+            overflow: hidden; overscroll-behavior: none; height: 100%; width: 100%; 
+            position: fixed; background: #000; margin: 0;
+        }
+
         *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
-        body{ background: var(--dark); font-family: 'Rajdhani', sans-serif; color: var(--b); }
-        #frame-os { position: fixed; inset: 0; border: 2px solid var(--b); z-index: 100; pointer-events: none; animation: breathe 3s ease-in-out infinite; }
-        @keyframes breathe { 0%, 100% { opacity: 0.4; box-shadow: inset 0 0 15px var(--b-glow); } 50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 10px var(--b); } }
-        #app-shell { position: relative; z-index: 10; height: 100vh; width: 100vw; display: flex; flex-direction: column; padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px; background: radial-gradient(circle at center, #0a1a2f 0%, #010409 100%); }
+
+        body { background: var(--dark); font-family: 'Rajdhani', sans-serif; color: var(--b); }
+
+        /* MARCO TÉCNICO */
+        #frame-os { 
+            position: fixed; inset: 0; border: 2px solid var(--b); z-index: 100; 
+            pointer-events: none; animation: breathe 3s ease-in-out infinite; 
+        }
+        @keyframes breathe { 
+            0%, 100% { opacity: 0.4; box-shadow: inset 0 0 15px var(--b-glow); } 
+            50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 10px var(--b); } 
+        }
+
+        #app-shell { 
+            position: relative; z-index: 10; height: 100vh; width: 100vw; 
+            display: flex; flex-direction: column; 
+            padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px; 
+            background: radial-gradient(circle at center, #0a1a2f 0%, #010409 100%); 
+        }
+
+        /* HEADER */
         .top-bar { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(0,207,255,0.3); }
         .status-bits { font-family: 'Share Tech Mono'; font-size: 0.6rem; letter-spacing: 1px; }
+
+        /* MONITOR CENTRAL */
         .monitor { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 30px; }
-        #output-console { width: 100%; min-height: 120px; background: rgba(0, 207, 255, 0.03); border: 1px solid rgba(0, 207, 255, 0.1); padding: 15px; border-radius: 4px; text-align: center; font-size: 1.1rem; color: var(--white); text-shadow: 0 0 5px var(--b-glow); }
-        .core-engine { position: relative; width: 220px; height: 220px; display: flex; align-items: center; justify-content: center; }
-        .core-ring { position: absolute; inset: 0; border: 2px solid var(--b); border-radius: 50%; border-top-color: transparent; animation: spin 4s linear infinite; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .main-btn { width: 170px; height: 170px; border-radius: 50%; background: #000; border: 4px solid var(--b); display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 30px var(--b-glow); transition: 0.3s; }
+        
+        #output-console { 
+            width: 100%; min-height: 100px; background: rgba(0, 207, 255, 0.03); 
+            border: 1px solid rgba(0, 207, 255, 0.1); padding: 15px; border-radius: 4px; 
+            text-align: center; font-size: 1.1rem; color: var(--white); 
+            text-shadow: 0 0 5px var(--b-glow); overflow-y: auto;
+        }
+
+        /* INTEGRACIÓN DE ENGRANES */
+        .core-engine { 
+            position: relative; width: 260px; height: 260px; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+
+        /* LA IMAGEN DE ENGRANES COMO FONDO ANIMADO */
+        .gears-bg {
+            position: absolute; inset: 0;
+            background: url('engranes.png') no-repeat center;
+            background-size: contain;
+            opacity: 0.4;
+            filter: cyan; /* Intenta darle un tono azulado si la imagen es blanca */
+            animation: gear-spin 20s linear infinite;
+            z-index: 1;
+        }
+        @keyframes gear-spin { to { transform: rotate(360deg); } }
+
+        .main-btn { 
+            width: 170px; height: 170px; border-radius: 50%; 
+            background: rgba(0,0,0,0.8); border: 4px solid var(--b); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            box-shadow: 0 0 30px var(--b-glow); transition: 0.3s;
+            z-index: 5;
+        }
+
         .s-listening .main-btn { border-color: #ff2255; box-shadow: 0 0 50px #ff2255; transform: scale(0.95); }
         .s-thinking .main-btn { border-color: #fff; animation: pulse 1s infinite; }
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
-        #keyscreen { position: fixed; inset: 0; z-index: 2000; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; }
+
+        /* PANTALLA DE ACCESO */
+        #keyscreen { 
+            position: fixed; inset: 0; z-index: 2000; background: #000; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; 
+        }
         .ks-input { background: transparent; border: 1px solid var(--b); padding: 15px; color: white; width: 280px; text-align: center; font-family: 'Share Tech Mono'; }
         .ks-btn { background: var(--b); color: #000; padding: 15px 40px; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; }
+        
         .hidden { display: none !important; }
     </style>
 </head>
@@ -47,29 +104,33 @@
 
 <div id="keyscreen">
     <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="font-family:'Bebas Neue'; font-size: 3rem; letter-spacing: 5px;">ADUABOT v6.1</h1>
-        <p style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 3px;">UNEA CAMPUS - ADUAMEX OS</p>
+        <h1 style="font-family:'Bebas Neue'; font-size: 3rem; letter-spacing: 5px;">ADUABOT v6.2</h1>
+        <p style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 3px;">ENGINEERING CORE // ADUAMEX</p>
     </div>
     <input type="password" id="apiKey" class="ks-input" placeholder="ACCESS KEY">
-    <button class="ks-btn" onclick="initSystem()">CONECTAR NÚCLEO</button>
+    <button class="ks-btn" onclick="initSystem()">INICIAR NÚCLEO</button>
 </div>
 
 <div id="app-shell" class="hidden">
     <div class="top-bar">
         <div>
             <h2 style="font-family:'Bebas Neue'; font-size: 1.8rem; line-height: 1;">ADUAMEX</h2>
-            <div class="status-bits">STATUS: ONLINE // AI: ACTIVE</div>
+            <div class="status-bits">SYSTEM: ONLINE // ENGINE: ACTIVE</div>
         </div>
         <div style="text-align: right;">
             <div class="status-bits">CORE ENERGY</div>
-            <div style="height: 6px; width: 120px; background: rgba(255,255,255,0.1); margin-top: 5px;"><div id="bar-fill" style="height: 100%; width: 100%; background: var(--b); transition: 0.3s;"></div></div>
+            <div style="height: 6px; width: 120px; background: rgba(255,255,255,0.1); margin-top: 5px;">
+                <div id="bar-fill" style="height: 100%; width: 100%; background: var(--b); transition: 0.3s;"></div>
+            </div>
         </div>
     </div>
 
     <div class="monitor">
         <div id="output-console">SISTEMA LISTO. ESPERANDO COMANDOS...</div>
+        
         <div class="core-engine" id="ptt-trigger">
-            <div class="core-ring"></div>
+            <div class="gears-bg"></div>
+            
             <div class="main-btn">
                 <svg width="60" height="60" viewBox="0 0 24 24" fill="var(--b)">
                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
@@ -78,12 +139,13 @@
                 <span id="btn-text" style="font-family:'Bebas Neue'; font-size: 1.1rem; margin-top: 10px;">HABLAR</span>
             </div>
         </div>
-        <p class="status-bits" style="opacity: 0.6;">ASESORÍA EXPERTA EN COMERCIO EXTERIOR</p>
+        
+        <p class="status-bits" style="opacity: 0.6; text-align: center;">ASESORÍA EXPERTA EN COMERCIO EXTERIOR<br>UNEA CAMPUS FERIA</p>
     </div>
 </div>
 
 <script>
-    let KEY = ""; let energy = 100; let isBusy = false; let recognition = null; let transcript = "";
+    let KEY = ""; let isBusy = false; let recognition = null; let transcript = "";
 
     function initSystem() {
         KEY = document.getElementById('apiKey').value;
@@ -138,7 +200,7 @@
         try {
             const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${KEY}`, {
                 method: 'POST', headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ contents: [{ parts: [{ text: `Eres AduaBot de AduaMex. Responde breve (20 palabras) como experto: ${q}` }] }] })
+                body: JSON.stringify({ contents: [{ parts: [{ text: `Eres AduaBot de AduaMex. Experto varonil en comercio. Responde en 25 palabras: ${q}` }] }] })
             });
             const data = await res.json();
             shell.classList.remove('s-thinking');
