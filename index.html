@@ -93,10 +93,13 @@ function initOS() {
     KEY = val;
     document.getElementById('keyscreen').classList.add('hidden');
     document.getElementById('app-shell').classList.remove('hidden');
-    window.speechSynthesis.getVoices();
 }
 
-/* LÓGICA DE MICROFONÍA REPARADA */
+function updateEnergy(amt) {
+    energy -= amt; if(energy < 0) energy = 0;
+    document.getElementById('energy-fill').style.width = energy + "%";
+}
+
 function setupMic() {
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!SR) return null;
@@ -118,8 +121,7 @@ const shell = document.getElementById('app-shell');
 function startPTT(e) {
     e.preventDefault(); 
     if(isHolding || energy <= 0) return;
-    isHolding = true; 
-    transcript = "";
+    isHolding = true; transcript = "";
     shell.classList.add('s-listening');
     document.getElementById('btn-text').textContent = "ESCUCHANDO";
     rec = setupMic(); if(rec) rec.start();
@@ -147,7 +149,7 @@ trigger.addEventListener('touchend', stopPTT, {passive: false});
 
 async function askIA(q) {
     shell.classList.add('s-thinking');
-    // Usamos el modelo gemini-2.5-flash como tienes en tus registros
+    updateEnergy(5);
     const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${KEY}`;
     try {
         const res = await fetch(URL, {
