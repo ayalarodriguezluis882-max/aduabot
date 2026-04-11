@@ -1,4 +1,4 @@
-```html id="futurista_pro_v1"
+```html id="gemini_ai_pro"
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,222 +9,117 @@
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --cyan:#00d4ff;
-  --bg:#020a14;
-}
-
 body{
   margin:0;
   background:radial-gradient(circle,#020a14,#000);
-  color:#e0f8ff;
+  color:#00d4ff;
   font-family:'Rajdhani',sans-serif;
   overflow:hidden;
-  transition:.4s;
-}
-
-/* ESTADOS */
-.state-idle{background:radial-gradient(circle,#020a14,#000);}
-.state-listening{background:radial-gradient(circle,#140202,#000);}
-.state-thinking{background:radial-gradient(circle,#021014,#000);}
-.state-speaking{background:radial-gradient(circle,#02140a,#000);}
-
-/* RADAR */
-.radar{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  background: radial-gradient(circle,rgba(0,212,255,0.06),transparent);
-  animation:radar 3s infinite;
-}
-@keyframes radar{
-  0%{transform:scale(.85);opacity:.2}
-  50%{transform:scale(1.2);opacity:.5}
-  100%{transform:scale(.85);opacity:.2}
-}
-
-/* CENTRO */
-.center{
-  position:absolute;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:20px;
-}
-
-/* ANILLOS */
-.ring{
-  position:absolute;
-  width:230px;
-  height:230px;
-  border-radius:50%;
-  border:1px dashed rgba(0,212,255,.2);
-  animation:spin 15s linear infinite;
-}
-@keyframes spin{
-  to{transform:rotate(360deg);}
+  text-align:center;
 }
 
 /* BOTÓN */
 #btn{
+  margin-top:30vh;
   width:160px;
   height:160px;
   border-radius:50%;
-  border:2px solid var(--cyan);
+  border:2px solid #00d4ff;
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  font-size:14px;
-  letter-spacing:.2em;
-  background:radial-gradient(circle,#041828,#020a14);
-  box-shadow:0 0 30px rgba(0,212,255,.4), inset 0 0 20px rgba(0,212,255,.1);
-  transition:.2s;
-  z-index:2;
-}
-
-#btn:active{
-  transform:scale(.93);
+  margin-left:auto;
+  margin-right:auto;
 }
 
 /* CONSOLA */
 #console{
-  position:absolute;
-  bottom:30px;
-  left:50%;
-  transform:translateX(-50%);
-  width:85%;
-  text-align:center;
+  margin-top:40px;
   font-family:'Share Tech Mono',monospace;
-  font-size:14px;
-  opacity:.9;
 }
-
-/* GLITCH */
-.glitch{
-  animation:glitch .25s infinite;
-}
-@keyframes glitch{
-  0%{transform:translate(0)}
-  25%{transform:translate(-2px,1px)}
-  50%{transform:translate(2px,-1px)}
-  75%{transform:translate(-1px,2px)}
-  100%{transform:translate(0)}
-}
-
 </style>
 </head>
 
-<body class="state-idle">
+<body>
 
-<div class="radar"></div>
+<h1>AduaBot IA</h1>
 
-<div class="center">
-  <div class="ring"></div>
-  <div id="btn">ACTIVAR</div>
-</div>
+<div id="btn">HABLAR</div>
 
-<div id="console">Sistema listo...</div>
+<div id="console">Presiona para hablar...</div>
 
 <script>
 
-let busy=false;
+const API_KEY = "PEGA_AQUI_TU_API_KEY";
 
-/* ESTADO */
-function setState(s){
-  document.body.className="state-"+s;
-}
-
-/* DELAY */
-function delay(ms){
-  return new Promise(r=>setTimeout(r,ms));
-}
-
-/* TYPING */
-function typeText(text){
-  const el=document.getElementById("console");
-  el.innerHTML="";
-  let i=0;
-
-  function write(){
-    if(i<text.length){
-      el.innerHTML+=text[i];
-      i++;
-      setTimeout(write,15);
-    }
-  }
-  write();
-}
+const btn = document.getElementById("btn");
+const consoleEl = document.getElementById("console");
 
 /* VOZ */
 function speak(text){
-  if(!('speechSynthesis' in window)) return;
-
-  const msg=new SpeechSynthesisUtterance(text);
-  msg.pitch=0.5;
-  msg.rate=0.9;
-
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.pitch = 0.5;
+  msg.rate = 0.9;
   speechSynthesis.cancel();
   speechSynthesis.speak(msg);
 }
 
-/* SONIDO */
-let beep;
-function playSound(){
-  if(!beep){
-    beep=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+/* RECONOCIMIENTO DE VOZ */
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+const recognition = new SpeechRecognition();
+recognition.lang = "es-MX";
+recognition.continuous = false;
+
+/* CLICK */
+btn.onclick = () => {
+  consoleEl.innerText = "Escuchando...";
+  recognition.start();
+};
+
+/* CUANDO ESCUCHA */
+recognition.onresult = async (event) => {
+
+  const texto = event.results[0][0].transcript;
+  consoleEl.innerText = "Tú: " + texto;
+
+  const respuesta = await preguntarGemini(texto);
+
+  consoleEl.innerText = "IA: " + respuesta;
+  speak(respuesta);
+};
+
+/* ERROR */
+recognition.onerror = () => {
+  consoleEl.innerText = "Error de micrófono";
+};
+
+/* GEMINI */
+async function preguntarGemini(texto){
+
+  try{
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+      {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          contents:[{
+            parts:[{text: texto}]
+          }]
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No entendí";
+
+  }catch(e){
+    return "Error conectando con la IA";
   }
-  beep.currentTime=0;
-  beep.play().catch(()=>{});
 }
-
-/* VIBRACIÓN */
-function vibrate(){
-  if(navigator.vibrate){
-    navigator.vibrate([50,30,50]);
-  }
-}
-
-/* GLITCH */
-function glitch(){
-  const el=document.getElementById("console");
-  el.classList.add("glitch");
-  setTimeout(()=>el.classList.remove("glitch"),400);
-}
-
-/* BOTÓN */
-document.getElementById("btn").addEventListener("click", async ()=>{
-
-  if(busy) return;
-  busy=true;
-
-  playSound();
-  vibrate();
-
-  setState("listening");
-  typeText("Escuchando comando...");
-  await delay(1200);
-
-  setState("thinking");
-  typeText("Analizando datos...");
-  await delay(1500);
-
-  setState("speaking");
-  typeText("Sistema en línea.");
-  speak("Sistema en linea");
-
-  glitch();
-
-  await delay(2500);
-
-  setState("idle");
-  typeText("Esperando nueva orden...");
-
-  busy=false;
-});
 
 </script>
 
