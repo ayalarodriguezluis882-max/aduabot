@@ -1,95 +1,229 @@
-```html
+```html id="futurista_pro_v1"
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AduaBot AI</title>
+<title>AduaBot AI PRO</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --cyan:#00d4ff;
+  --bg:#020a14;
+}
+
 body{
   margin:0;
-  background:#020a14;
-  color:#00d4ff;
-  font-family:Arial, sans-serif;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  height:100vh;
-  text-align:center;
+  background:radial-gradient(circle,#020a14,#000);
+  color:#e0f8ff;
+  font-family:'Rajdhani',sans-serif;
+  overflow:hidden;
+  transition:.4s;
 }
 
 /* ESTADOS */
-.state-idle{background:#020a14;}
-.state-listening{background:#140202;}
-.state-thinking{background:#021014;}
-.state-speaking{background:#02140a;}
+.state-idle{background:radial-gradient(circle,#020a14,#000);}
+.state-listening{background:radial-gradient(circle,#140202,#000);}
+.state-thinking{background:radial-gradient(circle,#021014,#000);}
+.state-speaking{background:radial-gradient(circle,#02140a,#000);}
 
+/* RADAR */
+.radar{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background: radial-gradient(circle,rgba(0,212,255,0.06),transparent);
+  animation:radar 3s infinite;
+}
+@keyframes radar{
+  0%{transform:scale(.85);opacity:.2}
+  50%{transform:scale(1.2);opacity:.5}
+  100%{transform:scale(.85);opacity:.2}
+}
+
+/* CENTRO */
+.center{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+
+/* ANILLOS */
+.ring{
+  position:absolute;
+  width:230px;
+  height:230px;
+  border-radius:50%;
+  border:1px dashed rgba(0,212,255,.2);
+  animation:spin 15s linear infinite;
+}
+@keyframes spin{
+  to{transform:rotate(360deg);}
+}
+
+/* BOTÓN */
 #btn{
-  margin-top:20px;
-  padding:20px 40px;
-  border:2px solid #00d4ff;
+  width:160px;
+  height:160px;
+  border-radius:50%;
+  border:2px solid var(--cyan);
+  display:flex;
+  align-items:center;
+  justify-content:center;
   cursor:pointer;
-  font-size:18px;
-  border-radius:10px;
+  font-size:14px;
+  letter-spacing:.2em;
+  background:radial-gradient(circle,#041828,#020a14);
+  box-shadow:0 0 30px rgba(0,212,255,.4), inset 0 0 20px rgba(0,212,255,.1);
+  transition:.2s;
+  z-index:2;
 }
 
-#console{
-  margin-top:30px;
-  font-size:18px;
+#btn:active{
+  transform:scale(.93);
 }
+
+/* CONSOLA */
+#console{
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  width:85%;
+  text-align:center;
+  font-family:'Share Tech Mono',monospace;
+  font-size:14px;
+  opacity:.9;
+}
+
+/* GLITCH */
+.glitch{
+  animation:glitch .25s infinite;
+}
+@keyframes glitch{
+  0%{transform:translate(0)}
+  25%{transform:translate(-2px,1px)}
+  50%{transform:translate(2px,-1px)}
+  75%{transform:translate(-1px,2px)}
+  100%{transform:translate(0)}
+}
+
 </style>
 </head>
 
 <body class="state-idle">
 
-<h1>AduaBot</h1>
+<div class="radar"></div>
 
-<div id="btn">ACTIVAR</div>
+<div class="center">
+  <div class="ring"></div>
+  <div id="btn">ACTIVAR</div>
+</div>
 
 <div id="console">Sistema listo...</div>
 
 <script>
 
-console.log("JS cargado correctamente");
+let busy=false;
 
-const btn = document.getElementById("btn");
-const consoleEl = document.getElementById("console");
-
-function setState(state){
-  document.body.className = "state-" + state;
+/* ESTADO */
+function setState(s){
+  document.body.className="state-"+s;
 }
 
+/* DELAY */
 function delay(ms){
-  return new Promise(r => setTimeout(r, ms));
+  return new Promise(r=>setTimeout(r,ms));
 }
 
-btn.addEventListener("click", async function(){
+/* TYPING */
+function typeText(text){
+  const el=document.getElementById("console");
+  el.innerHTML="";
+  let i=0;
 
-  console.log("CLICK DETECTADO");
+  function write(){
+    if(i<text.length){
+      el.innerHTML+=text[i];
+      i++;
+      setTimeout(write,15);
+    }
+  }
+  write();
+}
+
+/* VOZ */
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+
+  const msg=new SpeechSynthesisUtterance(text);
+  msg.pitch=0.5;
+  msg.rate=0.9;
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(msg);
+}
+
+/* SONIDO */
+let beep;
+function playSound(){
+  if(!beep){
+    beep=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+  }
+  beep.currentTime=0;
+  beep.play().catch(()=>{});
+}
+
+/* VIBRACIÓN */
+function vibrate(){
+  if(navigator.vibrate){
+    navigator.vibrate([50,30,50]);
+  }
+}
+
+/* GLITCH */
+function glitch(){
+  const el=document.getElementById("console");
+  el.classList.add("glitch");
+  setTimeout(()=>el.classList.remove("glitch"),400);
+}
+
+/* BOTÓN */
+document.getElementById("btn").addEventListener("click", async ()=>{
+
+  if(busy) return;
+  busy=true;
+
+  playSound();
+  vibrate();
 
   setState("listening");
-  consoleEl.innerText = "Escuchando...";
-  await delay(1000);
+  typeText("Escuchando comando...");
+  await delay(1200);
 
   setState("thinking");
-  consoleEl.innerText = "Procesando...";
-  await delay(1000);
+  typeText("Analizando datos...");
+  await delay(1500);
 
   setState("speaking");
-  consoleEl.innerText = "Sistema activado correctamente";
+  typeText("Sistema en línea.");
+  speak("Sistema en linea");
 
-  // VOZ (opcional)
-  if ('speechSynthesis' in window){
-    let msg = new SpeechSynthesisUtterance("Sistema activado correctamente");
-    speechSynthesis.speak(msg);
-  }
+  glitch();
 
-  await delay(2000);
+  await delay(2500);
 
   setState("idle");
-  consoleEl.innerText = "Sistema listo...";
+  typeText("Esperando nueva orden...");
+
+  busy=false;
 });
 
 </script>
