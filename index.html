@@ -1,98 +1,207 @@
-```html id="gemini_ai_pro"
+```html id="aduabot_ultra_pro"
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AduaBot AI PRO</title>
+<title>AduaBot AI ULTRA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
+:root{
+  --cyan:#00d4ff;
+  --red:#ff3b3b;
+  --green:#00ffaa;
+}
+
 body{
   margin:0;
   background:radial-gradient(circle,#020a14,#000);
-  color:#00d4ff;
+  color:#e0f8ff;
   font-family:'Rajdhani',sans-serif;
   overflow:hidden;
-  text-align:center;
+  transition:.4s;
 }
 
-/* BOTÓN */
+/* ESTADOS */
+.state-idle{background:radial-gradient(circle,#020a14,#000);}
+.state-listening{background:radial-gradient(circle,#140202,#000);}
+.state-thinking{background:radial-gradient(circle,#021014,#000);}
+.state-speaking{background:radial-gradient(circle,#02140a,#000);}
+
+/* HUD */
+.radar{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(0,212,255,.08),transparent);
+  animation:radar 4s infinite;
+}
+@keyframes radar{
+  0%{transform:scale(.8);opacity:.2}
+  50%{transform:scale(1.2);opacity:.5}
+  100%{transform:scale(.8);opacity:.2}
+}
+
+/* BOTÓN CENTRAL */
+.center{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
 #btn{
-  margin-top:30vh;
-  width:160px;
-  height:160px;
+  width:170px;
+  height:170px;
   border-radius:50%;
-  border:2px solid #00d4ff;
+  border:2px solid var(--cyan);
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  margin-left:auto;
-  margin-right:auto;
+  letter-spacing:.2em;
+  background:radial-gradient(circle,#041828,#020a14);
+  box-shadow:0 0 40px rgba(0,212,255,.4);
 }
+
+#btn:active{transform:scale(.95);}
 
 /* CONSOLA */
 #console{
-  margin-top:40px;
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  width:85%;
+  text-align:center;
   font-family:'Share Tech Mono',monospace;
+  font-size:14px;
+}
+
+/* GLITCH */
+.glitch{
+  animation:glitch .2s infinite;
+}
+@keyframes glitch{
+  0%{transform:translate(0)}
+  50%{transform:translate(-2px,1px)}
+  100%{transform:translate(0)}
 }
 </style>
 </head>
 
-<body>
+<body class="state-idle">
 
-<h1>AduaBot IA</h1>
+<div class="radar"></div>
 
-<div id="btn">HABLAR</div>
+<div class="center">
+  <div id="btn">HABLAR</div>
+</div>
 
-<div id="console">Presiona para hablar...</div>
+<div id="console">Sistema listo...</div>
 
 <script>
 
 const API_KEY = "PEGA_AQUI_TU_API_KEY";
 
+/* ELEMENTOS */
 const btn = document.getElementById("btn");
 const consoleEl = document.getElementById("console");
 
+let busy = false;
+
+/* ESTADO */
+function setState(s){
+  document.body.className = "state-" + s;
+}
+
+/* TYPING */
+function typeText(text){
+  consoleEl.innerHTML="";
+  let i=0;
+  function write(){
+    if(i<text.length){
+      consoleEl.innerHTML+=text[i];
+      i++;
+      setTimeout(write,15);
+    }
+  }
+  write();
+}
+
 /* VOZ */
 function speak(text){
+  if(!('speechSynthesis' in window)) return;
+
   const msg = new SpeechSynthesisUtterance(text);
   msg.pitch = 0.5;
   msg.rate = 0.9;
+
   speechSynthesis.cancel();
   speechSynthesis.speak(msg);
 }
 
-/* RECONOCIMIENTO DE VOZ */
+/* RECONOCIMIENTO */
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
-const recognition = new SpeechRecognition();
-recognition.lang = "es-MX";
-recognition.continuous = false;
+let recognition;
+
+if(SpeechRecognition){
+  recognition = new SpeechRecognition();
+  recognition.lang = "es-MX";
+}
 
 /* CLICK */
 btn.onclick = () => {
-  consoleEl.innerText = "Escuchando...";
+
+  if(busy) return;
+
+  if(!recognition){
+    typeText("Tu navegador no soporta voz");
+    return;
+  }
+
+  setState("listening");
+  typeText("Escuchando...");
   recognition.start();
 };
 
-/* CUANDO ESCUCHA */
-recognition.onresult = async (event) => {
+/* RESULTADO */
+recognition.onresult = async (e) => {
 
-  const texto = event.results[0][0].transcript;
-  consoleEl.innerText = "Tú: " + texto;
+  busy = true;
+
+  const texto = e.results[0][0].transcript;
+
+  setState("thinking");
+  typeText("Procesando: " + texto);
 
   const respuesta = await preguntarGemini(texto);
 
-  consoleEl.innerText = "IA: " + respuesta;
+  setState("speaking");
+  typeText("IA: " + respuesta);
+
   speak(respuesta);
+
+  glitch();
+
+  setTimeout(()=>{
+    setState("idle");
+    typeText("Esperando comando...");
+    busy = false;
+  },3000);
 };
 
 /* ERROR */
 recognition.onerror = () => {
-  consoleEl.innerText = "Error de micrófono";
+  busy = false;
+  setState("idle");
+  typeText("Error de micrófono");
 };
 
 /* GEMINI */
@@ -114,11 +223,17 @@ async function preguntarGemini(texto){
 
     const data = await res.json();
 
-    return data.candidates?.[0]?.content?.parts?.[0]?.text || "No entendí";
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta";
 
-  }catch(e){
-    return "Error conectando con la IA";
+  }catch{
+    return "Error con la IA";
   }
+}
+
+/* GLITCH */
+function glitch(){
+  consoleEl.classList.add("glitch");
+  setTimeout(()=>consoleEl.classList.remove("glitch"),300);
 }
 
 </script>
