@@ -11,35 +11,34 @@
 <style>
 :root{
   --cyan:#00d4ff;
-  --bg:#020a14;
 }
 
 body{
   margin:0;
-  background: radial-gradient(circle,#020a14,#000);
+  background:#020a14;
   font-family:'Rajdhani',sans-serif;
   color:#e0f8ff;
   overflow:hidden;
-  transition:background .5s;
+  transition:.4s;
 }
 
 /* ESTADOS */
-body.state-idle{background: radial-gradient(circle,#020a14,#000);}
-body.state-listening{background: radial-gradient(circle,#140202,#000);}
-body.state-thinking{background: radial-gradient(circle,#021014,#000);}
-body.state-speaking{background: radial-gradient(circle,#02140a,#000);}
+.state-idle{background:#020a14;}
+.state-listening{background:#140202;}
+.state-thinking{background:#021014;}
+.state-speaking{background:#02140a;}
 
 /* RADAR */
 .radar{
   position:fixed;
   inset:0;
-  background: radial-gradient(circle,rgba(0,212,255,0.08),transparent);
+  background: radial-gradient(circle,rgba(0,212,255,0.06),transparent);
   animation:radar 3s infinite;
 }
 @keyframes radar{
-  0%{transform:scale(.8);opacity:.2}
-  50%{transform:scale(1.2);opacity:.5}
-  100%{transform:scale(.8);opacity:.2}
+  0%{transform:scale(.9);opacity:.2}
+  50%{transform:scale(1.1);opacity:.5}
+  100%{transform:scale(.9);opacity:.2}
 }
 
 /* CENTRO */
@@ -53,32 +52,27 @@ body.state-speaking{background: radial-gradient(circle,#02140a,#000);}
 
 /* BOTÓN */
 #btn{
-  width:160px;
-  height:160px;
+  width:150px;
+  height:150px;
   border-radius:50%;
   border:2px solid var(--cyan);
   display:flex;
   align-items:center;
   justify-content:center;
   cursor:pointer;
-  box-shadow:0 0 30px rgba(0,212,255,.4);
-  transition:.2s;
+  box-shadow:0 0 25px rgba(0,212,255,.4);
+  user-select:none;
 }
 
 #btn:active{
   transform:scale(.95);
 }
 
-#btn span{
-  font-size:14px;
-  letter-spacing:.2em;
-}
-
 /* ANILLO */
 .ring{
   position:absolute;
-  width:200px;
-  height:200px;
+  width:190px;
+  height:190px;
   border-radius:50%;
   border:1px dashed rgba(0,212,255,.2);
   animation:spin 10s linear infinite;
@@ -93,7 +87,7 @@ body.state-speaking{background: radial-gradient(circle,#02140a,#000);}
   bottom:20px;
   left:50%;
   transform:translateX(-50%);
-  width:80%;
+  width:85%;
   text-align:center;
   font-family:'Share Tech Mono',monospace;
   font-size:14px;
@@ -119,96 +113,107 @@ body.state-speaking{background: radial-gradient(circle,#02140a,#000);}
 <div class="center">
   <div class="ring"></div>
 
-  <div id="btn">
-    <span>ACTIVAR</span>
-  </div>
+  <div id="btn">ACTIVAR</div>
 </div>
 
 <div id="console">Sistema listo...</div>
 
 <script>
 
+let busy = false;
+
 /* ESTADO */
 function setState(state){
-  document.body.className="state-"+state;
+  document.body.className = "state-" + state;
 }
 
 /* VIBRACIÓN */
 function vibrate(){
   if(navigator.vibrate){
-    navigator.vibrate([50,30,50]);
+    navigator.vibrate(50);
   }
 }
 
-/* SONIDO */
-const beep=new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+/* SONIDO (SE CREA SOLO DESPUÉS DEL CLICK) */
+let beep;
+function initSound(){
+  if(!beep){
+    beep = new Audio("https://www.soundjay.com/buttons/sounds/button-16.mp3");
+  }
+}
 
 /* TYPING */
 function typeText(text){
-  let el=document.getElementById("console");
-  el.innerHTML="";
-  let i=0;
+  const el = document.getElementById("console");
+  el.innerHTML = "";
+  let i = 0;
 
   function write(){
-    if(i<text.length){
-      el.innerHTML+=text.charAt(i);
+    if(i < text.length){
+      el.innerHTML += text.charAt(i);
       i++;
-      setTimeout(write,20);
+      setTimeout(write, 20);
     }
   }
   write();
 }
 
-/* VOZ */
+/* VOZ (CORREGIDA) */
 function speak(text){
-  let msg=new SpeechSynthesisUtterance(text);
-  msg.pitch=0.5;
-  msg.rate=0.9;
+  if(!('speechSynthesis' in window)) return;
+
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.pitch = 0.6;
+  msg.rate = 0.9;
+
+  speechSynthesis.cancel(); // evita bugs
   speechSynthesis.speak(msg);
 }
 
-/* BOTÓN */
-document.getElementById("btn").onclick=async()=>{
-
-  vibrate();
-  beep.play();
-
-  setState("listening");
-  typeText("Escuchando...");
-
-  await delay(1500);
-
-  setState("thinking");
-  typeText("Procesando comando...");
-
-  await delay(1500);
-
-  setState("speaking");
-  typeText("Respuesta generada.");
-
-  speak("Hola. Sistema activado correctamente.");
-
-  glitch();
-
-  await delay(3000);
-
-  setState("idle");
-  typeText("Sistema listo...");
-};
-
 /* GLITCH */
 function glitch(){
-  let el=document.getElementById("console");
+  const el = document.getElementById("console");
   el.classList.add("glitch");
-
-  setTimeout(()=>{
-    el.classList.remove("glitch");
-  },500);
+  setTimeout(()=>el.classList.remove("glitch"),300);
 }
 
+/* DELAY */
 function delay(ms){
   return new Promise(r=>setTimeout(r,ms));
 }
+
+/* BOTÓN */
+document.getElementById("btn").addEventListener("click", async ()=>{
+
+  if(busy) return;
+  busy = true;
+
+  initSound();
+  beep.play().catch(()=>{}); // evita error autoplay
+
+  vibrate();
+
+  setState("listening");
+  typeText("Escuchando...");
+  await delay(1200);
+
+  setState("thinking");
+  typeText("Procesando datos...");
+  await delay(1500);
+
+  setState("speaking");
+  typeText("Sistema activado correctamente.");
+  speak("Sistema activado correctamente");
+
+  glitch();
+
+  await delay(2500);
+
+  setState("idle");
+  typeText("Sistema listo...");
+
+  busy = false;
+});
 
 </script>
 
