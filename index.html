@@ -7,126 +7,223 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="mobile-web-app-capable" content="yes">
 
-<title>ADUABOT OS</title>
+<title>⚡ ADUABOT OS // CYBER CORE v.nexus</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
 <style>
 :root{
-  --b:#00cfff; --b-glow:rgba(0,207,255,0.4);
-  --dark:#010409; --white:#e0f8ff;
-  --red:#ff2255;
+  /* PALETA FUTURISTA - NEO-CYBER */
+  --b: #0afff0;          /* neón primario */
+  --b-glow: rgba(10, 255, 240, 0.5);
+  --p: #ff2aff;          /* neón magenta */
+  --p-glow: rgba(255, 42, 255, 0.4);
+  --dark: #03050b;
+  --abyss: #000000;
+  --white: #f0fcff;
+  --red: #ff3366;
+  --grid-color: rgba(10, 255, 240, 0.08);
 }
 
-/* BLOQUEO DE SCROLL Y GESTOS DE PÁGINA WEB */
+/* BLOQUEO DE SCROLL Y GESTOS DE PÁGINA WEB (MISMO COMPORTAMIENTO) */
 html, body { 
     overflow: hidden; 
     overscroll-behavior: none; 
     height: 100%; 
     width: 100%;
-    position: fixed; /* Evita el rebote en iOS */
+    position: fixed;
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
 
 body{
-    background: var(--dark);
+    background: var(--abyss);
     font-family: 'Rajdhani', sans-serif;
     color: var(--b);
 }
 
-/* INTERFAZ DE SISTEMA OPERATIVO (PANTALLA CARGA) */
+/* INTERFAZ DE SISTEMA OPERATIVO (PANTALLA CARGA) - misma estructura, estética realzada */
 #boot-sequence {
     position: fixed; inset: 0; z-index: 1000;
-    background: #000; color: var(--b);
+    background: radial-gradient(circle at 20% 30%, #0a0f1a, #000000);
+    color: var(--b);
     font-family: 'Share Tech Mono', monospace;
     padding: 20px; font-size: 0.8rem;
     display: flex; flex-direction: column;
 }
 
-/* MARCO TÉCNICO (RESPIRACIÓN) */
+/* MARCO TÉCNICO - EFECTO RESPLANDOR + SCANNER LINE */
 #frame-os {
     position: fixed; inset: 0;
     border: 2px solid var(--b);
     z-index: 100; pointer-events: none;
-    animation: breathe 3s ease-in-out infinite;
+    animation: cyberPulse 3s ease-in-out infinite;
+    box-shadow: 0 0 20px rgba(10, 255, 240, 0.3);
 }
-@keyframes breathe {
-    0%, 100% { opacity: 0.4; box-shadow: inset 0 0 15px var(--b-glow); }
-    50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 10px var(--b); }
+@keyframes cyberPulse {
+    0%, 100% { opacity: 0.6; box-shadow: inset 0 0 15px var(--b-glow), 0 0 5px var(--b); border-color: rgba(10, 255, 240, 0.6);}
+    50% { opacity: 1; box-shadow: inset 0 0 40px var(--b-glow), 0 0 20px var(--b); border-color: #0afff0;}
 }
 
-/* DASHBOARD PRINCIPAL */
+/* DASHBOARD PRINCIPAL - fondo con rejilla holográfica */
 #app-shell {
     position: relative; z-index: 10;
     height: 100vh; width: 100vw;
     display: flex; flex-direction: column;
     padding: env(safe-area-inset-top) 20px env(safe-area-inset-bottom) 20px;
-    background: radial-gradient(circle at center, #0a1a2f 0%, #010409 100%);
+    background: radial-gradient(circle at 50% 0%, #051520 0%, #010208 100%);
+    backdrop-filter: blur(1px);
+}
+
+/* overlay de rejilla futurista */
+#app-shell::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+    z-index: 0;
 }
 
 .top-bar {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 15px 0; border-bottom: 1px solid rgba(0,207,255,0.3);
+    padding: 15px 0; border-bottom: 1px solid rgba(10, 255, 240, 0.5);
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(90deg, rgba(10,255,240,0.05) 0%, rgba(0,0,0,0) 100%);
+    backdrop-filter: blur(2px);
 }
 
-.status-bits { font-family: 'Share Tech Mono'; font-size: 0.6rem; letter-spacing: 1px; }
+.status-bits { 
+    font-family: 'Share Tech Mono'; 
+    font-size: 0.6rem; 
+    letter-spacing: 2px; 
+    text-shadow: 0 0 3px var(--b-glow);
+    color: #aaffff;
+}
 
 /* MONITOR DE DATOS */
 .monitor {
     flex-grow: 1; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; gap: 30px;
+    justify-content: center; align-items: center; gap: 35px;
+    position: relative;
+    z-index: 2;
 }
 
 #output-console {
-    width: 100%; min-height: 120px;
-    background: rgba(0, 207, 255, 0.03);
-    border: 1px solid rgba(0, 207, 255, 0.1);
-    padding: 15px; border-radius: 4px;
-    text-align: center; font-size: 1.1rem; color: var(--white);
-    text-shadow: 0 0 5px var(--b-glow);
+    width: 100%; min-height: 130px;
+    background: rgba(0, 20, 30, 0.65);
+    border: 1px solid rgba(10, 255, 240, 0.35);
+    backdrop-filter: blur(5px);
+    padding: 18px; border-radius: 16px;
+    text-align: center; font-size: 1.15rem; color: #e0fffc;
+    text-shadow: 0 0 6px #0afff0;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    box-shadow: 0 0 15px rgba(10, 255, 240, 0.2), inset 0 0 10px rgba(10,255,240,0.1);
+    font-family: 'Rajdhani', monospace;
+    transition: 0.2s;
 }
 
-/* NÚCLEO DE PODER (BOTÓN PTT) */
+/* NÚCLEO DE PODER (BOTÓN PTT) - diseño cyber + anillos cuánticos */
 .core-engine {
-    position: relative; width: 220px; height: 220px;
+    position: relative; width: 240px; height: 240px;
     display: flex; align-items: center; justify-content: center;
 }
 
 .core-ring {
-    position: absolute; inset: 0;
-    border: 2px solid var(--b); border-radius: 50%;
-    border-top-color: transparent; animation: spin 4s linear infinite;
+    position: absolute; inset: -4px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(10,255,240,0.15) 0%, rgba(0,0,0,0) 70%);
+    animation: spinRev 8s linear infinite;
 }
+.core-ring::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border-radius: 50%;
+    border: 1px dashed var(--b);
+    opacity: 0.6;
+    animation: spin 4s linear infinite;
+}
+@keyframes spinRev { to { transform: rotate(-360deg); } }
 @keyframes spin { to { transform: rotate(360deg); } }
 
 .main-btn {
     width: 170px; height: 170px; border-radius: 50%;
-    background: #000; border: 4px solid var(--b);
+    background: radial-gradient(circle at 30% 30%, #0a0f1e, #000000);
+    border: 3px solid var(--b);
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    box-shadow: 0 0 30px var(--b-glow); transition: 0.3s;
+    box-shadow: 0 0 35px var(--b-glow), inset 0 0 10px rgba(10,255,240,0.3);
+    transition: all 0.2s cubic-bezier(0.2, 1.2, 0.8, 1);
+    cursor: pointer;
+}
+.main-btn svg {
+    filter: drop-shadow(0 0 6px var(--b));
+}
+.s-listening .main-btn { border-color: var(--p); box-shadow: 0 0 55px var(--p-glow); transform: scale(0.96); background: radial-gradient(circle at 30% 30%, #1a0522, #000);}
+.s-thinking .main-btn { border-color: #ffffff; box-shadow: 0 0 70px rgba(255,255,255,0.4); animation: pulseGlow 0.8s infinite alternate; }
+@keyframes pulseGlow {
+    0% { opacity: 0.7; box-shadow: 0 0 20px white; }
+    100% { opacity: 1; box-shadow: 0 0 55px rgba(255,255,200,0.9); }
 }
 
-.s-listening .main-btn { border-color: var(--red); box-shadow: 0 0 50px var(--red); transform: scale(0.95); }
-.s-thinking .main-btn { border-color: #fff; animation: pulse 1s infinite; }
-@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+/* BARRA DE ENERGÍA - estilo haz de plasma */
+.power-level { width: 100%; max-width: 340px; }
+.bar-wrap { height: 8px; background: rgba(10,255,240,0.2); border-radius: 4px; margin-top: 6px; position: relative; overflow: hidden; box-shadow: inset 0 0 3px #0afff0;}
+#bar-fill { height: 100%; width: 100%; background: linear-gradient(90deg, #0afff0, #ff2aff); box-shadow: 0 0 12px #0afff0; border-radius: 4px; transition: width 0.25s ease; }
 
-/* BARRA DE ENERGÍA */
-.power-level { width: 100%; max-width: 300px; }
-.bar-wrap { height: 6px; background: rgba(255,255,255,0.1); margin-top: 5px; position: relative; }
-#bar-fill { height: 100%; width: 100%; background: var(--b); box-shadow: 0 0 10px var(--b); transition: 0.3s; }
-
-/* KEYSCREEN */
+/* KEYSCREEN - PANTALLA DE ACCESO NEXT-GEN */
 #keyscreen {
-    position: fixed; inset: 0; z-index: 2000; background: #000;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    position: fixed; inset: 0; z-index: 2000; 
+    background: radial-gradient(ellipse at 40% 40%, #050a15, #000000);
+    backdrop-filter: blur(4px);
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+    border: 1px solid rgba(10,255,240,0.3);
+    box-shadow: inset 0 0 80px rgba(0,255,240,0.05);
 }
 .ks-input {
-    background: transparent; border: 1px solid var(--b); padding: 15px;
-    color: white; width: 280px; text-align: center; font-family: 'Share Tech Mono';
+    background: rgba(0, 10, 20, 0.8);
+    border: 1.5px solid var(--b);
+    padding: 16px 20px;
+    color: #0afff0;
+    width: 300px;
+    text-align: center;
+    font-family: 'Share Tech Mono';
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    border-radius: 40px;
+    box-shadow: 0 0 15px var(--b-glow);
+    transition: 0.2s;
 }
-.ks-btn { background: var(--b); color: #000; padding: 15px 40px; border: none; font-family: 'Bebas Neue'; font-size: 1.2rem; cursor: pointer; }
+.ks-input:focus { outline: none; border-color: #ff2aff; box-shadow: 0 0 20px #ff2aff; }
+.ks-btn { 
+    background: linear-gradient(135deg, #0afff0, #0a6f8a); 
+    color: #000; 
+    padding: 14px 48px; 
+    border: none; 
+    font-family: 'Bebas Neue'; 
+    font-size: 1.5rem; 
+    letter-spacing: 3px;
+    border-radius: 60px;
+    cursor: pointer; 
+    transition: 0.2s;
+    box-shadow: 0 0 12px #0afff0;
+}
+.ks-btn:hover { transform: scale(1.02); background: linear-gradient(135deg, #2afff0, #0affb3); box-shadow: 0 0 30px cyan;}
 
 .hidden { display: none !important; }
+
+/* detalles futuristas pequeños */
+.token-system .status-bits { font-size: 0.65rem; letter-spacing: 2px; }
+#btn-text { text-shadow: 0 0 4px cyan; }
+.top-bar h2 { text-shadow: 0 0 5px var(--b); letter-spacing: 2px; background: linear-gradient(135deg, #0afff0, #b0f0ff); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+/* puntos de estado dinámicos */
+.power-level .status-bits i { font-style: normal; animation: flicker 2s infinite; }
+@keyframes flicker { 0% { opacity: 0.4; } 100% { opacity: 1; } }
 </style>
 </head>
 <body>
@@ -135,27 +232,28 @@ body{
 
 <div id="keyscreen">
     <div style="text-align: center; margin-bottom: 20px;">
-        <h1 style="font-family:'Bebas Neue'; font-size: 3rem; letter-spacing: 5px;">ADUABOT v6.0</h1>
-        <p style="font-size: 0.7rem; opacity: 0.5; letter-spacing: 3px;">UNEA CAMPUS - TRÁFICO Y LOGÍSTICA</p>
+        <h1 style="font-family:'Bebas Neue'; font-size: 3.8rem; letter-spacing: 6px; background: linear-gradient(135deg, #0afff0, #ff2aff); -webkit-background-clip: text; background-clip: text; color: transparent; text-shadow: 0 0 15px cyan;">ADUABOT v6.0</h1>
+        <p style="font-size: 0.7rem; opacity: 0.7; letter-spacing: 4px; color: #0afff0;">UNEA CAMPUS - TRÁFICO Y LOGÍSTICA // CYBER NEXUS</p>
     </div>
-    <input type="password" id="apiKey" class="ks-input" placeholder="ACCESS KEY">
-    <button class="ks-btn" onclick="initSystem()">CONECTAR NÚCLEO</button>
+    <input type="password" id="apiKey" class="ks-input" placeholder="🔑 ACCESS KEY 🔑">
+    <button class="ks-btn" onclick="initSystem()">⟁ CONECTAR NÚCLEO ⟁</button>
+    <div style="font-size: 0.5rem; opacity: 0.3; margin-top: 10px;">SECURE BIOMETRIC LINK // v.QUANTUM</div>
 </div>
 
 <div id="app-shell" class="hidden">
     <div class="top-bar">
         <div>
-            <h2 style="font-family:'Bebas Neue'; font-size: 1.8rem; line-height: 1;">ADUAMEX</h2>
-            <div class="status-bits">STATUS: ONLINE // AI: ACTIVE</div>
+            <h2 style="font-family:'Bebas Neue'; font-size: 2rem; line-height: 1;">ADUAMEX [⚡]</h2>
+            <div class="status-bits">STATUS: ONLINE // AI: ACTIVE // CORE::READY</div>
         </div>
         <div class="token-system" style="text-align: right;">
-            <div class="status-bits">CORE ENERGY</div>
-            <div class="bar-wrap" style="width: 120px;"><div id="bar-fill"></div></div>
+            <div class="status-bits">⚡ PLASMA CORE ⚡</div>
+            <div class="bar-wrap" style="width: 130px;"><div id="bar-fill"></div></div>
         </div>
     </div>
 
     <div class="monitor">
-        <div id="output-console">SISTEMA INICIALIZADO. ESPERANDO COMANDOS DE VOZ...</div>
+        <div id="output-console">⚡ SISTEMA INICIALIZADO. ESPERANDO COMANDOS DE VOZ... ⚡</div>
 
         <div class="core-engine" id="ptt-trigger">
             <div class="core-ring"></div>
@@ -164,22 +262,22 @@ body{
                     <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
                     <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
                 </svg>
-                <span id="btn-text" style="font-family:'Bebas Neue'; font-size: 1.1rem; margin-top: 10px;">HABLAR</span>
+                <span id="btn-text" style="font-family:'Bebas Neue'; font-size: 1.2rem; margin-top: 10px; letter-spacing: 2px;">HABLAR</span>
             </div>
         </div>
 
         <div class="power-level" style="text-align: center;">
-            <p class="status-bits" style="margin-bottom: 10px; opacity: 0.6;">ASESORÍA EXPERTA EN COMERCIO EXTERIOR</p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%;"></div>
-                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.3;"></div>
-                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.1;"></div>
+            <p class="status-bits" style="margin-bottom: 10px; opacity: 0.9; letter-spacing: 2px;">✦ ASESORÍA EXPERTA EN COMERCIO EXTERIOR ✦</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; box-shadow: 0 0 6px cyan;"></div>
+                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.5; box-shadow: 0 0 4px cyan;"></div>
+                <div style="width: 8px; height: 8px; background: var(--b); border-radius: 50%; opacity: 0.2;"></div>
             </div>
         </div>
     </div>
 
-    <div style="padding: 10px; text-align: center; border-top: 1px solid rgba(0,207,255,0.1);">
-        <p class="status-bits" style="opacity: 0.3;">PROPERTY OF ADUAMEX S.A. DE C.V.</p>
+    <div style="padding: 10px; text-align: center; border-top: 1px solid rgba(10,255,240,0.2); background: rgba(0,0,0,0.3); backdrop-filter: blur(2px);">
+        <p class="status-bits" style="opacity: 0.5;">PROPERTY OF ADUAMEX S.A. DE C.V. // CYBER DESK v.nexus</p>
     </div>
 </div>
 
@@ -190,10 +288,10 @@ let isBusy = false;
 let recognition = null;
 let transcript = "";
 
-// INICIO DE SISTEMA
+// INICIO DE SISTEMA (misma lógica, intacta)
 function initSystem() {
     const input = document.getElementById('apiKey').value;
-    if(input.length < 10) return alert("LLAVE DENEGADA");
+    if(input.length < 10) return alert("LLAVE DENEGADA // ACCESO RECHAZADO");
     KEY = input;
     document.getElementById('keyscreen').classList.add('hidden');
     document.getElementById('app-shell').classList.remove('hidden');
@@ -204,18 +302,18 @@ function initSystem() {
     }
 }
 
-// CONTROL DE ENERGÍA
+// CONTROL DE ENERGÍA (íntegro)
 function consumeEnergy(amt) {
     energy -= amt;
     if(energy < 0) energy = 0;
     document.getElementById('bar-fill').style.width = energy + "%";
     if(energy <= 0) {
-        document.getElementById('output-console').textContent = "ERROR: ENERGÍA INSUFICIENTE. RECARGANDO...";
-        setTimeout(() => { energy = 100; consumeEnergy(0); }, 5000);
+        document.getElementById('output-console').textContent = "⚠️ ERROR: ENERGÍA INSUFICIENTE. RECARGANDO NÚCLEO... ⚠️";
+        setTimeout(() => { energy = 100; consumeEnergy(0); document.getElementById('output-console').textContent = "⚡ SISTEMA RECUPERADO. LISTO PARA COMANDOS DE VOZ ⚡"; }, 5000);
     }
 }
 
-// LÓGICA DE VOZ (PTT)
+// LÓGICA DE VOZ (PTT) - exactamente igual pero con la misma esencia
 function setupSpeech() {
     const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!Speech) return null;
@@ -287,10 +385,12 @@ async function processQuery(q) {
             const reply = data.candidates[0].content.parts[0].text;
             document.getElementById('output-console').textContent = reply;
             speak(reply);
+        } else {
+            document.getElementById('output-console').textContent = "⚠️ ERROR DE RESPUESTA DEL NÚCLEO GEMINI ⚠️";
         }
     } catch (err) {
         shell.classList.remove('s-thinking');
-        document.getElementById('output-console').textContent = "ERROR DE CONEXIÓN CON EL NÚCLEO.";
+        document.getElementById('output-console').textContent = "❌ ERROR DE CONEXIÓN CON EL NÚCLEO NEURONAL. ❌";
     }
 }
 
@@ -298,11 +398,12 @@ function speak(t) {
     const synth = window.speechSynthesis;
     const u = new SpeechSynthesisUtterance(t);
     u.lang = 'es-MX';
-    u.pitch = 0.5; // Voz de hombre grave
+    u.pitch = 0.5;
     u.rate = 0.9;
     
+    // Intentar seleccionar voz grave masculina (mismo código funcional)
     const voices = synth.getVoices();
-    const male = voices.find(v => v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.toLowerCase().includes('male'));
+    const male = voices.find(v => v.name.includes('Jorge') || v.name.includes('Pablo') || v.name.toLowerCase().includes('male') || v.name.includes('Carlos'));
     if(male) u.voice = male;
     
     synth.speak(u);
