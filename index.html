@@ -4,656 +4,278 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-<title>ADUABOT // ADUAMEX</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<title>ADUABOT OMNI-SYNTH v9.0 // ADUAMEX</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@300;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
 <style>
-:root{
-  --c:#00f0ff; --c2:#7b2fff; --c3:#00ff9d; --cred:#ff1744; --camb:#ffab00;
-  --bg:#000810; --panel:#00060f;
-  --glow:rgba(0,240,255,0.25); --glow2:rgba(123,47,255,0.2);
+:root {
+    --neon: #00f2ff; --neon-glow: rgba(0, 242, 255, 0.4);
+    --accent: #7d2ae8; --danger: #ff004c; --success: #00ff9d;
+    --bg: #00040a; --panel: rgba(0, 12, 24, 0.85);
 }
-html,body{overflow:hidden;overscroll-behavior:none;height:100%;width:100%;position:fixed;touch-action:none;}
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
-body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
 
-/* ══ CANVAS BG ══ */
-#bgc{position:fixed;inset:0;z-index:0;pointer-events:none;}
+* { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
+body { background: var(--bg); color: var(--neon); font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
 
-/* ══ VIGNETTE ══ */
-#vig{position:fixed;inset:0;z-index:1;pointer-events:none;
-  background:radial-gradient(ellipse at 50% 50%,transparent 40%,rgba(0,0,5,0.7) 100%);}
+/* ══ FONTO NEURAL DINÁMICO ══ */
+#canvas-neural { position: fixed; inset: 0; z-index: 0; opacity: 0.5; }
 
-/* ══ SCANLINES ══ */
-#scan{position:fixed;inset:0;z-index:2;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.06) 2px,rgba(0,0,0,0.06) 4px);
-  animation:scanmove 12s linear infinite;}
-@keyframes scanmove{to{background-position:0 400px;}}
+/* ══ INTERFAZ HUD TÁCTICA ══ */
+.hud-frame { position: fixed; inset: 0; z-index: 5; pointer-events: none; border: 20px solid transparent; border-image: radial-gradient(circle, var(--neon-glow) 1%, transparent 100%) 1; }
+.scanline { position: fixed; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 255, 0.05) 50%); background-size: 100% 4px; z-index: 6; pointer-events: none; }
 
-/* ══ HUD CORNERS ══ */
-#hud{position:fixed;inset:0;z-index:300;pointer-events:none;}
-.hc{position:absolute;width:40px;height:40px;border-color:var(--c);border-style:solid;animation:hca 3s ease-in-out infinite;}
-.hc.tl{top:10px;left:10px;border-width:2px 0 0 2px;}
-.hc.tr{top:10px;right:10px;border-width:2px 2px 0 0;}
-.hc.bl{bottom:10px;left:10px;border-width:0 0 2px 2px;}
-.hc.br{bottom:10px;right:10px;border-width:0 2px 2px 0;}
-@keyframes hca{0%,100%{opacity:.2;}50%{opacity:.9;filter:drop-shadow(0 0 8px var(--c));}}
-.htop{position:absolute;top:10px;left:60px;right:60px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.3;}
-.hbot{position:absolute;bottom:10px;left:60px;right:60px;height:1px;
-  background:linear-gradient(90deg,transparent,var(--c),transparent);opacity:.3;}
+/* ══ LOGIN / KEYSCREEN ══ */
+#login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
+.core-loader { width: 100px; height: 100px; border: 4px solid var(--neon); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; box-shadow: 0 0 20px var(--neon); }
+@keyframes spin { to { transform: rotate(360deg); } }
 
-/* ══ KEYSCREEN ══ */
-#ks{position:fixed;inset:0;z-index:4000;
-  background:radial-gradient(ellipse at 50% 45%,#020d1a 0%,#000508 100%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;}
+/* ══ CONTENEDOR PRINCIPAL ══ */
+#app-shell { position: relative; z-index: 10; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 20px; gap: 15px; }
 
-.ks-robot-mini{width:120px;height:120px;position:relative;display:flex;align-items:center;justify-content:center;}
-.ks-ring{position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(0,240,255,0.25);animation:kspin 5s linear infinite;}
-.ks-ring::after{content:'';position:absolute;top:-4px;left:50%;transform:translateX(-50%);
-  width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 12px var(--c);}
-.ks-ring.r2{inset:14px;border-color:rgba(123,47,255,0.2);animation:kspin 8s linear infinite reverse;}
-.ks-ring.r2::after{background:var(--c2);box-shadow:0 0 10px var(--c2);}
-@keyframes kspin{to{transform:rotate(360deg);}}
-.ks-face-box{width:74px;height:74px;background:radial-gradient(circle at 40% 30%,#071828,#000508);
-  border:1.5px solid rgba(0,240,255,0.35);border-radius:16px;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
-  box-shadow:0 0 30px rgba(0,240,255,0.08),inset 0 0 20px rgba(0,240,255,0.03);}
-.ks-eyes{display:flex;gap:14px;}
-.ks-eye{width:14px;height:14px;border-radius:50%;background:var(--c);
-  box-shadow:0 0 10px var(--c);animation:kse 3.5s ease-in-out infinite;}
-.ks-eye:nth-child(2){animation-delay:.12s;}
-@keyframes kse{0%,42%,58%,100%{transform:scaleY(1);}50%{transform:scaleY(0.08);}}
-.ks-mbar{width:32px;height:5px;border-radius:2.5px;background:var(--c);opacity:.6;}
+/* ══ CABECERA DE DATOS ══ */
+.header-node { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--neon-glow); padding-bottom: 10px; }
+.status-tag { font-family: 'JetBrains Mono'; font-size: 0.6rem; letter-spacing: 2px; color: var(--success); text-transform: uppercase; }
 
-.ks-title{font-family:'Orbitron',sans-serif;font-weight:900;font-size:3rem;
-  letter-spacing:8px;color:var(--c);
-  text-shadow:0 0 25px rgba(0,240,255,0.6),0 0 60px rgba(0,240,255,0.15);
-  animation:tpulse 3s ease-in-out infinite;}
-@keyframes tpulse{0%,100%{text-shadow:0 0 15px rgba(0,240,255,0.4);}
-  50%{text-shadow:0 0 40px rgba(0,240,255,1),0 0 80px rgba(0,240,255,0.3);}}
-.ks-sub{font-family:'Share Tech Mono';font-size:.56rem;letter-spacing:4px;color:rgba(0,240,255,0.3);text-align:center;}
-.ks-inp{background:rgba(0,240,255,.04);border:none;border-bottom:2px solid var(--c);
-  padding:14px 22px;color:#e0ffff;width:290px;text-align:center;
-  font-family:'Share Tech Mono';font-size:.9rem;letter-spacing:5px;outline:none;transition:all .3s;}
-.ks-inp:focus{background:rgba(0,240,255,.07);border-bottom-color:var(--c3);box-shadow:0 6px 20px rgba(0,240,255,.1);}
-.ks-inp::placeholder{color:rgba(0,240,255,.18);letter-spacing:3px;}
-.ks-btn{background:transparent;color:var(--c);padding:13px 50px;border:1.5px solid var(--c);
-  font-family:'Orbitron',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:4px;cursor:pointer;
-  position:relative;overflow:hidden;transition:color .2s;}
-.ks-btn::before{content:'';position:absolute;inset:0;background:var(--c);
-  transform:translateX(-101%);transition:transform .25s ease;z-index:-1;}
-.ks-btn:hover{color:#000;}.ks-btn:hover::before{transform:translateX(0);}
+/* ══ ROSTRO ADUABOT v9 ══ */
+.robot-visage { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.eye-unit { display: flex; gap: 80px; }
+.eye { 
+    width: 100px; height: 100px; background: radial-gradient(circle, #fff 0%, var(--neon) 40%, #001a33 100%); 
+    border-radius: 50%; box-shadow: 0 0 40px var(--neon-glow); position: relative; 
+    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.eye::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid white; opacity: 0.3; }
+.pupil { position: absolute; width: 40px; height: 40px; background: #000; border-radius: 50%; top: 30%; left: 30%; border: 4px solid var(--neon); }
 
-/* ══ APP SHELL ══ */
-#app{position:relative;z-index:10;height:100vh;width:100vw;
-  display:flex;flex-direction:column;
-  padding:env(safe-area-inset-top,8px) 14px env(safe-area-inset-bottom,6px) 14px;
-  background:radial-gradient(ellipse at 50% 15%,#071a30 0%,#000810 70%);
-  gap:4px;}
+/* Estados de Ojos */
+.s-listening .eye { filter: hue-rotate(-50deg); transform: scale(1.1); }
+.s-thinking .eye { animation: thinking-eyes 0.5s infinite alternate; filter: hue-rotate(250deg); }
+@keyframes thinking-eyes { from { transform: scaleY(1); } to { transform: scaleY(0.1); } }
 
-/* ── TOP BAR ── */
-.topbar{display:flex;justify-content:space-between;align-items:center;
-  padding:8px 0;border-bottom:1px solid rgba(0,240,255,.1);flex-shrink:0;}
-.brand{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.3rem;letter-spacing:4px;
-  background:linear-gradient(100deg,var(--c) 0%,var(--c2) 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.sbits{font-family:'Share Tech Mono';font-size:.52rem;letter-spacing:1.5px;color:rgba(0,240,255,.5);margin-top:3px;}
-.dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--c3);
-  box-shadow:0 0 6px var(--c3);animation:dblink 1.4s infinite;margin-right:5px;vertical-align:middle;}
-@keyframes dblink{0%,100%{opacity:1;}50%{opacity:.1;}}
-.ebar{width:100px;height:3px;background:rgba(0,240,255,.07);border-radius:2px;margin-top:4px;overflow:hidden;}
-#bfill{height:100%;width:100%;border-radius:2px;
-  background:linear-gradient(90deg,#3a00ff,var(--c),var(--c3));transition:width .5s ease;}
+/* ══ CONSOLA TÁCTICA ══ */
+.console-box { 
+    background: var(--panel); border: 1px solid var(--neon-glow); border-left: 5px solid var(--neon);
+    padding: 20px; font-family: 'JetBrains Mono'; font-size: 1.1rem; height: 120px; 
+    display: flex; align-items: center; justify-content: center; text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
 
-/* ── CENTER: ROBOT + PANELS ── */
-.center-zone{flex:1;display:grid;grid-template-columns:76px 1fr 76px;
-  align-items:center;gap:6px;min-height:0;}
+/* ══ CONTROLES Y PTT ══ */
+.bottom-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; }
+.ptt-trigger { 
+    width: 100px; height: 100px; border-radius: 50%; background: transparent; 
+    border: 3px solid var(--neon); cursor: pointer; display: flex; align-items: center; justify-content: center;
+    position: relative; transition: 0.3s;
+}
+.ptt-trigger::before { content: ''; position: absolute; inset: -10px; border: 2px dashed var(--neon); border-radius: 50%; animation: spin 10s linear infinite; }
+.ptt-trigger.active { background: var(--danger); border-color: white; box-shadow: 0 0 50px var(--danger); transform: scale(0.9); }
 
-/* side data panels */
-.spanel{display:flex;flex-direction:column;gap:5px;}
-.dchip{background:rgba(0,6,18,.9);border:1px solid rgba(0,240,255,.1);
-  padding:5px 7px;font-family:'Share Tech Mono';}
-.dchip.left{border-left:2px solid var(--c);}
-.dchip.right{border-right:2px solid var(--c);text-align:right;}
-.dchip .dl{font-size:.38rem;letter-spacing:2px;color:rgba(0,240,255,.35);}
-.dchip .dv{font-size:.65rem;color:var(--c);letter-spacing:1px;margin-top:1px;}
+.viz-container { display: flex; align-items: flex-end; gap: 4px; height: 40px; }
+.v-bar { width: 6px; background: var(--neon); border-radius: 3px; transition: 0.1s; min-height: 4px; }
 
-/* robot column */
-.robot-col{display:flex;flex-direction:column;align-items:center;gap:3px;}
-
-#rsvg{width:100%;max-width:210px;height:auto;
-  filter:drop-shadow(0 0 14px rgba(0,240,255,.3));transition:filter .4s;}
-.s-listening #rsvg{filter:drop-shadow(0 0 22px rgba(255,23,68,.75)) drop-shadow(0 0 50px rgba(255,23,68,.2));}
-.s-thinking  #rsvg{filter:drop-shadow(0 0 22px rgba(255,171,0,.65)) drop-shadow(0 0 50px rgba(255,171,0,.2));}
-.s-speaking  #rsvg{filter:drop-shadow(0 0 22px rgba(0,255,157,.65)) drop-shadow(0 0 50px rgba(0,255,157,.2));}
-
-/* ── CONSOLE ── */
-#con{width:100%;min-height:58px;flex-shrink:0;
-  background:rgba(0,4,14,.95);
-  border:1px solid rgba(0,240,255,.1);
-  border-top:2px solid rgba(0,240,255,.28);
-  padding:10px 14px;
-  text-align:center;font-size:.9rem;font-weight:600;color:#d0f8ff;
-  line-height:1.55;letter-spacing:.3px;position:relative;
-  display:flex;align-items:center;justify-content:center;}
-.clbl{position:absolute;font-family:'Share Tech Mono';font-size:.38rem;
-  letter-spacing:2px;color:rgba(0,240,255,.2);}
-.clbl.l{top:3px;left:8px;}.clbl.r{top:3px;right:8px;}
-#ctxt{position:relative;z-index:1;text-align:center;}
-.ccur{display:inline-block;width:2px;height:.85em;background:var(--c);
-  margin-left:2px;vertical-align:middle;animation:ccb .9s step-end infinite;}
-@keyframes ccb{0%,100%{opacity:1;}50%{opacity:0;}}
-
-/* ── BOTTOM ROW ── */
-.botrow{display:flex;align-items:center;justify-content:space-between;flex-shrink:0;padding:2px 0;}
-
-/* viz bars */
-.vwrap{display:flex;gap:3px;align-items:flex-end;height:26px;}
-.vb{width:5px;min-height:3px;border-radius:2px;background:rgba(0,240,255,.25);transition:height .07s ease;}
-.s-listening .vb{background:var(--cred);}
-.s-speaking  .vb{background:var(--c3);}
-.s-thinking  .vb{background:var(--camb);animation:tbvib .5s ease-in-out infinite alternate;}
-@keyframes tbvib{from{transform:scaleY(1);}to{transform:scaleY(1.3);}}
-
-/* PTT */
-#ptt{position:relative;width:86px;height:86px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;}
-.pr{position:absolute;border-radius:50%;border-style:solid;}
-.pr1{inset:0;border:1.5px solid transparent;border-top-color:var(--c);border-right-color:rgba(0,240,255,.2);animation:spin 2.5s linear infinite;}
-.pr2{inset:9px;border:1px solid transparent;border-bottom-color:var(--c2);border-left-color:rgba(123,47,255,.3);animation:spin 4s linear infinite reverse;}
-.pr3{inset:16px;border:1px solid rgba(0,240,255,.07);animation:spin 7s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg);}}
-.pc{width:56px;height:56px;border-radius:50%;
-  background:radial-gradient(circle at 38% 32%,#0b2442,#00050e);
-  border:2px solid var(--c);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  box-shadow:0 0 18px rgba(0,240,255,.2),inset 0 0 12px rgba(0,240,255,.04);
-  transition:all .25s;}
-.s-listening .pc{border-color:var(--cred);box-shadow:0 0 28px rgba(255,23,68,.6);transform:scale(.91);}
-.s-thinking  .pc{border-color:var(--camb);animation:ambp .65s ease-in-out infinite;}
-.s-speaking  .pc{border-color:var(--c3);box-shadow:0 0 28px rgba(0,255,157,.5);}
-@keyframes ambp{0%,100%{box-shadow:0 0 10px rgba(255,171,0,.2);}50%{box-shadow:0 0 35px rgba(255,171,0,.7);}}
-#bicon{transition:fill .3s;}
-.s-listening #bicon{fill:var(--cred);}.s-speaking #bicon{fill:var(--c3);}
-#btxt{font-family:'Orbitron',sans-serif;font-size:.37rem;font-weight:700;
-  letter-spacing:2px;color:var(--c);margin-top:2px;transition:color .3s;}
-.s-listening #btxt{color:var(--cred);}.s-thinking #btxt{color:var(--camb);}.s-speaking #btxt{color:var(--c3);}
-
-/* ── TICKER ── */
-.tstrip{overflow:hidden;white-space:nowrap;border-top:1px solid rgba(0,240,255,.06);padding:3px 0;flex-shrink:0;}
-.tinner{display:inline-block;font-family:'Share Tech Mono';font-size:.42rem;
-  letter-spacing:2.5px;color:rgba(0,240,255,.22);animation:tick 30s linear infinite;}
-@keyframes tick{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
-
-.hidden{display:none!important;}
+.hidden { display: none !important; }
 </style>
 </head>
 <body>
 
-<canvas id="bgc"></canvas>
-<div id="vig"></div>
-<div id="scan"></div>
-<div id="hud">
-  <div class="hc tl"></div><div class="hc tr"></div>
-  <div class="hc bl"></div><div class="hc br"></div>
-  <div class="htop"></div><div class="hbot"></div>
+<canvas id="canvas-neural"></canvas>
+<div class="hud-frame"></div>
+<div class="scanline"></div>
+
+<div id="login-screen">
+    <div class="core-loader"></div>
+    <h1 style="font-family:'Orbitron'; letter-spacing:10px;">ADUABOT v9.0</h1>
+    <input type="password" id="apiKey" style="background:transparent; border:1px solid var(--neon); color:white; padding:15px; text-align:center; font-family:'JetBrains Mono';" placeholder="INSERT CORE KEY">
+    <button onclick="bootSystem()" style="background:var(--neon); color:black; padding:12px 40px; font-family:'Orbitron'; font-weight:900; border:none; cursor:pointer;">BOOT SEQUENCE</button>
 </div>
 
-<!-- ══ KEYSCREEN ══ -->
-<div id="ks">
-  <div class="ks-robot-mini">
-    <div class="ks-ring"></div>
-    <div class="ks-ring r2"></div>
-    <div class="ks-face-box">
-      <div class="ks-eyes">
-        <div class="ks-eye"></div>
-        <div class="ks-eye"></div>
-      </div>
-      <div class="ks-mbar"></div>
+<div id="app-shell" class="hidden">
+    <header class="header-node">
+        <div>
+            <h2 style="font-family:'Orbitron'; font-size:1.5rem; color:white;">ADUAMEX <span style="color:var(--neon);">OS</span></h2>
+            <div class="status-tag" id="status-display">STANDBY // NÚCLEO ESTABLE</div>
+        </div>
+        <div style="text-align:right;">
+            <div class="status-tag">BIOMETRÍA OK</div>
+            <div style="font-family:'JetBrains Mono'; font-size:0.8rem;">UNEA CAMPUS - 2026</div>
+        </div>
+    </header>
+
+    <main class="robot-visage" id="robot-container">
+        <div class="eye-unit">
+            <div class="eye"><div class="pupil"></div></div>
+            <div class="eye"><div class="pupil"></div></div>
+        </div>
+        <div class="viz-container" id="mouth-viz" style="margin-top:40px;">
+            </div>
+    </main>
+
+    <footer class="bottom-nav">
+        <div class="viz-container" id="left-viz"></div>
+        
+        <button class="ptt-trigger" id="ptt-button">
+            <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
+                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+            </svg>
+        </button>
+
+        <div class="viz-container" id="right-viz" style="flex-direction:row-reverse;"></div>
+    </footer>
+
+    <div class="console-box" id="output-console">
+        CONEXIÓN ESTABLECIDA. ESPERANDO COMANDO DE VOZ...
     </div>
-  </div>
-  <div class="ks-title">ADUABOT</div>
-  <div class="ks-sub">v6.0 // UNEA 2025 // AGENTE ADUANAL IA</div>
-  <input type="password" id="apiKey" class="ks-inp" placeholder="ACCESS KEY">
-  <button class="ks-btn" onclick="initSystem()">ACTIVAR SISTEMA</button>
-</div>
-
-<!-- ══ APP ══ -->
-<div id="app" class="hidden">
-
-  <div class="topbar">
-    <div>
-      <div class="brand">ADUAMEX</div>
-      <div class="sbits"><span class="dot"></span>ONLINE · GEMINI 2.5 · COMERCIO EXTERIOR</div>
-    </div>
-    <div style="text-align:right">
-      <div class="sbits" style="margin-bottom:3px">CORE ENERGY</div>
-      <div class="ebar"><div id="bfill"></div></div>
-      <div class="sbits" style="margin-top:2px" id="epct">100%</div>
-    </div>
-  </div>
-
-  <div class="center-zone">
-    <!-- LEFT -->
-    <div class="spanel">
-      <div class="dchip left"><div class="dl">MODO</div><div class="dv" id="mchip">STANDBY</div></div>
-      <div class="dchip left"><div class="dl">CONSULTAS</div><div class="dv" id="qchip">00</div></div>
-      <div class="dchip left"><div class="dl">IDIOMA</div><div class="dv">ES·MX</div></div>
-      <div class="dchip left"><div class="dl">RED</div><div class="dv">GEMINI</div></div>
-    </div>
-
-    <!-- ROBOT -->
-    <div class="robot-col">
-      <svg id="rsvg" viewBox="0 0 220 230" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <radialGradient id="hg" cx="42%" cy="28%" r="68%">
-            <stop offset="0%" stop-color="#0d2845"/>
-            <stop offset="100%" stop-color="#010b1a"/>
-          </radialGradient>
-          <radialGradient id="eg" cx="32%" cy="28%" r="65%">
-            <stop offset="0%" stop-color="#80ffff"/>
-            <stop offset="60%" stop-color="#00d4ff"/>
-            <stop offset="100%" stop-color="#005577"/>
-          </radialGradient>
-          <radialGradient id="pg" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="#003344"/>
-            <stop offset="100%" stop-color="#000c18"/>
-          </radialGradient>
-          <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
-            <feGaussianBlur stdDeviation="3" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <filter id="sg" x="-20%" y="-20%" width="140%" height="140%">
-            <feGaussianBlur stdDeviation="1.8" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-        </defs>
-
-        <!-- ANTENNA -->
-        <line x1="110" y1="22" x2="110" y2="6" stroke="#00f0ff" stroke-width="1.8" stroke-opacity=".6"/>
-        <circle cx="110" cy="4" r="4.5" fill="#00f0ff" opacity=".85" filter="url(#glow)">
-          <animate attributeName="r" values="4.5;6;4.5" dur="1.8s" repeatCount="indefinite"/>
-          <animate attributeName="opacity" values=".85;1;.85" dur="1.8s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="110" cy="4" r="2" fill="white" opacity=".9"/>
-
-        <!-- SHOULDER GUARDS -->
-        <rect x="5" y="80" width="28" height="55" rx="9" fill="url(#hg)" stroke="#00f0ff" stroke-width="1" stroke-opacity=".3"/>
-        <rect x="187" y="80" width="28" height="55" rx="9" fill="url(#hg)" stroke="#00f0ff" stroke-width="1" stroke-opacity=".3"/>
-        <!-- shoulder lights -->
-        <circle cx="19" cy="93" r="4" fill="#00f0ff" opacity=".5" filter="url(#sg)">
-          <animate attributeName="opacity" values=".5;.95;.5" dur="2.3s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="201" cy="93" r="4" fill="#00f0ff" opacity=".5" filter="url(#sg)">
-          <animate attributeName="opacity" values=".5;.95;.5" dur="2.3s" begin=".5s" repeatCount="indefinite"/>
-        </circle>
-        <rect x="11" y="103" width="16" height="3" rx="1.5" fill="#00f0ff" fill-opacity=".22"/>
-        <rect x="11" y="109" width="10" height="2" rx="1" fill="#00f0ff" fill-opacity=".13"/>
-        <rect x="193" y="103" width="16" height="3" rx="1.5" fill="#00f0ff" fill-opacity=".22"/>
-        <rect x="193" y="109" width="10" height="2" rx="1" fill="#00f0ff" fill-opacity=".13"/>
-
-        <!-- HEAD -->
-        <rect x="30" y="22" width="160" height="138" rx="22" fill="url(#hg)" stroke="#00f0ff" stroke-width="1.5" stroke-opacity=".45"/>
-        <!-- head top shine -->
-        <rect x="42" y="28" width="90" height="18" rx="9" fill="#00f0ff" fill-opacity=".035"/>
-        <!-- top detail line -->
-        <line x1="62" y1="44" x2="158" y2="44" stroke="#00f0ff" stroke-width=".6" stroke-opacity=".18"/>
-
-        <!-- VISOR FRAME -->
-        <rect x="38" y="68" width="144" height="56" rx="16" fill="#010d1e" stroke="#00f0ff" stroke-width="1" stroke-opacity=".3"/>
-        <rect x="42" y="72" width="136" height="10" rx="5" fill="#00f0ff" fill-opacity=".025"/>
-
-        <!-- EYEBROWS -->
-        <rect id="brl" x="50" y="64" width="44" height="3.5" rx="1.75" fill="#00f0ff" fill-opacity=".45"/>
-        <rect id="brr" x="126" y="64" width="44" height="3.5" rx="1.75" fill="#00f0ff" fill-opacity=".45"/>
-
-        <!-- EYE SOCKETS -->
-        <ellipse cx="78" cy="96" rx="26" ry="20" fill="#000c1a" stroke="#00f0ff" stroke-width="1.2" stroke-opacity=".5"/>
-        <ellipse cx="142" cy="96" rx="26" ry="20" fill="#000c1a" stroke="#00f0ff" stroke-width="1.2" stroke-opacity=".5"/>
-
-        <!-- EYES -->
-        <ellipse id="eye-l" cx="78" cy="96" rx="18" ry="13" fill="url(#eg)" filter="url(#glow)"/>
-        <ellipse id="eye-r" cx="142" cy="96" rx="18" ry="13" fill="url(#eg)" filter="url(#glow)"/>
-
-        <!-- BLINK OVERLAY (squishes eye height) -->
-        <ellipse id="blink-l" cx="78" cy="96" rx="18" ry="0" fill="#010d1e">
-          <animate attributeName="ry" values="0;0;0;0;13;0;0;0;0" dur="5s" repeatCount="indefinite"/>
-        </ellipse>
-        <ellipse id="blink-r" cx="142" cy="96" rx="18" ry="0" fill="#010d1e">
-          <animate attributeName="ry" values="0;0;0;0;13;0;0;0;0" dur="5s" begin=".08s" repeatCount="indefinite"/>
-        </ellipse>
-
-        <!-- PUPILS -->
-        <circle id="pl" cx="78" cy="96" r="6" fill="#00020a"/>
-        <circle id="pr" cx="142" cy="96" r="6" fill="#00020a"/>
-        <!-- pupil glow -->
-        <circle cx="78" cy="96" r="2.5" fill="#00f0ff" fill-opacity=".95"/>
-        <circle cx="142" cy="96" r="2.5" fill="#00f0ff" fill-opacity=".95"/>
-        <!-- shine -->
-        <ellipse cx="70" cy="90" rx="4.5" ry="2.5" fill="white" fill-opacity=".16"/>
-        <ellipse cx="134" cy="90" rx="4.5" ry="2.5" fill="white" fill-opacity=".16"/>
-
-        <!-- NOSE AREA -->
-        <rect x="94" y="126" width="32" height="8" rx="4" fill="#010d1e" stroke="#00f0ff" stroke-width=".8" stroke-opacity=".28"/>
-        <circle cx="103" cy="130" r="2.2" fill="#00f0ff" opacity=".5"/>
-        <circle cx="117" cy="130" r="2.2" fill="#00f0ff" opacity=".5"/>
-
-        <!-- CHEEK PANELS -->
-        <rect x="40" y="116" width="26" height="18" rx="5" fill="#010d1e" stroke="#00f0ff" stroke-width=".8" stroke-opacity=".2"/>
-        <rect x="154" y="116" width="26" height="18" rx="5" fill="#010d1e" stroke="#00f0ff" stroke-width=".8" stroke-opacity=".2"/>
-        <rect x="44" y="119" width="7" height="4" rx="1.5" fill="#00f0ff" fill-opacity=".4"/>
-        <rect x="44" y="126" width="12" height="2.5" rx="1" fill="#00f0ff" fill-opacity=".2"/>
-        <rect x="158" y="119" width="7" height="4" rx="1.5" fill="#00f0ff" fill-opacity=".4"/>
-        <rect x="164" y="126" width="12" height="2.5" rx="1" fill="#00f0ff" fill-opacity=".2"/>
-
-        <!-- MOUTH BOX -->
-        <rect x="50" y="140" width="120" height="14" rx="6" fill="#010d1e" stroke="#00f0ff" stroke-width="1.2" stroke-opacity=".4"/>
-
-        <!-- MOUTH SEGMENTS (8 - lip sync) -->
-        <rect class="ms" id="ms0" x="55"  y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms1" x="67"  y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms2" x="79"  y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms3" x="91"  y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms4" x="103" y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms5" x="115" y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms6" x="127" y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-        <rect class="ms" id="ms7" x="139" y="142" width="8" height="10" rx="2" fill="#00f0ff"/>
-
-        <!-- CHIN LINE -->
-        <rect x="78" y="157" width="64" height="2" rx="1" fill="#00f0ff" fill-opacity=".1"/>
-
-        <!-- NECK -->
-        <rect x="82" y="160" width="56" height="26" rx="6" fill="url(#hg)" stroke="#00f0ff" stroke-width="1" stroke-opacity=".28"/>
-        <rect x="92" y="162" width="7" height="22" fill="#00f0ff" fill-opacity=".055"/>
-        <rect x="107" y="162" width="7" height="22" fill="#00f0ff" fill-opacity=".055"/>
-        <rect x="122" y="162" width="7" height="22" fill="#00f0ff" fill-opacity=".055"/>
-
-        <!-- CHEST -->
-        <rect x="42" y="184" width="136" height="40" rx="14" fill="url(#hg)" stroke="#00f0ff" stroke-width="1" stroke-opacity=".22"/>
-        <!-- chest center panel -->
-        <rect x="88" y="190" width="44" height="28" rx="7" fill="url(#pg)" stroke="#00f0ff" stroke-width=".8" stroke-opacity=".28"/>
-        <!-- chest LED -->
-        <circle cx="110" cy="204" r="5" fill="#00f0ff" opacity=".35" filter="url(#sg)">
-          <animate attributeName="opacity" values=".35;.8;.35" dur="2.1s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="110" cy="204" r="2" fill="white" opacity=".7"/>
-        <!-- chest side bars -->
-        <rect x="52" y="196" width="28" height="3" rx="1.5" fill="#00f0ff" fill-opacity=".18"/>
-        <rect x="52" y="202" width="20" height="2" rx="1" fill="#00f0ff" fill-opacity=".1"/>
-        <rect x="140" y="196" width="28" height="3" rx="1.5" fill="#00f0ff" fill-opacity=".18"/>
-        <rect x="148" y="202" width="20" height="2" rx="1" fill="#00f0ff" fill-opacity=".1"/>
-      </svg>
-
-      <!-- AUDIO VIZ ROW under robot -->
-      <div style="display:flex;gap:3px;align-items:flex-end;height:18px;margin-top:2px;" id="rviz">
-        <div class="vb" style="height:3px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:6px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:10px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:14px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:16px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:14px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:10px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:6px;background:rgba(0,240,255,.15)"></div>
-        <div class="vb" style="height:3px;background:rgba(0,240,255,.15)"></div>
-      </div>
-    </div>
-
-    <!-- RIGHT -->
-    <div class="spanel" style="align-items:flex-start;">
-      <div class="dchip right"><div class="dl">EMPRESA</div><div class="dv">ADUAMEX</div></div>
-      <div class="dchip right"><div class="dl">EVENTO</div><div class="dv">UNEA '25</div></div>
-      <div class="dchip right"><div class="dl">MOTOR</div><div class="dv">GMN 2.5</div></div>
-      <div class="dchip right"><div class="dl">STAND</div><div class="dv">LISTO</div></div>
-    </div>
-  </div>
-
-  <!-- CONSOLE -->
-  <div id="con">
-    <span class="clbl l">▸ OUTPUT</span>
-    <span class="clbl r" id="cslbl">STANDBY</span>
-    <span id="ctxt">SISTEMA LISTO — MANTÉN PRESIONADO Y HABLA</span><span class="ccur"></span>
-  </div>
-
-  <!-- BOTTOM ROW -->
-  <div class="botrow">
-    <div class="vwrap" id="vl">
-      <div class="vb" style="height:3px"></div>
-      <div class="vb" style="height:7px"></div>
-      <div class="vb" style="height:12px"></div>
-      <div class="vb" style="height:17px"></div>
-      <div class="vb" style="height:22px"></div>
-      <div class="vb" style="height:16px"></div>
-      <div class="vb" style="height:9px"></div>
-    </div>
-
-    <div id="ptt">
-      <div class="pr pr1"></div>
-      <div class="pr pr2"></div>
-      <div class="pr pr3"></div>
-      <div class="pc">
-        <svg id="bicon" width="22" height="22" viewBox="0 0 24 24" fill="#00f0ff">
-          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-        </svg>
-        <span id="btxt">HABLAR</span>
-      </div>
-    </div>
-
-    <div class="vwrap" id="vr" style="flex-direction:row-reverse;">
-      <div class="vb" style="height:3px"></div>
-      <div class="vb" style="height:7px"></div>
-      <div class="vb" style="height:12px"></div>
-      <div class="vb" style="height:17px"></div>
-      <div class="vb" style="height:22px"></div>
-      <div class="vb" style="height:16px"></div>
-      <div class="vb" style="height:9px"></div>
-    </div>
-  </div>
-
-  <div class="tstrip">
-    <span class="tinner">
-      ★ ADUAMEX S.A. DE C.V. ★ AGENTE ADUANAL CERTIFICADO ★ TIJUANA, B.C. ★ IMPORTACIÓN · EXPORTACIÓN · LOGÍSTICA INTERNACIONAL · CUMPLIMIENTO NORMATIVO · OEA · CLASIFICACIÓN ARANCELARIA ★ VISÍTANOS EN EL STAND ★ FERIA UNEA 2025 ★ COMERCIO EXTERIOR DE ÉLITE ★
-    </span>
-  </div>
 </div>
 
 <script>
-/* ── NEURAL PARTICLE BACKGROUND ── */
-(()=>{
-  const cv=document.getElementById('bgc'),cx=cv.getContext('2d');
-  let W,H,pts=[];
-  const resize=()=>{
-    W=cv.width=innerWidth;H=cv.height=innerHeight;
-    pts=[];
-    const n=Math.min(55,Math.floor(W*H/14000));
-    for(let i=0;i<n;i++) pts.push({
-      x:Math.random()*W,y:Math.random()*H,
-      vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,
-      r:.4+Math.random()*1.5,o:.08+Math.random()*.35,
-      pulse:Math.random()*Math.PI*2,pspeed:.01+Math.random()*.02
-    });
-  };
-  const draw=()=>{
-    cx.clearRect(0,0,W,H);
-    pts.forEach(p=>{
-      p.x+=p.vx;p.y+=p.vy;p.pulse+=p.pspeed;
-      if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;
-      const op=p.o*(0.6+0.4*Math.sin(p.pulse));
-      cx.beginPath();cx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      cx.fillStyle=`rgba(0,240,255,${op})`;cx.fill();
-    });
-    for(let i=0;i<pts.length;i++){
-      for(let j=i+1;j<pts.length;j++){
-        const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y;
-        const d=Math.sqrt(dx*dx+dy*dy);
-        if(d<100){
-          cx.beginPath();
-          cx.strokeStyle=`rgba(0,240,255,${.07*(1-d/100)})`;
-          cx.lineWidth=.5;cx.moveTo(pts[i].x,pts[i].y);cx.lineTo(pts[j].x,pts[j].y);cx.stroke();
+let KEY = "";
+let isBusy = false;
+let recognition;
+
+// ══ INICIALIZACIÓN ══
+function bootSystem() {
+    const val = document.getElementById('apiKey').value;
+    if(val.length < 10) return alert("ACCESS DENIED: KEY INVALID");
+    KEY = val;
+    document.getElementById('login-screen').classList.add('hidden');
+    document.getElementById('app-shell').classList.remove('hidden');
+    initNeuralBg();
+    createBars();
+    setupSpeech();
+}
+
+// ══ FONDO NEURAL (CANVAS) ══
+function initNeuralBg() {
+    const canvas = document.getElementById('canvas-neural');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let particles = [];
+
+    class Particle {
+        constructor() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
         }
-      }
+        update() {
+            this.x += this.speedX; this.y += this.speedY;
+            if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
+            if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
+        }
+        draw() {
+            ctx.fillStyle = '#00f2ff';
+            ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI * 2); ctx.fill();
+        }
     }
-    requestAnimationFrame(draw);
-  };
-  addEventListener('resize',resize);resize();draw();
-})();
 
-/* ── STATE ── */
-let KEY='',energy=100,busy=false,rec=null,tscript='',qcount=0;
-const app=document.getElementById('app');
-const ct=document.getElementById('ctxt');
-const mc=document.getElementById('mchip');
-const qc=document.getElementById('qchip');
-const csl=document.getElementById('cslbl');
+    for(let i=0; i<60; i++) particles.push(new Particle());
 
-/* ── INIT ── */
-function initSystem(){
-  const v=document.getElementById('apiKey').value;
-  if(v.length<10)return alert('LLAVE DENEGADA');
-  KEY=v;
-  document.getElementById('ks').classList.add('hidden');
-  app.classList.remove('hidden');
-  if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
-  idleLoop();
-}
-
-/* ── ENERGY ── */
-function consumeEnergy(a){
-  energy=Math.max(0,energy-a);
-  document.getElementById('bfill').style.width=energy+'%';
-  document.getElementById('epct').textContent=energy+'%';
-  if(energy<=0){ct.textContent='ERROR: ENERGÍA INSUFICIENTE. RECARGANDO...';
-    setTimeout(()=>{energy=100;consumeEnergy(0);},5000);}
-}
-
-/* ── LIP SYNC ── */
-const segs=[...document.querySelectorAll('.ms')];
-const BY=142,BH=10;
-const LPAT=[
-  [10,7,5,3,3,5,7,10],[3,7,10,8,8,10,7,3],[6,10,8,4,4,8,10,6],
-  [4,6,9,10,10,9,6,4],[10,6,3,6,6,3,6,10],[5,9,10,6,6,10,9,5],
-  [8,3,5,10,10,5,3,8],[2,5,8,10,10,8,5,2],
-];
-let lipT=null;
-function setMouth(h){
-  segs.forEach((s,i)=>{
-    const v=Math.max(2,Math.min(BH,h[i]||2));
-    s.setAttribute('height',v);s.setAttribute('y',BY+(BH-v));
-  });
-}
-function startLip(){let i=0;lipT=setInterval(()=>{
-  const p=LPAT[i++%LPAT.length];setMouth(p.map(v=>v+(Math.random()-.5)*2.5));},80);}
-function stopLip(){clearInterval(lipT);lipT=null;setMouth([2,2,2,2,2,2,2,2]);}
-
-/* ── VIZ BARS ── */
-const vbars=[...document.querySelectorAll('.vb')];
-let vizT=null;
-function startViz(){vizT=setInterval(()=>{vbars.forEach(b=>{b.style.height=Math.round(3+Math.random()*20)+'px';});},70);}
-function stopViz(){clearInterval(vizT);vizT=null;vbars.forEach(b=>b.style.height='3px');}
-
-/* ── IDLE EYES ── */
-function idleLoop(){
-  setInterval(()=>{
-    if(busy)return;
-    const dx=(Math.random()-.5)*6,dy=(Math.random()-.5)*3.5;
-    document.getElementById('pl').setAttribute('cx',78+dx);
-    document.getElementById('pl').setAttribute('cy',96+dy);
-    document.getElementById('pr').setAttribute('cx',142+dx);
-    document.getElementById('pr').setAttribute('cy',96+dy);
-  },2400);
-  let t=0;
-  setInterval(()=>{
-    if(busy)return;t++;
-    const v=Math.sin(t*.22)*1.8;setMouth(Array(8).fill(2+v));
-  },110);
-}
-
-/* ── EYE COLORS ── */
-const ECOLS={idle:'url(#eg)',listening:'#ff1744',thinking:'#ffab00',speaking:'#00ff9d'};
-function setEyes(c){
-  document.getElementById('eye-l').setAttribute('fill',c);
-  document.getElementById('eye-r').setAttribute('fill',c);
-}
-
-/* ── SET STATE ── */
-const SLABELS={idle:'STANDBY',listening:'ESCUCHANDO',thinking:'PROCESANDO',speaking:'HABLANDO'};
-const BLABELS={idle:'HABLAR',listening:'ESCUCHANDO',thinking:'PENSANDO',speaking:'HABLANDO'};
-function setState(s){
-  app.classList.remove('s-listening','s-thinking','s-speaking');
-  if(s!=='idle')app.classList.add('s-'+s);
-  mc.textContent=SLABELS[s];document.getElementById('btxt').textContent=BLABELS[s];
-  csl.textContent=SLABELS[s];setEyes(ECOLS[s]||ECOLS.idle);
-  if(s==='listening'){startViz();stopLip();}
-  else if(s==='speaking'){startViz();startLip();}
-  else{stopViz();stopLip();}
-}
-
-/* ── SPEECH REC ── */
-function setupSpeech(){
-  const S=window.SpeechRecognition||window.webkitSpeechRecognition;
-  if(!S)return null;
-  const r=new S();r.lang='es-MX';r.continuous=true;r.interimResults=true;
-  r.onresult=(e)=>{
-    let tmp='';
-    for(let i=e.resultIndex;i<e.results.length;++i){
-      if(e.results[i].isFinal)tscript+=e.results[i][0].transcript;
-      else tmp+=e.results[i][0].transcript;
+    function animate() {
+        ctx.clearRect(0,0,canvas.width, canvas.height);
+        particles.forEach(p => { p.update(); p.draw(); });
+        requestAnimationFrame(animate);
     }
-    ct.textContent=tscript||tmp;
-  };
-  return r;
+    animate();
 }
 
-const ptt=document.getElementById('ptt');
-function startPTT(e){
-  e.preventDefault();if(busy||energy<=0)return;
-  busy=true;tscript='';setState('listening');
-  rec=setupSpeech();if(rec)rec.start();
-}
-function stopPTT(e){
-  e.preventDefault();if(!busy)return;
-  busy=false;if(rec)rec.stop();
-  setState('thinking');
-  setTimeout(()=>{
-    const q=ct.textContent;
-    if(q&&q.length>2)processQuery(q);else{setState('idle');}
-  },500);
-}
-ptt.addEventListener('mousedown',startPTT);
-ptt.addEventListener('mouseup',stopPTT);
-ptt.addEventListener('touchstart',startPTT,{passive:false});
-ptt.addEventListener('touchend',stopPTT,{passive:false});
-
-/* ── AI QUERY ── */
-async function processQuery(q){
-  consumeEnergy(5);qcount++;qc.textContent=String(qcount).padStart(2,'0');
-  const ctx=`Eres AduaBot, el experto de AduaMex en la feria UNEA. Vende los servicios de AduaMex. Sé profesional, varonil y directo. Máximo 25 palabras. Al final di: "Visítanos en el stand". Pregunta: ${q}`;
-  try{
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${KEY}`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:ctx}]}]})
+// ══ UI BARS ══
+function createBars() {
+    const containers = ['mouth-viz', 'left-viz', 'right-viz'];
+    containers.forEach(id => {
+        const el = document.getElementById(id);
+        const count = id === 'mouth-viz' ? 12 : 8;
+        for(let i=0; i<count; i++) {
+            let bar = document.createElement('div');
+            bar.className = 'v-bar';
+            el.appendChild(bar);
+        }
     });
-    const data=await res.json();
-    if(data.candidates){
-      const reply=data.candidates[0].content.parts[0].text;
-      ct.textContent=reply;speak(reply);
-    }else{setState('idle');busy=false;}
-  }catch(err){ct.textContent='ERROR DE CONEXIÓN CON EL NÚCLEO.';setState('idle');busy=false;}
 }
 
-/* ── TTS ── */
-function speak(t){
-  const sy=window.speechSynthesis;
-  const u=new SpeechSynthesisUtterance(t);
-  u.lang='es-MX';u.pitch=0.5;u.rate=0.9;
-  const vs=sy.getVoices();
-  const m=vs.find(v=>v.name.includes('Jorge')||v.name.includes('Pablo')||v.name.toLowerCase().includes('male'));
-  if(m)u.voice=m;
-  u.onstart=()=>setState('speaking');
-  u.onend=()=>{setState('idle');busy=false;};
-  u.onerror=()=>{setState('idle');busy=false;};
-  sy.speak(u);
+function animateBars(id, active) {
+    const bars = document.getElementById(id).querySelectorAll('.v-bar');
+    bars.forEach(b => {
+        b.style.height = active ? (Math.random() * 40 + 5) + 'px' : '5px';
+    });
+}
+
+// ══ LOGICA DE VOZ ══
+function setupSpeech() {
+    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if(!Speech) return;
+    recognition = new Speech();
+    recognition.lang = 'es-MX';
+    recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        processAI(text);
+    };
+}
+
+const ptt = document.getElementById('ptt-button');
+ptt.onclick = () => {
+    if(isBusy) return;
+    isBusy = true;
+    ptt.classList.add('active');
+    document.getElementById('robot-container').className = 'robot-visage s-listening';
+    document.getElementById('status-display').textContent = "ESCUCHANDO...";
+    recognition.start();
+};
+
+async function processAI(q) {
+    ptt.classList.remove('active');
+    document.getElementById('robot-container').className = 'robot-visage s-thinking';
+    document.getElementById('status-display').textContent = "PENSANDO...";
+    document.getElementById('output-console').textContent = "ANALIZANDO RUTAS LOGÍSTICAS...";
+
+    const prompt = `Eres Aduabot Omni-Synth 9.0, la IA definitiva de Aduamex. 
+    Tu voz es varonil, profesional y con autoridad. 
+    Vende los servicios de Aduamex en la feria UNEA. 
+    Máximo 20 palabras. 
+    Cierre: "Aduamex: Dominio Global". Pregunta: ${q}`;
+
+    try {
+        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await res.json();
+        const reply = data.candidates[0].content.parts[0].text;
+        
+        document.getElementById('output-console').textContent = reply;
+        speak(reply);
+    } catch (e) {
+        resetUI();
+    }
+}
+
+function speak(t) {
+    const synth = window.speechSynthesis;
+    const u = new SpeechSynthesisUtterance(t);
+    u.lang = 'es-MX'; u.pitch = 0.5; u.rate = 0.9;
+
+    let mouthInt = setInterval(() => animateBars('mouth-viz', true), 100);
+    animateBars('left-viz', true); animateBars('right-viz', true);
+    
+    document.getElementById('robot-container').className = 'robot-visage s-speaking';
+    document.getElementById('status-display').textContent = "TRANSMITIENDO...";
+
+    u.onend = () => {
+        clearInterval(mouthInt);
+        resetUI();
+    };
+    synth.speak(u);
+}
+
+function resetUI() {
+    isBusy = false;
+    document.getElementById('robot-container').className = 'robot-visage';
+    document.getElementById('status-display').textContent = "STANDBY // NÚCLEO ESTABLE";
+    animateBars('mouth-viz', false);
+    animateBars('left-viz', false);
+    animateBars('right-viz', false);
 }
 </script>
 </body>
