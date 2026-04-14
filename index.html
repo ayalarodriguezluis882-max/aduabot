@@ -1,282 +1,243 @@
+```html id="aduabot_ultra_pro"
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>ADUABOT OMNI-SYNTH v9.0 // ADUAMEX</title>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;900&family=JetBrains+Mono:wght@300;500&family=Rajdhani:wght@600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AduaBot AI ULTRA</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;600&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
 <style>
-:root {
-    --neon: #00f2ff; --neon-glow: rgba(0, 242, 255, 0.4);
-    --accent: #7d2ae8; --danger: #ff004c; --success: #00ff9d;
-    --bg: #00040a; --panel: rgba(0, 12, 24, 0.85);
+:root{
+  --cyan:#00d4ff;
+  --red:#ff3b3b;
+  --green:#00ffaa;
 }
 
-* { margin:0; padding:0; box-sizing:border-box; user-select:none; -webkit-tap-highlight-color:transparent; }
-body { background: var(--bg); color: var(--neon); font-family: 'Rajdhani', sans-serif; height: 100vh; overflow: hidden; }
-
-/* ══ FONTO NEURAL DINÁMICO ══ */
-#canvas-neural { position: fixed; inset: 0; z-index: 0; opacity: 0.5; }
-
-/* ══ INTERFAZ HUD TÁCTICA ══ */
-.hud-frame { position: fixed; inset: 0; z-index: 5; pointer-events: none; border: 20px solid transparent; border-image: radial-gradient(circle, var(--neon-glow) 1%, transparent 100%) 1; }
-.scanline { position: fixed; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0, 242, 255, 0.05) 50%); background-size: 100% 4px; z-index: 6; pointer-events: none; }
-
-/* ══ LOGIN / KEYSCREEN ══ */
-#login-screen { position: fixed; inset: 0; z-index: 1000; background: var(--bg); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 30px; }
-.core-loader { width: 100px; height: 100px; border: 4px solid var(--neon); border-radius: 50%; border-top-color: transparent; animation: spin 1s linear infinite; box-shadow: 0 0 20px var(--neon); }
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ══ CONTENEDOR PRINCIPAL ══ */
-#app-shell { position: relative; z-index: 10; height: 100vh; display: grid; grid-template-rows: auto 1fr auto; padding: 20px; gap: 15px; }
-
-/* ══ CABECERA DE DATOS ══ */
-.header-node { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid var(--neon-glow); padding-bottom: 10px; }
-.status-tag { font-family: 'JetBrains Mono'; font-size: 0.6rem; letter-spacing: 2px; color: var(--success); text-transform: uppercase; }
-
-/* ══ ROSTRO ADUABOT v9 ══ */
-.robot-visage { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-.eye-unit { display: flex; gap: 80px; }
-.eye { 
-    width: 100px; height: 100px; background: radial-gradient(circle, #fff 0%, var(--neon) 40%, #001a33 100%); 
-    border-radius: 50%; box-shadow: 0 0 40px var(--neon-glow); position: relative; 
-    transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.eye::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid white; opacity: 0.3; }
-.pupil { position: absolute; width: 40px; height: 40px; background: #000; border-radius: 50%; top: 30%; left: 30%; border: 4px solid var(--neon); }
-
-/* Estados de Ojos */
-.s-listening .eye { filter: hue-rotate(-50deg); transform: scale(1.1); }
-.s-thinking .eye { animation: thinking-eyes 0.5s infinite alternate; filter: hue-rotate(250deg); }
-@keyframes thinking-eyes { from { transform: scaleY(1); } to { transform: scaleY(0.1); } }
-
-/* ══ CONSOLA TÁCTICA ══ */
-.console-box { 
-    background: var(--panel); border: 1px solid var(--neon-glow); border-left: 5px solid var(--neon);
-    padding: 20px; font-family: 'JetBrains Mono'; font-size: 1.1rem; height: 120px; 
-    display: flex; align-items: center; justify-content: center; text-align: center;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+body{
+  margin:0;
+  background:radial-gradient(circle,#020a14,#000);
+  color:#e0f8ff;
+  font-family:'Rajdhani',sans-serif;
+  overflow:hidden;
+  transition:.4s;
 }
 
-/* ══ CONTROLES Y PTT ══ */
-.bottom-nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 20px; }
-.ptt-trigger { 
-    width: 100px; height: 100px; border-radius: 50%; background: transparent; 
-    border: 3px solid var(--neon); cursor: pointer; display: flex; align-items: center; justify-content: center;
-    position: relative; transition: 0.3s;
+/* ESTADOS */
+.state-idle{background:radial-gradient(circle,#020a14,#000);}
+.state-listening{background:radial-gradient(circle,#140202,#000);}
+.state-thinking{background:radial-gradient(circle,#021014,#000);}
+.state-speaking{background:radial-gradient(circle,#02140a,#000);}
+
+/* HUD */
+.radar{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background:radial-gradient(circle,rgba(0,212,255,.08),transparent);
+  animation:radar 4s infinite;
 }
-.ptt-trigger::before { content: ''; position: absolute; inset: -10px; border: 2px dashed var(--neon); border-radius: 50%; animation: spin 10s linear infinite; }
-.ptt-trigger.active { background: var(--danger); border-color: white; box-shadow: 0 0 50px var(--danger); transform: scale(0.9); }
+@keyframes radar{
+  0%{transform:scale(.8);opacity:.2}
+  50%{transform:scale(1.2);opacity:.5}
+  100%{transform:scale(.8);opacity:.2}
+}
 
-.viz-container { display: flex; align-items: flex-end; gap: 4px; height: 40px; }
-.v-bar { width: 6px; background: var(--neon); border-radius: 3px; transition: 0.1s; min-height: 4px; }
+/* BOTÓN CENTRAL */
+.center{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
 
-.hidden { display: none !important; }
+#btn{
+  width:170px;
+  height:170px;
+  border-radius:50%;
+  border:2px solid var(--cyan);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  letter-spacing:.2em;
+  background:radial-gradient(circle,#041828,#020a14);
+  box-shadow:0 0 40px rgba(0,212,255,.4);
+}
+
+#btn:active{transform:scale(.95);}
+
+/* CONSOLA */
+#console{
+  position:absolute;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  width:85%;
+  text-align:center;
+  font-family:'Share Tech Mono',monospace;
+  font-size:14px;
+}
+
+/* GLITCH */
+.glitch{
+  animation:glitch .2s infinite;
+}
+@keyframes glitch{
+  0%{transform:translate(0)}
+  50%{transform:translate(-2px,1px)}
+  100%{transform:translate(0)}
+}
 </style>
 </head>
-<body>
 
-<canvas id="canvas-neural"></canvas>
-<div class="hud-frame"></div>
-<div class="scanline"></div>
+<body class="state-idle">
 
-<div id="login-screen">
-    <div class="core-loader"></div>
-    <h1 style="font-family:'Orbitron'; letter-spacing:10px;">ADUABOT v9.0</h1>
-    <input type="password" id="apiKey" style="background:transparent; border:1px solid var(--neon); color:white; padding:15px; text-align:center; font-family:'JetBrains Mono';" placeholder="INSERT CORE KEY">
-    <button onclick="bootSystem()" style="background:var(--neon); color:black; padding:12px 40px; font-family:'Orbitron'; font-weight:900; border:none; cursor:pointer;">BOOT SEQUENCE</button>
+<div class="radar"></div>
+
+<div class="center">
+  <div id="btn">HABLAR</div>
 </div>
 
-<div id="app-shell" class="hidden">
-    <header class="header-node">
-        <div>
-            <h2 style="font-family:'Orbitron'; font-size:1.5rem; color:white;">ADUAMEX <span style="color:var(--neon);">OS</span></h2>
-            <div class="status-tag" id="status-display">STANDBY // NÚCLEO ESTABLE</div>
-        </div>
-        <div style="text-align:right;">
-            <div class="status-tag">BIOMETRÍA OK</div>
-            <div style="font-family:'JetBrains Mono'; font-size:0.8rem;">UNEA CAMPUS - 2026</div>
-        </div>
-    </header>
-
-    <main class="robot-visage" id="robot-container">
-        <div class="eye-unit">
-            <div class="eye"><div class="pupil"></div></div>
-            <div class="eye"><div class="pupil"></div></div>
-        </div>
-        <div class="viz-container" id="mouth-viz" style="margin-top:40px;">
-            </div>
-    </main>
-
-    <footer class="bottom-nav">
-        <div class="viz-container" id="left-viz"></div>
-        
-        <button class="ptt-trigger" id="ptt-button">
-            <svg viewBox="0 0 24 24" width="40" height="40" fill="currentColor">
-                <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-                <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-            </svg>
-        </button>
-
-        <div class="viz-container" id="right-viz" style="flex-direction:row-reverse;"></div>
-    </footer>
-
-    <div class="console-box" id="output-console">
-        CONEXIÓN ESTABLECIDA. ESPERANDO COMANDO DE VOZ...
-    </div>
-</div>
+<div id="console">Sistema listo...</div>
 
 <script>
-let KEY = "";
-let isBusy = false;
+
+const API_KEY = "PEGA_AQUI_TU_API_KEY";
+
+/* ELEMENTOS */
+const btn = document.getElementById("btn");
+const consoleEl = document.getElementById("console");
+
+let busy = false;
+
+/* ESTADO */
+function setState(s){
+  document.body.className = "state-" + s;
+}
+
+/* TYPING */
+function typeText(text){
+  consoleEl.innerHTML="";
+  let i=0;
+  function write(){
+    if(i<text.length){
+      consoleEl.innerHTML+=text[i];
+      i++;
+      setTimeout(write,15);
+    }
+  }
+  write();
+}
+
+/* VOZ */
+function speak(text){
+  if(!('speechSynthesis' in window)) return;
+
+  const msg = new SpeechSynthesisUtterance(text);
+  msg.pitch = 0.5;
+  msg.rate = 0.9;
+
+  speechSynthesis.cancel();
+  speechSynthesis.speak(msg);
+}
+
+/* RECONOCIMIENTO */
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
 let recognition;
 
-// ══ INICIALIZACIÓN ══
-function bootSystem() {
-    const val = document.getElementById('apiKey').value;
-    if(val.length < 10) return alert("ACCESS DENIED: KEY INVALID");
-    KEY = val;
-    document.getElementById('login-screen').classList.add('hidden');
-    document.getElementById('app-shell').classList.remove('hidden');
-    initNeuralBg();
-    createBars();
-    setupSpeech();
+if(SpeechRecognition){
+  recognition = new SpeechRecognition();
+  recognition.lang = "es-MX";
 }
 
-// ══ FONDO NEURAL (CANVAS) ══
-function initNeuralBg() {
-    const canvas = document.getElementById('canvas-neural');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-    let particles = [];
+/* CLICK */
+btn.onclick = () => {
 
-    class Particle {
-        constructor() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * canvas.height;
-            this.speedX = (Math.random() - 0.5) * 0.5;
-            this.speedY = (Math.random() - 0.5) * 0.5;
-        }
-        update() {
-            this.x += this.speedX; this.y += this.speedY;
-            if (this.x > canvas.width || this.x < 0) this.speedX *= -1;
-            if (this.y > canvas.height || this.y < 0) this.speedY *= -1;
-        }
-        draw() {
-            ctx.fillStyle = '#00f2ff';
-            ctx.beginPath(); ctx.arc(this.x, this.y, 1, 0, Math.PI * 2); ctx.fill();
-        }
-    }
+  if(busy) return;
 
-    for(let i=0; i<60; i++) particles.push(new Particle());
+  if(!recognition){
+    typeText("Tu navegador no soporta voz");
+    return;
+  }
 
-    function animate() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        particles.forEach(p => { p.update(); p.draw(); });
-        requestAnimationFrame(animate);
-    }
-    animate();
-}
-
-// ══ UI BARS ══
-function createBars() {
-    const containers = ['mouth-viz', 'left-viz', 'right-viz'];
-    containers.forEach(id => {
-        const el = document.getElementById(id);
-        const count = id === 'mouth-viz' ? 12 : 8;
-        for(let i=0; i<count; i++) {
-            let bar = document.createElement('div');
-            bar.className = 'v-bar';
-            el.appendChild(bar);
-        }
-    });
-}
-
-function animateBars(id, active) {
-    const bars = document.getElementById(id).querySelectorAll('.v-bar');
-    bars.forEach(b => {
-        b.style.height = active ? (Math.random() * 40 + 5) + 'px' : '5px';
-    });
-}
-
-// ══ LOGICA DE VOZ ══
-function setupSpeech() {
-    const Speech = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!Speech) return;
-    recognition = new Speech();
-    recognition.lang = 'es-MX';
-    recognition.onresult = (e) => {
-        const text = e.results[0][0].transcript;
-        processAI(text);
-    };
-}
-
-const ptt = document.getElementById('ptt-button');
-ptt.onclick = () => {
-    if(isBusy) return;
-    isBusy = true;
-    ptt.classList.add('active');
-    document.getElementById('robot-container').className = 'robot-visage s-listening';
-    document.getElementById('status-display').textContent = "ESCUCHANDO...";
-    recognition.start();
+  setState("listening");
+  typeText("Escuchando...");
+  recognition.start();
 };
 
-async function processAI(q) {
-    ptt.classList.remove('active');
-    document.getElementById('robot-container').className = 'robot-visage s-thinking';
-    document.getElementById('status-display').textContent = "PENSANDO...";
-    document.getElementById('output-console').textContent = "ANALIZANDO RUTAS LOGÍSTICAS...";
+/* RESULTADO */
+recognition.onresult = async (e) => {
 
-    const prompt = `Eres Aduabot Omni-Synth 9.0, la IA definitiva de Aduamex. 
-    Tu voz es varonil, profesional y con autoridad. 
-    Vende los servicios de Aduamex en la feria UNEA. 
-    Máximo 20 palabras. 
-    Cierre: "Aduamex: Dominio Global". Pregunta: ${q}`;
+  busy = true;
 
-    try {
-        const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        });
-        const data = await res.json();
-        const reply = data.candidates[0].content.parts[0].text;
-        
-        document.getElementById('output-console').textContent = reply;
-        speak(reply);
-    } catch (e) {
-        resetUI();
-    }
+  const texto = e.results[0][0].transcript;
+
+  setState("thinking");
+  typeText("Procesando: " + texto);
+
+  const respuesta = await preguntarGemini(texto);
+
+  setState("speaking");
+  typeText("IA: " + respuesta);
+
+  speak(respuesta);
+
+  glitch();
+
+  setTimeout(()=>{
+    setState("idle");
+    typeText("Esperando comando...");
+    busy = false;
+  },3000);
+};
+
+/* ERROR */
+recognition.onerror = () => {
+  busy = false;
+  setState("idle");
+  typeText("Error de micrófono");
+};
+
+/* GEMINI */
+async function preguntarGemini(texto){
+
+  try{
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`,
+      {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body: JSON.stringify({
+          contents:[{
+            parts:[{text: texto}]
+          }]
+        })
+      }
+    );
+
+    const data = await res.json();
+
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || "Sin respuesta";
+
+  }catch{
+    return "Error con la IA";
+  }
 }
 
-function speak(t) {
-    const synth = window.speechSynthesis;
-    const u = new SpeechSynthesisUtterance(t);
-    u.lang = 'es-MX'; u.pitch = 0.5; u.rate = 0.9;
-
-    let mouthInt = setInterval(() => animateBars('mouth-viz', true), 100);
-    animateBars('left-viz', true); animateBars('right-viz', true);
-    
-    document.getElementById('robot-container').className = 'robot-visage s-speaking';
-    document.getElementById('status-display').textContent = "TRANSMITIENDO...";
-
-    u.onend = () => {
-        clearInterval(mouthInt);
-        resetUI();
-    };
-    synth.speak(u);
+/* GLITCH */
+function glitch(){
+  consoleEl.classList.add("glitch");
+  setTimeout(()=>consoleEl.classList.remove("glitch"),300);
 }
 
-function resetUI() {
-    isBusy = false;
-    document.getElementById('robot-container').className = 'robot-visage';
-    document.getElementById('status-display').textContent = "STANDBY // NÚCLEO ESTABLE";
-    animateBars('mouth-viz', false);
-    animateBars('left-viz', false);
-    animateBars('right-viz', false);
-}
 </script>
+
 </body>
 </html>
+```
