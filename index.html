@@ -2,518 +2,241 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<title>🏆 ADUABOT NEO | EL CEREBRO SUPREMO | STAND ADUAMEX UNEA</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<title>ADUABOT FINAL BOSS</title>
+
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+body{
+  margin:0;
+  background:radial-gradient(circle,#001,#000);
+  color:#00f0ff;
+  font-family:Arial;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
 }
-html, body {
-    overflow: hidden;
-    height: 100%;
-    width: 100%;
-    background: radial-gradient(circle at 20% 10%, #010514, #000000);
-    font-family: 'Rajdhani', sans-serif;
+
+/* PANEL */
+#panel{
+  text-align:center;
+  width:320px;
 }
-:root {
-    --neo-cyan: #00f7ff;
-    --neo-purple: #b000ff;
-    --gold-glow: #ffcc44;
+
+/* OJOS */
+.eyes{
+  display:flex;
+  justify-content:space-around;
+  margin-bottom:10px;
 }
-/* Marco Energético */
-#energetic-frame {
-    position: fixed;
-    inset: 10px;
-    border: 3px solid var(--neo-cyan);
-    border-radius: 40px;
-    pointer-events: none;
-    z-index: 200;
-    animation: frameVibe 1.8s infinite alternate;
-    box-shadow: 0 0 40px rgba(0,247,255,0.5);
+.eye{
+  width:60px;
+  height:60px;
+  background:#00f0ff;
+  border-radius:50%;
+  box-shadow:0 0 25px #00f0ff;
+  transition:0.1s;
 }
-@keyframes frameVibe {
-    0% { border-color: #00aaff; box-shadow: 0 0 15px cyan;}
-    100% { border-color: var(--neo-purple); box-shadow: 0 0 60px #ff44cc;}
+
+/* BOCA */
+.mouth{
+  width:180px;
+  height:15px;
+  margin:auto;
+  background:#00f0ff;
+  border-radius:20px;
 }
-/* LOADER ÉPICO */
-#boot-loader {
-    position: fixed;
-    inset: 0;
-    background: #000000ee;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 25px;
-    backdrop-filter: blur(4px);
-    font-family: 'Share Tech Mono';
+
+/* HABLANDO */
+.talking .mouth{
+  animation:talk 0.12s infinite;
 }
-.boot-text {
-    font-size: 1.7rem;
-    letter-spacing: 6px;
-    border-right: 3px solid cyan;
-    animation: blinkCursor 0.7s infinite;
+@keyframes talk{
+  0%{height:10px;}
+  50%{height:70px;}
+  100%{height:15px;}
 }
-@keyframes blinkCursor {
-    0%,100%{ border-color: cyan; }
-    50%{ border-color: transparent;}
+
+/* ESCUCHANDO */
+.listening .eye{
+  background:#ff0033;
+  box-shadow:0 0 40px #ff0033;
 }
-/* APP PRINCIPAL */
-#app-main {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 15px;
-    background: radial-gradient(ellipse at 50% 30%, #021a2a, #000000);
-    z-index: 10;
+
+/* BOTON */
+button{
+  margin-top:20px;
+  padding:12px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:10px;
+  background:#00f0ff;
+  cursor:pointer;
 }
-.header-stats {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 2px solid rgba(0,247,255,0.6);
-    padding-bottom: 8px;
+
+/* TEXTO */
+#output{
+  margin-top:15px;
+  color:white;
+  min-height:60px;
 }
-/* ROSTRO HIPER REALISTA (Robot Vivo) */
-.robot-face {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 12px 0 10px;
+
+/* ENERGIA */
+#energy{
+  margin-top:10px;
+  height:6px;
+  background:#222;
 }
-.eyes-3d {
-    display: flex;
-    gap: 45px;
-    margin-bottom: 20px;
-}
-.eye-ball {
-    width: 85px;
-    height: 85px;
-    background: #071530;
-    border-radius: 50%;
-    border: 3px solid var(--neo-cyan);
-    box-shadow: 0 0 25px var(--neo-cyan);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.pupil-move {
-    width: 32px;
-    height: 32px;
-    background: radial-gradient(circle, white, cyan);
-    border-radius: 50%;
-    transition: transform 0.07s linear;
-}
-.lip-area {
-    width: 160px;
-    height: 45px;
-    background: #031a2a;
-    border-radius: 50px;
-    border: 2px solid cyan;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-.lip-sync {
-    width: 25px;
-    height: 14px;
-    background: var(--neo-cyan);
-    border-radius: 20px;
-    transition: all 0.07s;
-}
-.talking .lip-sync {
-    animation: lipDance 0.1s infinite alternate;
-}
-@keyframes lipDance {
-    0% { width: 20px; height: 12px; background: #33ffff;}
-    100% { width: 130px; height: 28px; background: #ffaa44;}
-}
-.talking .eye-ball {
-    animation: eyeFlash 0.25s infinite alternate;
-}
-@keyframes eyeFlash {
-    from { box-shadow: 0 0 10px cyan;}
-    to { box-shadow: 0 0 35px gold;}
-}
-/* Consola Interactiva */
-#message-console {
-    background: rgba(0, 30, 55, 0.75);
-    backdrop-filter: blur(16px);
-    border-radius: 35px;
-    padding: 16px;
-    margin: 12px 0;
-    border: 1px solid cyan;
-    text-align: center;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #f0fcff;
-    min-height: 90px;
-    font-family: 'Share Tech Mono';
-}
-/* NUCLEO PTT + EFECTOS DE PODER */
-.ptt-core {
-    position: relative;
-    width: 210px;
-    height: 210px;
-    margin: 8px auto;
-}
-.orbit-ring {
-    position: absolute;
-    inset: 0;
-    border: 4px solid cyan;
-    border-radius: 50%;
-    border-top-color: transparent;
-    animation: spinRev 4s linear infinite;
-}
-@keyframes spinRev { to { transform: rotate(-360deg); } }
-.btn-power {
-    width: 170px;
-    height: 170px;
-    background: radial-gradient(circle at 35% 35%, #002a44, #000000);
-    border-radius: 50%;
-    border: 4px solid cyan;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0 0 40px cyan;
-    transition: 0.08s linear;
-}
-.listening-mode .btn-power {
-    border-color: #ff2266;
-    transform: scale(0.94);
-    background: radial-gradient(circle, #331122, #110022);
-    box-shadow: 0 0 70px #ff4488;
-}
-.thinking-mode .btn-power {
-    border-color: var(--gold-glow);
-    animation: throb 0.6s infinite;
-}
-@keyframes throb {
-    0% { transform: scale(1); box-shadow: 0 0 20px gold;}
-    100% { transform: scale(1.02); box-shadow: 0 0 55px #ffaa55;}
-}
-.energy-meter {
-    width: 75%;
-    margin: 12px auto;
-}
-.bar-bg {
-    height: 12px;
-    background: #11212e;
-    border-radius: 20px;
-}
-#energy-bar {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, cyan, #ffaa44);
-    border-radius: 20px;
-}
-.promo-tag {
-    font-size: 0.7rem;
-    background: rgba(255,215,0,0.2);
-    border-radius: 40px;
-    padding: 5px 12px;
-    display: inline-block;
-}
-.confetti-burst {
-    position: fixed;
-    width: 12px;
-    height: 12px;
-    background: gold;
-    top: -20px;
-    z-index: 999;
-    animation: fallParty 2.2s linear forwards;
-}
-@keyframes fallParty {
-    to { transform: translateY(110vh) rotate(400deg); opacity: 0;}
-}
-.hidden {
-    display: none;
+#bar{
+  height:100%;
+  width:100%;
+  background:#00f0ff;
 }
 </style>
 </head>
-<body>
-<div id="energetic-frame"></div>
-<div id="boot-loader">
-    <div style="font-size: 4rem;">🧠⚡</div>
-    <div class="boot-text">ADUABOT NEO - MODO BESTIA</div>
-    <div class="boot-text" style="font-size:1rem;">SINCRONIZANDO CARISMA Y VENTAS...</div>
-</div>
 
-<div id="app-main" class="hidden">
-    <div class="header-stats">
-        <div><h1 style="font-family:'Bebas Neue'; font-size:2rem;">ADUAMEX</h1><span style="font-size:0.6rem;">🏅 STAND OFICIAL UNEA 2026</span></div>
-        <div><span id="energy-percent">💎 100%</span><div class="bar-bg" style="width:100px;"><div id="energy-bar"></div></div></div>
-    </div>
-    
-    <div class="robot-face" id="robotFace">
-        <div class="eyes-3d">
-            <div class="eye-ball" id="eyeL"><div class="pupil-move" id="pupilL"></div></div>
-            <div class="eye-ball" id="eyeR"><div class="pupil-move" id="pupilR"></div></div>
-        </div>
-        <div class="lip-area"><div class="lip-sync" id="mouthSync"></div></div>
-    </div>
-    
-    <div id="message-console">🔥🔥 ADUABOT NEO: ¡EL ROBOT VENDEDOR MÁS PODEROSO! 🔥🔥<br> Mantén presionado el botón central, pregúntame sobre comercio exterior, costos, beneficios o promos. ¡Vamos a conquistar la feria!</div>
-    
-    <div class="ptt-core" id="pttZone">
-        <div class="orbit-ring"></div>
-        <div class="btn-power" id="coreAction">
-            <svg width="60" height="60" viewBox="0 0 24 24" fill="#0af"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/><path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
-            <span id="pttLabel" style="font-family:'Bebas Neue'; font-size:1.4rem;">HABLAR</span>
-        </div>
-    </div>
-    
-    <div class="energy-meter"><div class="promo-tag">🎤 MANTÉN PRESIONADO | 💰 PROMO FERIA: 20% DCTO | 🤖 EXPERTO EN ADUANAS</div></div>
-    <div style="text-align:center; font-size:0.5rem; margin-top: 5px;">⚡ CEREBRO SUPREMO - COMPETENCIA IA GANADORA ⚡</div>
+<body>
+
+<div id="panel">
+  <div class="eyes">
+    <div class="eye"></div>
+    <div class="eye"></div>
+  </div>
+
+  <div class="mouth" id="mouth"></div>
+
+  <button onclick="start()">INICIAR</button>
+
+  <div id="output">AduaBot listo para dominar la feria...</div>
+
+  <div id="energy"><div id="bar"></div></div>
 </div>
 
 <script>
-// ============= CONFIGURACIÓN DEFINITIVA =============
-let API_KEY = "";
-let energia = 100;
-let isListening = false;
-let isThinkingAI = false;
-let activeRecog = null;
-let speechUtter = window.speechSynthesis;
-let mouthInterval = null;
+let recognition;
+let energy=100;
 
-// DOM
-const loaderScreen = document.getElementById('boot-loader');
-const mainApp = document.getElementById('app-main');
-const consoleMsg = document.getElementById('message-console');
-const energyFill = document.getElementById('energy-bar');
-const energyPercentSpan = document.getElementById('energy-percent');
-const coreBtn = document.getElementById('coreAction');
-const pttContainer = document.getElementById('pttZone');
-const pttLabel = document.getElementById('pttLabel');
-const pupilL = document.getElementById('pupilL');
-const pupilR = document.getElementById('pupilR');
-const robotFaceDiv = document.getElementById('robotFace');
+/* VOZ */
+function speak(text){
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang="es-MX";
+  u.pitch=0.6;
+  u.rate=0.92;
 
-// ========== BOOT Y API ==========
-setTimeout(() => {
-    loaderScreen.style.opacity = "0";
-    setTimeout(() => {
-        loaderScreen.classList.add('hidden');
-        mainApp.classList.remove('hidden');
-        solicitarApiKey();
-        iniciarSeguimientoOcular();
-        bienvenidaInicial();
-    }, 600);
-}, 2000);
+  const panel=document.body;
 
-function solicitarApiKey() {
-    let keyUser = prompt("🔓 INGRESA GEMINI API KEY (si no, MODO FERIA PRO con respuestas maestras)", "");
-    if(keyUser && keyUser.length > 8) {
-        API_KEY = keyUser;
-        consoleMsg.innerHTML = "✅ MODO GEMINI ACTIVADO. ¡AduaBot tiene poder infinito!";
-    } else {
-        API_KEY = null;
-        consoleMsg.innerHTML = "🎯 MODO DEMO MAESTRO: Base de conocimiento AduaMex de alta calidad. ¡Vamos a vender!";
-    }
+  u.onstart=()=>panel.classList.add("talking");
+  u.onend=()=>panel.classList.remove("talking");
+
+  speechSynthesis.speak(u);
 }
 
-// Gestión Energía
-function actualizarEnergia(delta) {
-    energia = Math.min(100, Math.max(0, energia + delta));
-    energyFill.style.width = energia + "%";
-    energyPercentSpan.innerHTML = `⚡ ${Math.floor(energia)}%`;
-    if(energia <= 12) {
-        consoleMsg.innerHTML = "⚠️ RECARGANDO ENERGÍA... ¡Sigo más fuerte!";
-        setTimeout(() => actualizarEnergia(30), 2200);
-    }
-}
-function gastarEnergia(costo) {
-    if(energia <= 0) {
-        consoleMsg.innerHTML = "🔄 REACTIVANDO SISTEMA...";
-        actualizarEnergia(40);
-        return false;
-    }
-    actualizarEnergia(-costo);
-    return true;
+/* ENERGIA */
+function useEnergy(n){
+  energy-=n;
+  if(energy<0) energy=0;
+  document.getElementById("bar").style.width=energy+"%";
 }
 
-// BASE DE CONOCIMIENTO LOCAL PREMIUM (RESPUESTAS QUE VENDEN)
-function respuestaLocalExperta(pregunta) {
-    let p = pregunta.toLowerCase();
-    if(p.includes('costo') || p.includes('precio') || p.includes('cuánto cuesta')) return "💰 Precios desde $4,500 MXN por operación + IVA. Incluye gestión electrónica y clasificación arancelaria. ¡Promoción feria: 20% de descuento en primera importación! Visítanos ya.";
-    if(p.includes('agente') || p.includes('aduana') || p.includes('despacho')) return "ADUAMEX es Agente Aduanal 5.0 con trazabilidad digital. Reducimos tiempos en un 40%. ¿Tu negocio merece eficiencia? ¡Acércate a nuestro stand!";
-    if(p.includes('exportar') || p.includes('exportación')) return "🚢 Exporta sin estrés. Asesoría en reglas de origen, certificados de origen y logística internacional. ADUAMEX te garantiza éxito. ¡Pregunta por el plan exportador!";
-    if(p.includes('ventaja') || p.includes('beneficio')) return "🏆 Beneficios exclusivos: atención 24/7 con AduaBot, compliance fiscal, auditoría preventiva. ¡Somos tu socio estratégico en comercio exterior!";
-    if(p.includes('feria') || p.includes('unea')) return "🎡 ¡En la Feria UNEA tenemos SORTEOS y asesoría gratuita! Regístrate en nuestro stand y llévate un diagnóstico aduanero sin costo. ¡No te lo pierdas!";
-    if(p.includes('promoción') || p.includes('descuento') || p.includes('oferta')) return "🔥🔥 OFERTA IMPERDIBLE: 25% de descuento en tu primer pedimento si contratas hoy en la feria. Además, guía de importación gratis. ¡Habla conmigo!";
-    if(p.includes('hola') || p.includes('buenas') || p.includes('saludos')) return "🤖 ¡Hola! Soy AduaBot, el cerebro robótico más avanzado en aduanas. ¿Necesitas importar, exportar o asesoría? ADUAMEX te da la solución. ¡Pregúntame sin miedo!";
-    return "ADUAMEX revoluciona el comercio exterior con tecnología de punta y asesores expertos. ¡Ven a nuestro stand en UNEA y descubre cómo ahorrar hasta un 30% en costos aduaneros! ¿Tienes otra pregunta?";
+/* DETECCION INTELIGENTE */
+function detectar(q){
+  q=q.toLowerCase();
+
+  if(q.includes("cuanto")||q.includes("costo")||q.includes("precio")){
+    return "simulador";
+  }
+  if(q.includes("importar")||q.includes("exportar")||q.includes("aduana")){
+    return "experto";
+  }
+  return "ventas";
 }
 
-// Efectos de confeti (para ventas)
-function lanzarConfeti() {
-    for(let i=0; i<55; i++) {
-        let conf = document.createElement('div');
-        conf.classList.add('confetti-burst');
-        conf.style.left = Math.random() * window.innerWidth + "px";
-        conf.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 65%)`;
-        conf.style.width = Math.random() * 10 + 4 + "px";
-        conf.style.height = conf.style.width;
-        document.body.appendChild(conf);
-        setTimeout(() => conf.remove(), 2100);
-    }
+/* SIMULADOR */
+function simular(q){
+  let costo=Math.floor(Math.random()*5000+1000);
+  let impuestos=Math.floor(costo*0.16);
+  return `Costo estimado ${costo} pesos. Impuestos ${impuestos}. Te optimizo costos. Visítanos en el stand.`;
 }
 
-// SÍNTESIS DE VOZ + LIP SYNC PERFECTO
-function hablarConEstilo(texto) {
-    if(!speechUtter) return;
-    speechUtter.cancel();
-    robotFaceDiv.classList.add('talking');
-    if(mouthInterval) clearInterval(mouthInterval);
-    mouthInterval = setInterval(() => {
-        if(!speechUtter.speaking) {
-            clearInterval(mouthInterval);
-            robotFaceDiv.classList.remove('talking');
-        }
-    }, 120);
-    const utterance = new SpeechSynthesisUtterance(texto);
-    utterance.lang = 'es-MX';
-    utterance.rate = 0.9;
-    utterance.pitch = 0.65;
-    const voces = speechUtter.getVoices();
-    const vozMasculina = voces.find(v => v.lang.includes('es') && (v.name.includes('Carlos') || v.name.includes('Jorge') || v.name.toLowerCase().includes('google') || v.name.toLowerCase().includes('male')));
-    if(vozMasculina) utterance.voice = vozMasculina;
-    utterance.onend = () => {
-        if(mouthInterval) clearInterval(mouthInterval);
-        robotFaceDiv.classList.remove('talking');
-    };
-    speechUtter.speak(utterance);
-}
+/* IA */
+async function ask(q){
+  useEnergy(5);
+  document.getElementById("output").innerText="Procesando...";
 
-// LLAMADA A GEMINI O LOCAL + CONFETI SI VENTA
-async function procesarPregunta(textoUsuario) {
-    if(isThinkingAI) return;
-    if(!gastarEnergia(6)) return;
-    isThinkingAI = true;
-    pttContainer.classList.add('thinking-mode');
-    consoleMsg.innerHTML = `🤖 ANALIZANDO: "${textoUsuario.substring(0, 65)}"...`;
-    let respuestaFinal = "";
-    let usaLocal = false;
-    if(API_KEY && API_KEY.length > 10) {
-        try {
-            const promptVentaMaestra = `Eres ADUABOT, un robot vendedor experto en aduanas de ADUAMEX. Responde con actitud ganadora, máximo 38 palabras, finalizando SIEMPRE con: "¡Visítanos en el stand de ADUAMEX en la feria UNEA!" Pregunta: ${textoUsuario}`;
-            const respuestaAPI = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${API_KEY}`, {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({contents:[{parts:[{text:promptVentaMaestra}]}], generationConfig:{temperature:0.85,maxOutputTokens:120}})
-            });
-            const datos = await respuestaAPI.json();
-            if(datos.candidates && datos.candidates[0].content.parts[0].text) {
-                respuestaFinal = datos.candidates[0].content.parts[0].text;
-                if(!respuestaFinal.includes("stand de ADUAMEX")) respuestaFinal += " ¡Visítanos en el stand de ADUAMEX en la feria UNEA!";
-            } else throw new Error();
-        } catch(e) { usaLocal = true; }
-    } else { usaLocal = true; }
-    if(usaLocal) respuestaFinal = respuestaLocalExperta(textoUsuario);
-    consoleMsg.innerHTML = `🤖 ${respuestaFinal}`;
-    hablarConEstilo(respuestaFinal);
-    if(respuestaFinal.includes("descuento") || respuestaFinal.includes("promo") || respuestaFinal.includes("oferta") || respuestaFinal.includes("stand")) {
-        lanzarConfeti();
-        setTimeout(()=>lanzarConfeti(), 350);
-    }
-    isThinkingAI = false;
-    pttContainer.classList.remove('thinking-mode');
-    actualizarEnergia(3);
-}
+  let tipo=detectar(q);
+  let prompt="";
 
-// ========== RECONOCIMIENTO DE VOZ (PTT MODO GUERRERO) ==========
-function iniciarEscucha() {
-    if(isThinkingAI) { consoleMsg.innerHTML = "🧠 Procesando venta, espera..."; return; }
-    if(!gastarEnergia(2)) return;
-    const SpeechRecognizer = window.SpeechRecognition || window.webkitSpeechRecognition;
-    if(!SpeechRecognizer) { alert("Navegador no soporta voz, usa el modo táctil. Escribe tu pregunta."); return; }
-    if(activeRecog) activeRecog.abort();
-    activeRecog = new SpeechRecognizer();
-    activeRecog.lang = 'es-MX';
-    activeRecog.continuous = false;
-    activeRecog.interimResults = true;
-    isListening = true;
-    pttContainer.classList.add('listening-mode');
-    pttLabel.innerText = "ESCUCHANDO...";
-    consoleMsg.innerHTML = "🎙️ ¡HABLA! Suelta el botón para procesar tu consulta aduanal.";
-    let fragmentoFinal = "";
-    activeRecog.onresult = (event) => {
-        let textoInterino = "";
-        for(let i=event.resultIndex; i<event.results.length; i++) {
-            if(event.results[i].isFinal) fragmentoFinal += event.results[i][0].transcript;
-            else textoInterino += event.results[i][0].transcript;
-        }
-        consoleMsg.innerHTML = `🎤 DICTADO: ${fragmentoFinal || textoInterino}`;
-    };
-    activeRecog.onend = () => {
-        if(isListening) terminarYProcesar(fragmentoFinal);
-    };
-    activeRecog.start();
-}
-function terminarYProcesar(textoCapturado) {
-    if(!isListening) return;
-    isListening = false;
-    pttContainer.classList.remove('listening-mode');
-    pttLabel.innerText = "HABLAR";
-    if(activeRecog) activeRecog.stop();
-    let consulta = consoleMsg.innerText.replace("🎤 DICTADO:", "").trim();
-    if(consulta === "" || consulta.includes("ESCUCHANDO")) consulta = textoCapturado;
-    if(consulta && consulta.length > 2) procesarPregunta(consulta);
-    else {
-        consoleMsg.innerHTML = "🤖 No te escuché bien. Intenta de nuevo. ¿Necesitas ayuda con trámites aduaneros?";
-        hablarConEstilo("No te escuché bien, por favor repite tu pregunta.");
-    }
-}
+  if(tipo==="ventas"){
+    prompt=`Eres vendedor experto. Responde agresivo, convincente, máximo 18 palabras. Termina: Visítanos en el stand. ${q}`;
+  }
+  else if(tipo==="experto"){
+    prompt=`Eres experto en comercio exterior. Responde claro en máximo 25 palabras. ${q}`;
+  }
+  else{
+    let r=simular(q);
+    document.getElementById("output").innerText=r;
+    speak(r);
+    return;
+  }
 
-// OJOS QUE SIGUEN EL DEDO O MOUSE (efecto real)
-function iniciarSeguimientoOcular() {
-    document.addEventListener('mousemove', (e) => {
-        let xRel = e.clientX / window.innerWidth;
-        let yRel = e.clientY / window.innerHeight;
-        let movX = (xRel - 0.5) * 20;
-        let movY = (yRel - 0.5) * 14;
-        pupilL.style.transform = `translate(${movX}px, ${movY}px)`;
-        pupilR.style.transform = `translate(${movX}px, ${movY}px)`;
+  try{
+    const res=await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=TU_API_KEY",{
+      method:"POST",
+      headers:{ "Content-Type":"application/json"},
+      body: JSON.stringify({
+        contents:[{ parts:[{ text:prompt }]}]
+      })
     });
-    document.addEventListener('touchmove', (e) => {
-        if(e.touches.length) {
-            let xRel = e.touches[0].clientX / window.innerWidth;
-            let yRel = e.touches[0].clientY / window.innerHeight;
-            let movX = (xRel - 0.5) * 20;
-            let movY = (yRel - 0.5) * 14;
-            pupilL.style.transform = `translate(${movX}px, ${movY}px)`;
-            pupilR.style.transform = `translate(${movX}px, ${movY}px)`;
-        }
-    });
+
+    const data=await res.json();
+    const r=data.candidates[0].content.parts[0].text;
+
+    document.getElementById("output").innerText=r;
+    speak(r);
+
+  }catch{
+    document.getElementById("output").innerText="Error IA";
+  }
 }
 
-function bienvenidaInicial() {
-    setTimeout(() => {
-        hablarConEstilo("¡Hola! Soy AduaBot, el campeón de ventas en comercio exterior. Pregúntame sobre promociones y beneficios. ¡Vamos a ganar juntos!");
-    }, 1000);
+/* SPEECH CONTINUO */
+function start(){
+  const Speech=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new Speech();
+  recognition.lang="es-MX";
+  recognition.continuous=true;
+
+  document.body.classList.add("listening");
+
+  recognition.start();
+
+  recognition.onresult=(e)=>{
+    const t=e.results[e.results.length-1][0].transcript;
+    ask(t);
+  };
+
+  recognition.onend=()=>{
+    document.body.classList.remove("listening");
+    start();
+  };
 }
 
-// EVENTOS PTT
-coreBtn.addEventListener('mousedown', (e) => { e.preventDefault(); iniciarEscucha(); });
-coreBtn.addEventListener('mouseup', () => { if(isListening) terminarYProcesar(""); });
-coreBtn.addEventListener('touchstart', (e) => { e.preventDefault(); iniciarEscucha(); });
-coreBtn.addEventListener('touchend', () => { if(isListening) terminarYProcesar(""); });
+/* ATRACCION AUTOMATICA */
+setInterval(()=>{
+  const frases=[
+    "¿Quieres importar sin pagar de más?",
+    "Reduce tus costos en aduana",
+    "Haz crecer tu negocio internacional",
+    "Optimiza tu logística hoy mismo"
+  ];
 
-// Cargar voces temprano
-window.speechSynthesis.getVoices();
+  const f=frases[Math.floor(Math.random()*frases.length)];
+
+  document.getElementById("output").innerText=f;
+  speak(f);
+
+},10000);
+
 </script>
+
 </body>
 </html>
