@@ -68,7 +68,7 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
 .att-dots{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;max-width:220px;}
 .att-dot{width:7px;height:7px;border-radius:50%;background:rgba(0,232,255,.18);transition:all .4s;}
 .att-dot.active{background:var(--c);box-shadow:0 0 9px var(--c);}
-/* Highlight AduaReto dots in gold */
+/* Highlight Reto AduaBot dots in gold */
 .att-dot.reto{background:rgba(255,171,0,.2);}
 .att-dot.reto.active{background:var(--camb);box-shadow:0 0 9px var(--camb);}
 .att-cta{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;}
@@ -248,7 +248,7 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
   <div class="att-dots" id="att-dots-wrap"></div>
   <div class="att-cta">
     <button class="att-cta-btn" onclick="dismissAttract('talk')">HACER UNA CONSULTA</button>
-    <button class="att-cta-btn gold" onclick="dismissAttract('quiz')">ACEPTAR EL ADUARRETO</button>
+    <button class="att-cta-btn gold" onclick="dismissAttract('quiz')">ACEPTAR EL RETO ADUABOT</button>
   </div>
 </div>
 
@@ -307,7 +307,7 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
       <div id="quiz-btn" onclick="openQuiz()">
         <div class="qb-trophy">🏆</div>
         <div class="qb-text">
-          <div class="qb-title">ADUARRETO — PON A PRUEBA TU CONOCIMIENTO</div>
+          <div class="qb-title">RETO ADUABOT — PON A PRUEBA TU CONOCIMIENTO</div>
           <div class="qb-sub">RETA A ADUABOT Y GÁNATE UNA RECOMPENSA</div>
           <div class="qb-hint">5 PREGUNTAS ALEATORIAS · EXPERTO EN COMERCIO EXTERIOR · PREMIO AL GANADOR</div>
         </div>
@@ -334,14 +334,14 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
   </div>
 
   <div class="tstrip">
-    <span class="tinner">★ ADUAMEX S.A. DE C.V. ★ AGENCIA ADUANAL CERTIFICADA ★ TIJUANA, B.C. MÉXICO ★ IMPORTACIÓN · EXPORTACIÓN · LOGÍSTICA INTERNACIONAL · CUMPLIMIENTO NORMATIVO · OEA ★ ACEPTA EL ADUARRETO Y GANA UN PREMIO ★ VISÍTANOS EN EL STAND ★ FERIA UNEA 2025 ★</span>
+    <span class="tinner">★ ADUAMEX S.A. DE C.V. ★ AGENCIA ADUANAL CERTIFICADA ★ TIJUANA, B.C. MÉXICO ★ IMPORTACIÓN · EXPORTACIÓN · LOGÍSTICA INTERNACIONAL · CUMPLIMIENTO NORMATIVO · OEA ★ ACEPTA EL RETO ADUABOT Y GANA UN PREMIO ★ VISÍTANOS EN EL STAND ★ FERIA UNEA 2025 ★</span>
   </div>
 </div>
 
 <!-- QUIZ OVERLAY -->
 <div id="quiz-ov" class="hidden">
   <div style="text-align:center">
-    <div class="qo-title">ADUARRETO</div>
+    <div class="qo-title">RETO ADUABOT</div>
     <div class="qo-sub">COMERCIO EXTERIOR · NIVEL EXPERTO · 5 PREGUNTAS ALEATORIAS · ¿PUEDES VENCER A ADUABOT?</div>
   </div>
   <div class="qmeta">
@@ -364,7 +364,7 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
   <div id="qrv" class="hidden qres">
     <div class="qscore" id="qscore">0/5</div>
     <div class="qmsg" id="qrmsg">RESULTADO</div>
-    <div class="qprize hidden" id="qprize">🏆 ¡VENCISTE AL ADUARRETO! ACÉRCATE AL STAND DE ADUAMEX PARA RECLAMAR TU PREMIO 🏆</div>
+    <div class="qprize hidden" id="qprize">🏆 ¡VENCISTE AL RETO ADUABOT! ACÉRCATE AL STAND DE ADUAMEX PARA RECLAMAR TU PREMIO 🏆</div>
     <button class="qclose" onclick="closeQuiz()">CERRAR</button>
   </div>
 </div>
@@ -539,53 +539,53 @@ function consumeEnergy(a){energy=Math.max(0,energy-a);
     setTimeout(()=>{energy=100;consumeEnergy(0);},5000);}}
 
 /* ═══════════════════════════════════════════════
-   ATTRACT — 14 mensajes (6 sobre AduaReto),
+   ATTRACT — 14 mensajes (6 sobre Reto AduaBot),
    5s pausa entre cada uno, 2min silencio al final
 ═══════════════════════════════════════════════ */
-// isReto marks messages that promote the AduaReto (gold dot)
+// isReto marks messages that promote the Reto AduaBot (gold dot)
 const ATTRACT_MSGS=[
   {reto:false,
    msg:"¡Hola! Soy AduaBot, asesor experto en comercio exterior de AduaMex.\nEstoy aquí en la Feria de UNEA para ayudarte.\n¡Presiona el micrófono y pregúntame lo que quieras!",
    voice:"Hola, soy AduaBot, asesor experto en comercio exterior de AduaMex. Estoy aquí en la Feria de UNEA para ayudarte. Pregúntame lo que quieras."},
   {reto:true,
-   msg:"¿CREES QUE PUEDES VENCER AL ADUARRETO?\nAduaBot te desafía con 5 preguntas de comercio exterior.\nSolo los más preparados pasan el reto.\n¿Te atreves? ¡Acepta y gana tu PREMIO!",
-   voice:"¿Crees que puedes vencer al AduaReto? AduaBot te desafía con cinco preguntas de comercio exterior. Solo los más preparados pasan el reto. ¿Te atreves? ¡Acepta y gana tu premio!"},
+   msg:"¿CREES QUE PUEDES VENCER AL RETO ADUABOT?\nAduaBot te desafía con 5 preguntas de comercio exterior.\nSolo los más preparados pasan el reto.\n¿Te atreves? ¡Acepta y gana tu PREMIO!",
+   voice:"¿Crees que puedes vencer al Reto AduaBot? AduaBot te desafía con cinco preguntas de comercio exterior. Solo los más preparados pasan el reto. ¿Te atreves? ¡Acepta y gana tu premio!"},
   {reto:false,
    msg:"¿Sabías que AduaMex es una agencia aduanal\ncertificada con años de experiencia en Tijuana?\nImportación, exportación y logística internacional:\nsomos tu aliado de confianza en la frontera.",
    voice:"¿Sabías que AduaMex es una agencia aduanal certificada con años de experiencia en Tijuana? Importación, exportación y logística internacional: somos tu aliado de confianza en la frontera."},
   {reto:true,
-   msg:"EL ADUARRETO TIENE UN PREMIO ESPECIAL.\nResponde 4 de 5 preguntas correctamente\ny visita el stand de AduaMex para reclamar\ntu recompensa. ¡Los expertos siempre ganan!",
-   voice:"El AduaReto tiene un premio especial. Responde cuatro de cinco preguntas correctamente y visita el stand de AduaMex para reclamar tu recompensa. ¡Los expertos siempre ganan!"},
+   msg:"EL RETO ADUABOT TIENE UN PREMIO ESPECIAL.\nResponde 4 de 5 preguntas correctamente\ny visita el stand de AduaMex para reclamar\ntu recompensa. ¡Los expertos siempre ganan!",
+   voice:"El Reto AduaBot tiene un premio especial. Responde cuatro de cinco preguntas correctamente y visita el stand de AduaMex para reclamar tu recompensa. ¡Los expertos siempre ganan!"},
   {reto:false,
    msg:"AduaMex te ofrece:\n✦ Clasificación Arancelaria\n✦ Pedimentos y Despacho Aduanero\n✦ Operador Económico Autorizado (OEA)\n✦ Logística Internacional\nTodo para hacer crecer tu negocio.",
    voice:"AduaMex te ofrece clasificación arancelaria, pedimentos y despacho aduanero, certificación como operador económico autorizado, y logística internacional. Todo para hacer crecer tu negocio."},
   {reto:true,
-   msg:"ESTUDIANTE O PROFESOR DE COMERCIO EXTERIOR:\nel ADUARRETO fue diseñado para ti.\n¿Cuánto sabes realmente del mundo aduanal?\nDemuéstralo y gánate un premio de AduaMex.",
-   voice:"Estudiante o profesor de comercio exterior: el AduaReto fue diseñado para ti. ¿Cuánto sabes realmente del mundo aduanal? Demuéstralo y gánate un premio de AduaMex."},
+   msg:"ESTUDIANTE O PROFESOR DE COMERCIO EXTERIOR:\nel RETO ADUABOT fue diseñado para ti.\n¿Cuánto sabes realmente del mundo aduanal?\nDemuéstralo y gánate un premio de AduaMex.",
+   voice:"Estudiante o profesor de comercio exterior: el Reto AduaBot fue diseñado para ti. ¿Cuánto sabes realmente del mundo aduanal? Demuéstralo y gánate un premio de AduaMex."},
   {reto:false,
    msg:"El T-MEC abre enormes oportunidades para\nempresas y profesionales mexicanos.\n¿Sabes cómo aprovecharlas al máximo?\nPresiona el micrófono y pregúntame.",
    voice:"El T-MEC abre enormes oportunidades para empresas y profesionales mexicanos. ¿Sabes cómo aprovecharlas al máximo? Presiona el micrófono y pregúntame."},
   {reto:true,
-   msg:"ADUARRETO: EL RETO DE COMERCIO EXTERIOR.\n¿Clasificación arancelaria? ¿INCOTERMS? ¿IMMEX?\nAduaBot conoce cada respuesta.\nDemuestra que tú también. ¡Acepta el reto!",
-   voice:"AduaReto: el reto de comercio exterior. ¿Clasificación arancelaria? ¿INCOTERMS? ¿IMMEX? AduaBot conoce cada respuesta. Demuestra que tú también. ¡Acepta el reto!"},
+   msg:"RETO ADUABOT: EL RETO DE COMERCIO EXTERIOR.\n¿Clasificación arancelaria? ¿INCOTERMS? ¿IMMEX?\nAduaBot conoce cada respuesta.\nDemuestra que tú también. ¡Acepta el reto!",
+   voice:"Reto AduaBot: el reto de comercio exterior. ¿Clasificación arancelaria? ¿INCOTERMS? ¿IMMEX? AduaBot conoce cada respuesta. Demuestra que tú también. ¡Acepta el reto!"},
   {reto:false,
    msg:"Cada año miles de empresas pierden\noportunidades por no tener un agente\naduanal de confianza. AduaMex lleva años\nasegurando que tus mercancías lleguen a tiempo.",
    voice:"Cada año miles de empresas pierden oportunidades por no tener un agente aduanal de confianza. AduaMex lleva años asegurando que tus mercancías lleguen a tiempo y sin contratiempos."},
   {reto:true,
-   msg:"¿LISTO PARA EL ADUARRETO?\n5 preguntas. 15 segundos cada una.\nTema: Comercio Exterior nivel experto.\nSi respondes 4 de 5, el premio es TUYO.",
-   voice:"¿Listo para el AduaReto? Cinco preguntas, quince segundos cada una. Tema: comercio exterior nivel experto. Si respondes cuatro de cinco, el premio es tuyo. ¡Anímate!"},
+   msg:"¿LISTO PARA EL RETO ADUABOT?\n5 preguntas. 15 segundos cada una.\nTema: Comercio Exterior nivel experto.\nSi respondes 4 de 5, el premio es TUYO.",
+   voice:"¿Listo para el Reto AduaBot? Cinco preguntas, quince segundos cada una. Tema: comercio exterior nivel experto. Si respondes cuatro de cinco, el premio es tuyo. ¡Anímate!"},
   {reto:false,
    msg:"Estudiar Comercio Internacional es elegir\nuna carrera con futuro global.\nAduaMex apoya a los futuros profesionales\ndel comercio exterior. ¡Pregunta cómo!",
    voice:"Estudiar comercio internacional es elegir una carrera con futuro global. AduaMex apoya a los futuros profesionales del comercio exterior. Pregunta cómo podemos colaborar."},
   {reto:true,
-   msg:"NADIE HA PODIDO VENCER AL ADUARRETO.\n¿Serás el primero?\nDemuestra tu conocimiento en comercio exterior\ny llévate el premio de AduaMex.",
-   voice:"Nadie ha podido vencer al AduaReto. ¿Serás el primero? Demuestra tu conocimiento en comercio exterior y llévate el premio de AduaMex. El reto te espera."},
+   msg:"NADIE HA PODIDO VENCER AL RETO ADUABOT.\n¿Serás el primero?\nDemuestra tu conocimiento en comercio exterior\ny llévate el premio de AduaMex.",
+   voice:"Nadie ha podido vencer al Reto AduaBot. ¿Serás el primero? Demuestra tu conocimiento en comercio exterior y llévate el premio de AduaMex. El reto te espera."},
   {reto:false,
    msg:"AduaMex: tu agencia aduanal certificada.\nTijuana, B.C. · Frontera México-EE.UU.\nImportación · Exportación · OEA · Logística.\nVisítanos en el stand y conoce más.",
    voice:"AduaMex, tu agencia aduanal certificada en Tijuana, Baja California. Importación, exportación, OEA y logística. Visítanos en el stand y conoce todo lo que podemos hacer por ti."},
   {reto:true,
-   msg:"ÚLTIMO LLAMADO AL ADUARRETO.\nEstudiantes y profesores de UNEA:\n¿tienen lo que se necesita para vencer\nal asesor experto de AduaMex?\n¡Presiona el botón y compruébalo!",
-   voice:"Último llamado al AduaReto. Estudiantes y profesores de UNEA: ¿tienen lo que se necesita para vencer al asesor experto de AduaMex? Presionen el botón y compruébenlo."},
+   msg:"ÚLTIMO LLAMADO AL RETO ADUABOT.\nEstudiantes y profesores de UNEA:\n¿tienen lo que se necesita para vencer\nal asesor experto de AduaMex?\n¡Presiona el botón y compruébalo!",
+   voice:"Último llamado al Reto AduaBot. Estudiantes y profesores de UNEA: ¿tienen lo que se necesita para vencer al asesor experto de AduaMex? Presionen el botón y compruébenlo."},
 ];
 
 function startInactivityWatcher(){
@@ -857,9 +857,108 @@ const BANK=[
    opts:["Un arancel punitivo para países en desarrollo","Acuerdo por el que países desarrollados otorgan preferencias arancelarias unilaterales a países en desarrollo","Un tipo de TLC entre bloques regionales","Un programa de certificación de calidad"],correct:1},
   {q:"¿Qué son las salvaguardas en comercio internacional?",
    opts:["Seguros de carga obligatorios","Medidas temporales de protección aplicadas cuando el aumento de importaciones causa daño grave a la industria nacional","Documentos de garantía bancaria","Certificados de calidad para productos importados"],correct:1},
+
+  {q:"¿Qué es el arancel mixto en el sistema arancelario mexicano?",
+   opts:["Solo un porcentaje sobre el valor","Solo una cantidad fija por unidad","La combinación de un arancel ad valorem y uno específico aplicados simultáneamente","Un arancel exclusivo para países sin TLC"],correct:2},
+  {q:"¿Qué es el aforo en el proceso de despacho aduanero?",
+   opts:["El peso máximo permitido por contenedor","El reconocimiento físico y/o documental de mercancías por el agente aduanal","El pago del IVA en importaciones","El número de bultos declarados en el pedimento"],correct:1},
+  {q:"¿Qué es el régimen aduanero de elaboración en recinto fiscalizado?",
+   opts:["Almacenar mercancías sin procesar por tiempo indefinido","Importar definitivamente con pago diferido","Introducir mercancías extranjeras a un recinto autorizado para someterlas a procesos industriales sin pagar impuestos","Exportar temporalmente para reparación"],correct:2},
+  {q:"¿Cuál es la diferencia entre importación temporal y depósito fiscal?",
+   opts:["Son lo mismo con diferente nombre","En temporal la mercancía se usa en México; en depósito fiscal se almacena en bodega autorizada sin pagar impuestos aún","El depósito fiscal paga más impuestos","La temporal no requiere pedimento"],correct:1},
+  {q:"¿Qué es el precio de transferencia en operaciones de comercio exterior?",
+   opts:["El precio de venta al consumidor final","El valor declarado en la factura aduanal","El precio pactado entre empresas relacionadas en transacciones internacionales, sujeto a reglas fiscales especiales","El costo de transporte internacional"],correct:2},
+  {q:"¿Qué es el certificado fitosanitario en comercio exterior?",
+   opts:["Un permiso para exportar productos electrónicos","Documento que certifica que productos vegetales o animales cumplen requisitos sanitarios para ingresar a un país","Un arancel especial para productos orgánicos","Un tipo de seguro para mercancías perecederas"],correct:1},
+  {q:"¿Qué es la fracción arancelaria 9802 en el contexto del T-MEC?",
+   opts:["Productos completamente fabricados en México","Fracción para artículos de uso personal","Fracción que permite importar con arancel reducido componentes fabricados en EE.UU. que regresan al país tras proceso en México","Productos agrícolas con trato preferencial"],correct:2},
+  {q:"¿Qué es el despacho anticipado en aduanas mexicanas?",
+   opts:["Pagar aranceles antes del pedimento","Tramitar el pedimento y pagar impuestos antes de que la mercancía llegue a territorio nacional","Un descuento por tramitar rápidamente","Importar sin revisión física"],correct:1},
+  {q:"¿Qué es la carta de crédito documentaria (L/C) en comercio internacional?",
+   opts:["Un contrato de transporte marítimo","Un documento donde el banco del importador garantiza el pago al exportador si se presentan los documentos acordados","Un seguro de carga internacional","Un certificado de origen bancario"],correct:1},
+  {q:"¿Qué es el conocimiento de embarque (Bill of Lading)?",
+   opts:["La factura comercial de importación","Documento emitido por la naviera que acredita el contrato de transporte y la recepción de la mercancía","El pedimento aduanal marítimo","El certificado de origen para transporte marítimo"],correct:1},
+  {q:"¿Qué son las medidas antidumping?",
+   opts:["Aranceles que aplica un país para contrarrestar importaciones vendidas a precios artificialmente bajos que dañan su industria","Subsidios para exportadores nacionales","Restricciones cuantitativas a las importaciones","Normas técnicas obligatorias para productos importados"],correct:0},
+  {q:"¿Qué es el transporte multimodal en logística internacional?",
+   opts:["Transportar mercancías usando solo transporte marítimo","El uso de un solo medio de transporte para toda la cadena","El uso combinado de dos o más medios de transporte bajo un único contrato y documento","El transporte exclusivo por vía aérea"],correct:2},
+  {q:"¿Qué es la guía aérea (Air Waybill) en comercio exterior?",
+   opts:["El pedimento para importaciones aéreas","Documento de transporte aéreo que acredita el contrato entre el embarcador y la aerolínea para el transporte de mercancías","Un permiso de exportación por avión","La factura del flete aéreo internacional"],correct:1},
+  {q:"¿Qué es el seguro de carga en operaciones de comercio exterior?",
+   opts:["Un impuesto obligatorio sobre importaciones","La póliza que cubre pérdidas o daños a la mercancía durante el transporte internacional","Un trámite aduanal obligatorio","El costo del embalaje internacional"],correct:1},
+  {q:"¿Qué significa el INCOTERM CIF?",
+   opts:["El comprador paga todo desde origen","El vendedor paga solo el flete","Costo, Seguro y Flete: el vendedor paga transporte y seguro hasta el puerto de destino","El importador asume costos desde el almacén del vendedor"],correct:2},
+  {q:"¿Qué es el packing list o lista de empaque?",
+   opts:["El pedimento aduanal detallado","Documento que describe el contenido, peso y dimensiones de cada bulto de un embarque","La factura comercial de exportación","El certificado de calidad del producto"],correct:1},
+  {q:"¿Cuál es la función del Número de Identificación Comercial (NICO) en México?",
+   opts:["Es el RFC del importador","Código asignado a mercancías que identifica regulaciones especiales aplicables, complementando la fracción arancelaria","El número de pedimento aduanal","El folio del certificado de origen"],correct:1},
+  {q:"¿Qué es la declaración de valor en aduana?",
+   opts:["La lista de precios del proveedor extranjero","El documento donde el importador declara el valor de la mercancía para calcular los impuestos de importación","El certificado de origen del producto","El manifiesto de carga del buque"],correct:1},
+  {q:"¿Qué es el comercio de servicios en el contexto internacional?",
+   opts:["Solo el comercio de productos digitales","El intercambio internacional de servicios como turismo, finanzas, transporte, educación y telecomunicaciones, regulado por el AGCS de la OMC","El comercio informal en zonas fronterizas","La exportación de software únicamente"],correct:1},
+  {q:"¿Qué es la zona de libre comercio en su definición más básica?",
+   opts:["Una zona donde no hay ningún tipo de control","Un área donde se eliminan los aranceles entre los países miembros pero cada país mantiene sus propios aranceles frente a terceros","Un acuerdo donde todos los países tienen los mismos aranceles","Una región donde solo circulan productos locales"],correct:1},
+  {q:"¿Qué diferencia a una unión aduanera de una zona de libre comercio?",
+   opts:["No hay diferencia real entre ambas","En la unión aduanera los países adoptan un arancel externo común frente a terceros países; en la zona de libre comercio cada país mantiene el suyo","La zona de libre comercio elimina más barreras","La unión aduanera es solo para servicios"],correct:1},
+  {q:"¿Qué es el Sistema de Información Comercial (SNICE) en México?",
+   opts:["Una red social para empresas exportadoras","Sistema de la Secretaría de Economía con información sobre aranceles, cuotas y regulaciones aplicables al comercio exterior","El sistema de pagos del SAT para aranceles","La plataforma de logística del gobierno"],correct:1},
+  {q:"¿Qué es la declaratoria de cumplimiento de una NOM?",
+   opts:["Un permiso de exportación especial","El documento que acredita que un producto importado cumple con la norma técnica mexicana aplicable","Una exención fiscal para productos certificados","El sello de calidad del gobierno mexicano"],correct:1},
+  {q:"¿Qué es el COVE (Comprobante de Valor Electrónico) en aduanas mexicanas?",
+   opts:["El pedimento electrónico simplificado","El folio electrónico que vincula la factura comercial con el pedimento para acreditar el valor en aduana","El comprobante fiscal del pago de aranceles","El número de registro del agente aduanal"],correct:1},
+  {q:"¿Qué es la exportación definitiva de servicios en términos fiscales?",
+   opts:["Solo aplica a productos tangibles","La prestación de servicios a residentes en el extranjero que se consume fuera del territorio nacional, generalmente con tasa 0% de IVA","Un tipo de exportación que paga el doble de impuestos","La exportación de servicios profesionales únicamente"],correct:1},
+  {q:"¿Qué es la nomenclatura arancelaria?",
+   opts:["El nombre comercial del producto en el mercado","El sistema de codificación y descripción ordenada de las mercancías para fines aduaneros y estadísticos","El registro de importadores habituales","El catálogo de agentes aduanales autorizados"],correct:1},
+  {q:"¿Qué es el manifiesto de carga en logística aduanera?",
+   opts:["El pedimento del importador","Documento que relaciona todas las mercancías transportadas en un vehículo, buque o aeronave, presentado ante la aduana al arribo","La factura del transportista","El contrato de arrendamiento del contenedor"],correct:1},
+  {q:"¿Qué establece el Artículo 36 de la Ley Aduanera mexicana?",
+   opts:["Los requisitos para ser agente aduanal","Los documentos que deben presentarse ante la aduana para el despacho de importaciones y exportaciones","Las sanciones por evasión de impuestos","Los requisitos para obtener la certificación OEA"],correct:1},
+  {q:"¿Qué es el Pre-despacho en el sistema aduanero mexicano?",
+   opts:["Un pago anticipado de derechos","La modalidad que permite transmitir el pedimento y pagar contribuciones antes de que la mercancía llegue a México para agilizar su salida","Un tipo de despacho sin reconocimiento físico","El despacho exclusivo para importadores certificados"],correct:1},
+  {q:"¿Qué es el Sistema de Administración Aduanera (SAA)?",
+   opts:["El departamento de cobros del SAT","La plataforma tecnológica del SAT que gestiona y automatiza los procesos de despacho aduanero en México","El software de contabilidad para agentes aduanales","El registro nacional de mercancías peligrosas"],correct:1},
+  {q:"¿Qué es el comercio intraindustrial en economía internacional?",
+   opts:["El comercio exclusivamente entre micro empresas","El intercambio de bienes similares o del mismo sector entre dos países, como cuando México exporta e importa vehículos","El comercio solo dentro de un mismo estado","El comercio entre empresas del mismo grupo corporativo"],correct:1},
+  {q:"¿Qué son los contingentes arancelarios (cupos) en comercio exterior?",
+   opts:["Aranceles que aumentan automáticamente","El volumen máximo de mercancías que puede importarse con arancel reducido; las cantidades que lo superan pagan arancel mayor","La cantidad máxima de exportaciones permitidas","El límite de peso por contenedor marítimo"],correct:1},
+  {q:"¿Qué es el tipo de cambio en operaciones de comercio exterior?",
+   opts:["El costo del transporte internacional","La tasa de conversión entre la moneda nacional y la extranjera usada para calcular el valor en aduana en operaciones de importación","El precio del seguro de carga","El arancel convertido a pesos mexicanos"],correct:1},
+  {q:"¿Qué es la facilitación del comercio según la OMC?",
+   opts:["Eliminar todos los aranceles inmediatamente","La simplificación, modernización y armonización de los procedimientos de exportación e importación para reducir costos y tiempos","Reducir las normas de calidad para importar más rápido","Crear zonas francas en todos los países"],correct:1},
+  {q:"¿Qué es el SADEN (Sistema de Automatización del Despacho Especial) en México?",
+   opts:["El sistema de pagos electrónicos de aranceles","El mecanismo que permite realizar el despacho aduanero de mercancías consideradas de bajo riesgo de forma simplificada y expedita","El registro de empresas certificadas OEA","La plataforma de estadísticas de comercio exterior"],correct:1},
+  {q:"¿Qué es la triangulación de comercio en operaciones aduanales?",
+   opts:["Un método legal de transporte por tres países","El proceso de importar en un país, procesar y reexportar legalmente","Una práctica que puede usarse para evadir restricciones arancelarias enviando mercancías a través de un tercer país para falsear su origen","El uso de tres agentes aduanales en una operación"],correct:2},
+  {q:"¿Qué es el TLCUEM (Tratado de Libre Comercio México - Unión Europea)?",
+   opts:["Un acuerdo solo de servicios financieros","Un tratado que elimina aranceles entre México y los 27 países de la UE para bienes, servicios e inversión","Un programa de cooperación cultural solamente","Un acuerdo exclusivo para productos agrícolas"],correct:1},
+  {q:"¿Qué es la exportación indirecta?",
+   opts:["Exportar sin pagar impuestos","Vender productos a un intermediario nacional que se encarga de exportarlos al mercado extranjero","Exportar productos de manera clandestina","Exportar temporalmente para exposiciones"],correct:1},
+  {q:"¿Qué regula la Ley de Comercio Exterior en México?",
+   opts:["Solo los aranceles de importación","Los mecanismos para regular, promover y proteger el comercio exterior, incluyendo cuotas compensatorias, salvaguardas y prácticas desleales","Únicamente las exportaciones mexicanas","El transporte internacional de mercancías"],correct:1},
+  {q:"¿Qué es el pago de contribuciones en el despacho aduanero?",
+   opts:["Solo el pago del IVA","El entero de los impuestos (IGI, IVA, IEPS según aplique) y derechos causados por la importación, previo al despacho de la mercancía","Un depósito reembolsable de garantía","El pago al agente aduanal por sus servicios"],correct:1},
+  {q:"¿Qué es el rectificación de pedimento en aduanas?",
+   opts:["Cancelar completamente una importación","La corrección de datos erróneos en un pedimento ya tramitado, dentro de los plazos y supuestos permitidos por la Ley Aduanera","Duplicar un pedimento por error","Solicitar devolución de impuestos pagados de más"],correct:1},
+  {q:"¿Qué es la inteligencia aduanera?",
+   opts:["Un sistema de IA para clasificar mercancías","El uso de análisis de datos, perfiles de riesgo y tecnología para detectar contrabando, fraude fiscal y evasión en operaciones de comercio exterior","Un programa de capacitación para agentes aduanales","El sistema de vigilancia en recintos fiscales"],correct:1},
+  {q:"¿Qué es el Comprobante Fiscal Digital por Internet (CFDI) en exportaciones?",
+   opts:["Un documento solo para importaciones","El comprobante fiscal electrónico que ampara la exportación de mercancías, equivalente a la factura en operaciones nacionales","El pedimento de exportación simplificado","El certificado de origen digital"],correct:1},
+  {q:"¿Qué es la ventaja comparativa en teoría del comercio internacional?",
+   opts:["Tener más tecnología que otros países","Producir un bien con menor costo de oportunidad relativo que otro país, justificando la especialización y el comercio internacional","Exportar más de lo que se importa siempre","Tener los precios más bajos del mercado"],correct:1},
+  {q:"¿Qué es el Registro en el Esquema de Certificación (REC) de empresas OEA?",
+   opts:["El trámite para ser agente aduanal","El proceso mediante el cual el SAT certifica a empresas como operadores confiables con beneficios en rapidez y facilidades aduaneras","El registro de proveedores de logística","La certificación ISO para exportadores"],correct:1},
+  {q:"¿Qué es la cadena de suministro global (Global Supply Chain)?",
+   opts:["Solo la red de transporte marítimo mundial","La red integrada de proveedores, fabricantes, distribuidores y clientes que opera a nivel internacional para producir y entregar bienes","El sistema de pedimentos electrónicos","El conjunto de agentes aduanales certificados"],correct:1},
+  {q:"¿Cuál es la diferencia entre el IVA en importaciones definitivas y el IVA acreditable?",
+   opts:["No hay diferencia entre ambos","El IVA en importaciones se paga al momento del despacho como requisito; el IVA acreditable es el que la empresa puede recuperar contra el IVA cobrado en sus ventas","El IVA de importación es siempre mayor","El IVA acreditable solo aplica a exportadores"],correct:1},
+  {q:"¿Qué es el SECIIT (Servicio de Clasificación e Identificación de Instrumentos de Trabajo)?",
+   opts:["Un programa de capacitación aduanal","El sistema del SAT que permite a las empresas solicitar criterios de clasificación arancelaria de sus mercancías para tener certeza jurídica","El registro de agentes aduanales activos","Un certificado de calidad para importadores"],correct:1},
+  {q:"¿Qué son los Principios Generales de Valoración Aduanera de la OMC?",
+   opts:["Reglas para calcular el flete internacional","El conjunto de métodos en orden jerárquico para determinar el valor en aduana: valor de transacción, bienes idénticos, similares, deductivo, reconstruido y de últimos recursos","Las normas para certificar el origen de mercancías","Los procedimientos para el despacho aduanero"],correct:1},
 ];
 
-let currentQ=[],qi=0,qScore=0,qtimer=null,qtl=15,qaActive=false;
+let currentQ=[],qi=0,qScore=0,qtimer=null,qtl=12,qaActive=false;
 
 function shuffle(arr){return [...arr].sort(()=>Math.random()-.5);}
 
@@ -895,13 +994,13 @@ function loadQ(){
   startQTimer();
 }
 
-function startQTimer(){clearInterval(qtimer);qtl=15;updTimer();
+function startQTimer(){clearInterval(qtimer);qtl=12;updTimer();
   qtimer=setInterval(()=>{qtl--;updTimer();if(qtl<=0){clearInterval(qtimer);revealQ(-1);}},1000);}
 
 function updTimer(){
   document.getElementById('tnum').textContent=qtl;
-  const c=document.getElementById('tc');c.style.strokeDashoffset=201*(1-qtl/15);
-  const col=qtl>8?'#00e8ff':qtl>4?'#ffab00':'#ff1744';
+  const c=document.getElementById('tc');c.style.strokeDashoffset=201*(1-qtl/12);
+  const col=qtl>6?'#00e8ff':qtl>3?'#ffab00':'#ff1744';
   c.style.stroke=col;document.getElementById('tnum').style.color=col;}
 
 function ansQ(chosen){if(!qaActive)return;clearInterval(qtimer);revealQ(chosen);}
@@ -918,17 +1017,17 @@ function revealQ(chosen){
     ?['¡Correcto! Excelente dominio del tema.','¡Acertaste! Eso es nivel experto.','¡Correcto! AduaBot reconoce tu conocimiento.'][qi%3]
     :['Incorrecto. La respuesta correcta está marcada en verde.','Error. Revisa la opción correcta marcada.','No es correcta. Sigue aprendiendo con AduaMex.'][qi%3];
   speakText(`${fb}${qi<4?' Siguiente pregunta.':''}`,null,null);
-  setTimeout(()=>{qi++;if(qi<5){document.getElementById('p'+qi).classList.add('cur');loadQ();}else showQResult();},1500);}
+  setTimeout(()=>{qi++;if(qi<5){document.getElementById('p'+qi).classList.add('cur');loadQ();}else showQResult();},4500);}
 
 function showQResult(){
   qaActive=false;
   document.getElementById('qv').classList.add('hidden');document.getElementById('qrv').classList.remove('hidden');
   document.getElementById('qscore').textContent=`${qScore}/5`;
   const won=qScore>=4;
-  document.getElementById('qrmsg').textContent=won?'¡VENCISTE AL ADUARRETO!':'ADUABOT SIGUE INVICTO';
+  document.getElementById('qrmsg').textContent=won?'¡VENCISTE AL RETO ADUABOT!':'ADUABOT SIGUE INVICTO';
   document.getElementById('qprize').classList.toggle('hidden',!won);
   const msg=won
-    ?`¡Felicidades! Obtuviste ${qScore} de 5. Venciste al AduaReto. Eres un experto en comercio exterior. Acércate al stand de AduaMex para reclamar tu premio especial.`
+    ?`¡Felicidades! Obtuviste ${qScore} de 5. Venciste al Reto AduaBot. Eres un experto en comercio exterior. Acércate al stand de AduaMex para reclamar tu premio especial.`
     :`Obtuviste ${qScore} de 5. AduaBot sigue invicto, pero lo intentaste bien. Sigue aprendiendo y vuelve a intentarlo. Visítanos en el stand de AduaMex.`;
   setTimeout(()=>speakText(msg,null,null),400);}
 
