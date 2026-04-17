@@ -206,6 +206,7 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
   font-family:'Orbitron',sans-serif;font-size:var(--fs-md);font-weight:700;letter-spacing:3px;cursor:pointer;transition:all .2s;}
 .qclose:hover{background:var(--c);color:#000;}
 .hidden{display:none!important;}
+@keyframes scorepop{0%{transform:scale(1);}40%{transform:scale(1.45);}100%{transform:scale(1);}}
 </style>
 </head>
 <body>
@@ -330,11 +331,15 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
         <div class="dchip"><div class="dl">EVENTO</div><div class="dv">UNEA '25</div></div>
         <div class="dchip R"><div class="dl">STAND</div><div class="dv">ACTIVO</div></div>
       </div>
+      <div class="chips-row">
+        <div class="dchip" style="border-left-color:var(--c3)"><div class="dl">VICTORIAS BOT</div><div class="dv" id="score-wins" style="color:var(--c3)">0</div></div>
+        <div class="dchip R" style="border-right-color:var(--cred)"><div class="dl">DERROTAS BOT</div><div class="dv" id="score-losses" style="color:var(--cred)">0</div></div>
+      </div>
     </div>
   </div>
 
   <div class="tstrip">
-    <span class="tinner">★ ADUAMEX S.A. DE C.V. ★ AGENCIA ADUANAL CERTIFICADA ★ TIJUANA, B.C. MÉXICO ★ IMPORTACIÓN · EXPORTACIÓN · LOGÍSTICA INTERNACIONAL · CUMPLIMIENTO NORMATIVO · OEA ★ ACEPTA EL RETO ADUABOT Y GANA UN PREMIO ★ VISÍTANOS EN EL STAND ★ FERIA UNEA 2025 ★</span>
+    <span class="tinner">★ ADUAMEX S.A. DE C.V. ★ AGENCIA ADUANAL CERTIFICADA ★ TIJUANA, B.C. MÉXICO ★ IMPORTACIÓN · EXPORTACIÓN · LOGÍSTICA INTERNACIONAL · CUMPLIMIENTO NORMATIVO · OEA ★ ACEPTA EL RETO ADUABOT Y GANA UN PREMIO ★ VISÍTANOS EN EL STAND ★ FERIA UNEA 2025 ★ SISTEMA PROPIEDAD DE ADUAMEX AGENCIA DIGITAL ★</span>
   </div>
 </div>
 
@@ -517,6 +522,7 @@ function animGears(){
    CORE
 ═══════════════════════════════════════════════ */
 let KEY='',energy=100,busy=false,rec=null,tscript='',qcnt=0;
+let botWins=0,botLosses=0,quizResultTimer=null;
 let lastActivity=Date.now(),attractRunning=false,attractSeq=null,attractMsgIdx=0;
 const appEl=document.getElementById('app'),ctEl=document.getElementById('ctxt');
 
@@ -1026,12 +1032,30 @@ function showQResult(){
   const won=qScore>=4;
   document.getElementById('qrmsg').textContent=won?'¡VENCISTE AL RETO ADUABOT!':'ADUABOT SIGUE INVICTO';
   document.getElementById('qprize').classList.toggle('hidden',!won);
+  // Update live score counter
+  if(won){
+    botLosses++;
+    const el=document.getElementById('score-losses');
+    if(el){el.textContent=botLosses;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
+  } else {
+    botWins++;
+    const el=document.getElementById('score-wins');
+    if(el){el.textContent=botWins;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
+  }
   const msg=won
     ?`¡Felicidades! Obtuviste ${qScore} de 5. Venciste al Reto AduaBot. Eres un experto en comercio exterior. Acércate al stand de AduaMex para reclamar tu premio especial.`
     :`Obtuviste ${qScore} de 5. AduaBot sigue invicto, pero lo intentaste bien. Sigue aprendiendo y vuelve a intentarlo. Visítanos en el stand de AduaMex.`;
-  setTimeout(()=>speakText(msg,null,null),400);}
+  setTimeout(()=>speakText(msg,null,null),400);
+  // Auto attract after 40s if nobody closes
+  clearTimeout(quizResultTimer);
+  quizResultTimer=setTimeout(()=>{
+    if(!document.getElementById('quiz-ov').classList.contains('hidden')){
+      closeQuiz();
+    }
+  },40000);
+}
 
-function closeQuiz(){document.getElementById('quiz-ov').classList.add('hidden');
+function closeQuiz(){clearTimeout(quizResultTimer);document.getElementById('quiz-ov').classList.add('hidden');
   clearInterval(qtimer);qaActive=false;window.speechSynthesis.cancel();resetActivity();}
 </script>
 </body>
