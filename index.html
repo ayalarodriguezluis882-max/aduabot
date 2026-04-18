@@ -207,6 +207,179 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
 .qclose:hover{background:var(--c);color:#000;}
 .hidden{display:none!important;}
 @keyframes scorepop{0%{transform:scale(1);}40%{transform:scale(1.45);}100%{transform:scale(1);}}
+
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE — PHONE ADAPTATION
+   Tablet landscape (>=600px) = existing layout unchanged
+   Phone portrait / small screen (<600px) = single column
+═══════════════════════════════════════════════════════ */
+
+/* ── PHONE PORTRAIT (<=599px wide) ── */
+@media screen and (max-width:599px){
+
+  /* Scale down font vars */
+  :root{
+    --fs-xs:.52rem; --fs-sm:.65rem; --fs-md:.8rem;
+    --fs-lg:.9rem;  --fs-xl:1.1rem; --fs-2xl:1.4rem;
+  }
+
+  /* Allow scroll on phone so nothing gets cut off */
+  html,body{ overflow:auto; position:relative; }
+  #app{ overflow-y:auto; height:auto; min-height:100vh; }
+
+  /* Single column layout */
+  .main-body{
+    grid-template-columns:1fr !important;
+    gap:8px;
+  }
+
+  /* Hide gear canvas on phone — save space */
+  .right-col{ display:none !important; }
+
+  /* Top bar: smaller logo */
+  .brand-logo{ height:28px !important; }
+  .ebar{ width:70px !important; }
+
+  /* PTT button: more compact */
+  #ptt{ padding:10px 12px !important; gap:10px !important; }
+  .ptt-icon-wrap{ width:40px !important; height:40px !important; }
+  .ptt-orb{ width:24px !important; height:24px !important; }
+  .ptt-orb-dot{ width:7px !important; height:7px !important; }
+  #btxt{ font-size:.72rem !important; }
+  .ptt-instr{ font-size:.38rem !important; letter-spacing:1px !important; }
+
+  /* Quiz button: compact */
+  #quiz-btn{ padding:10px 12px !important; gap:10px !important; }
+  .qb-trophy{ font-size:1.6rem !important; }
+  .qb-title{ font-size:.62rem !important; letter-spacing:1px !important; }
+  .qb-sub{ font-size:.72rem !important; }
+  .qb-hint{ font-size:.35rem !important; }
+  .qb-badge-num{ font-size:.85rem !important; }
+
+  /* Console */
+  #con{ font-size:.82rem !important; min-height:52px !important; padding:8px 10px !important; }
+
+  /* Chips: 4 per 2x2 grid */
+  .chips-row .dchip .dv{ font-size:.58rem !important; }
+
+  /* Viz bars: less height */
+  .vizrow{ height:14px !important; }
+  .vb{ width:5px !important; }
+
+  /* HUD corners: smaller */
+  .hc{ width:28px !important; height:28px !important; }
+
+  /* App padding */
+  #app{ padding:6px 10px 8px 10px !important; gap:5px !important; }
+
+  /* Keyscreen */
+  .ks-logo-img{ width:200px !important; }
+  .ks-inp{ width:260px !important; }
+
+  /* Attract */
+  .att-logo-img{ width:200px !important; }
+  #att-msg{ font-size:.95rem !important; max-width:290px !important; min-height:70px !important; }
+  .att-ring-wrap{ width:60px !important; height:60px !important; }
+  .att-inner{ width:38px !important; height:38px !important; }
+  .att-cta-btn{ padding:8px 14px !important; font-size:.58rem !important; letter-spacing:2px !important; }
+
+  /* Quiz overlay */
+  .qo-title{ font-size:1.3rem !important; letter-spacing:3px !important; }
+  .qcard{ padding:12px 12px !important; }
+  .qtxt{ font-size:1rem !important; }
+  .qopts{ gap:7px !important; }
+  .qopt{ padding:10px 8px !important; font-size:.85rem !important; }
+  .tw{ width:56px !important; height:56px !important; }
+  #tsv{ width:56px !important; height:56px !important; }
+  .tnum{ font-size:1rem !important; }
+  .pip{ width:26px !important; height:4px !important; }
+  .qscore{ font-size:2.8rem !important; }
+  .qmsg{ font-size:.9rem !important; }
+  .qprize{ font-size:.55rem !important; padding:10px 12px !important; }
+  .qclose{ padding:9px 26px !important; font-size:.65rem !important; }
+
+  /* Ticker: smaller */
+  .tinner{ font-size:.36rem !important; letter-spacing:1.5px !important; }
+}
+
+/* ── PHONE LANDSCAPE (height <= 480px, width >= 500px) ── */
+@media screen and (max-height:480px) and (min-width:500px){
+
+  :root{
+    --fs-xs:.5rem; --fs-sm:.62rem; --fs-md:.78rem;
+    --fs-lg:.88rem; --fs-xl:1rem; --fs-2xl:1.3rem;
+  }
+
+  html,body{ overflow:auto; position:relative; }
+  #app{ overflow-y:auto; height:auto; min-height:100vh; gap:4px !important; }
+
+  /* Keep 2 columns but shrink gear canvas */
+  #gear-canvas{ min-height:120px !important; }
+  .gear-col{ gap:3px !important; }
+
+  /* Compact top bar */
+  .brand-logo{ height:26px !important; }
+  .ebar{ width:65px !important; }
+  .epct-lbl{ display:none; }
+
+  /* Compact PTT */
+  #ptt{ padding:8px 12px !important; gap:10px !important; }
+  .ptt-icon-wrap{ width:38px !important; height:38px !important; }
+  .ptt-orb{ width:22px !important; height:22px !important; }
+  #btxt{ font-size:.65rem !important; }
+  .ptt-instr{ font-size:.36rem !important; }
+
+  /* Compact quiz btn */
+  #quiz-btn{ padding:8px 12px !important; gap:8px !important; }
+  .qb-trophy{ font-size:1.4rem !important; }
+  .qb-title{ font-size:.58rem !important; }
+  .qb-sub{ font-size:.68rem !important; }
+  .qb-hint{ display:none; }
+
+  /* Console */
+  #con{ font-size:.8rem !important; min-height:44px !important; padding:6px 10px !important; }
+
+  /* Viz bars */
+  .vizrow{ height:12px !important; }
+
+  /* Chips smaller */
+  .dchip{ padding:4px 6px !important; }
+  .dv{ font-size:.55rem !important; }
+  .dl{ font-size:.33rem !important; }
+
+  /* HUD */
+  .hc{ width:24px !important; height:24px !important; }
+
+  /* App padding */
+  #app{ padding:5px 10px 6px 10px !important; }
+
+  /* Quiz overlay: compact */
+  .qcard{ padding:10px !important; }
+  .qtxt{ font-size:.92rem !important; }
+  .qopt{ padding:9px 8px !important; font-size:.8rem !important; }
+  .tw{ width:50px !important; height:50px !important; }
+  #tsv{ width:50px !important; height:50px !important; }
+  .tnum{ font-size:.9rem !important; }
+  .qscore{ font-size:2.4rem !important; }
+}
+
+/* ── SMALL TABLET / LARGE PHONE (600px–767px) ── */
+@media screen and (min-width:600px) and (max-width:767px){
+  :root{
+    --fs-xs:.55rem; --fs-sm:.68rem; --fs-md:.86rem;
+    --fs-lg:.98rem; --fs-xl:1.2rem; --fs-2xl:1.6rem;
+  }
+  .brand-logo{ height:34px !important; }
+  #ptt{ padding:12px 14px !important; }
+  .ptt-icon-wrap{ width:46px !important; height:46px !important; }
+  #btxt{ font-size:.82rem !important; }
+  #quiz-btn{ padding:12px 14px !important; }
+  .qb-trophy{ font-size:1.9rem !important; }
+  #gear-canvas{ min-height:150px !important; }
+  .qopt{ font-size:.92rem !important; }
+  .qtxt{ font-size:1.1rem !important; }
+}
+
 </style>
 </head>
 <body>
