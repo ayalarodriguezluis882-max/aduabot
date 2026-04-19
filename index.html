@@ -478,7 +478,7 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
           <div id="ptt-state">LISTO</div>
         </div>
       </div>
-      <div id="quiz-btn" onclick="openQuiz()">
+      <div id="quiz-btn" onclick="openModeSelect()">
         <div class="qb-trophy">🏆</div>
         <div class="qb-text">
           <div class="qb-title">RETO ADUABOT — PON A PRUEBA TU CONOCIMIENTO</div>
@@ -507,6 +507,10 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
       <div class="chips-row">
         <div class="dchip" style="border-left-color:var(--c3)"><div class="dl">VICTORIAS BOT</div><div class="dv" id="score-wins" style="color:var(--c3)">0</div></div>
         <div class="dchip R" style="border-right-color:var(--cred)"><div class="dl">DERROTAS BOT</div><div class="dv" id="score-losses" style="color:var(--cred)">0</div></div>
+      </div>
+      <div class="chips-row" id="tv-score-row">
+        <div class="dchip" style="border-left-color:var(--camb)"><div class="dl">TRIVIA GANADOS</div><div class="dv" id="tv-wins" style="color:var(--camb)">0</div></div>
+        <div class="dchip R" style="border-right-color:var(--camb)"><div class="dl">TRIVIA PERDIDOS</div><div class="dv" id="tv-losses" style="color:rgba(255,171,0,.5)">0</div></div>
       </div>
     </div>
   </div>
@@ -1230,6 +1234,233 @@ function showQResult(){
 
 function closeQuiz(){clearTimeout(quizResultTimer);document.getElementById('quiz-ov').classList.add('hidden');
   clearInterval(qtimer);qaActive=false;window.speechSynthesis.cancel();resetActivity();}
+/* ═══════════════════════════════════════════════════
+   MODE SELECT
+═══════════════════════════════════════════════════ */
+function openModeSelect(){
+  resetActivity();
+  document.getElementById('mode-select').classList.remove('hidden');
+  speakText('Elige tu nivel. Reto AduaBot para estudiantes y profesores de comercio exterior, o AduaTrivia para visitantes generales.',null,null);
+}
+function closeModeSelect(){
+  document.getElementById('mode-select').classList.add('hidden');
+  window.speechSynthesis.cancel();
+}
+function startExpertReto(){
+  document.getElementById('mode-select').classList.add('hidden');
+  window.speechSynthesis.cancel();
+  setTimeout(openQuiz,200);
+}
+function startTrivia(){
+  document.getElementById('mode-select').classList.add('hidden');
+  window.speechSynthesis.cancel();
+  setTimeout(openTrivia,200);
+}
+
+/* ═══════════════════════════════════════════════════
+   ADUATRIVIA BANK — 40 preguntas nivel visitante
+═══════════════════════════════════════════════════ */
+const TRIVIA_BANK=[
+  {q:"¿Qué significa importar un producto?",opts:["Fabricarlo en México","Comprarlo en otro país y traerlo a México","Venderlo muy caro","Exportarlo al extranjero"],correct:1},
+  {q:"¿Qué es un arancel?",opts:["Un tipo de camión de carga","El nombre del agente aduanal","Un impuesto que se paga cuando traes mercancías de otro país","El precio del dólar"],correct:2},
+  {q:"¿Cuál es la frontera más activa de México para el comercio con EE.UU.?",opts:["Ciudad Juárez","Tijuana / Baja California","Cancún","Monterrey"],correct:1},
+  {q:"¿Qué hace una Agencia Aduanal como AduaMex?",opts:["Vende seguros de carro","Ayuda a las empresas a cruzar legalmente sus mercancías por la aduana","Fabrica productos para exportar","Presta dinero a importadores"],correct:1},
+  {q:"¿Qué significa IVA?",opts:["Impuesto al Valor Agregado","Instituto de Ventas al Aire libre","Inversión de Valor Alto","Impuesto de Viajes al Aeropuerto"],correct:0},
+  {q:"Si una empresa mexicana vende sus productos en EE.UU., eso se llama:",opts:["Importar","Almacenar","Exportar","Revender"],correct:2},
+  {q:"¿Qué es el comercio exterior?",opts:["Vender cosas en el mercado del pueblo","Comprar y vender productos entre diferentes países","Abrir una tienda en el extranjero","Solo importar, no exportar"],correct:1},
+  {q:"¿Qué país es el principal socio comercial de México?",opts:["China","España","Estados Unidos","Brasil"],correct:2},
+  {q:"¿Qué es el T-MEC?",opts:["Un tipo de camión de carga pesada","Un impuesto especial de México","El tratado comercial entre México, Estados Unidos y Canadá","El nombre del aeropuerto de Tijuana"],correct:2},
+  {q:"¿Cómo se llama el lugar donde se revisan las mercancías al entrar a un país?",opts:["El almacén","La aduana","El aeropuerto únicamente","La frontera informal"],correct:1},
+  {q:"¿Qué es un contenedor en el comercio internacional?",opts:["Un tipo de documento aduanal","Una caja metálica grande usada para transportar mercancías en barcos y camiones","El nombre del barco de carga","Un almacén en el puerto"],correct:1},
+  {q:"Si compras algo en línea de China y te lo mandan a México, eso es:",opts:["Una exportación de México","Una importación a México","Un intercambio cultural","Una donación internacional"],correct:1},
+  {q:"¿Qué pasa si metes mercancías a México sin declararlas en la aduana?",opts:["No pasa nada, es normal","Pueden confiscarte la mercancía y hacerte pagar multas","Te dan una advertencia amistosa","Te piden que lo declares la próxima vez"],correct:1},
+  {q:"¿Cuál de estas cosas NO es un medio de transporte en comercio internacional?",opts:["Barco","Avión","Camión de carga","Bicicleta municipal"],correct:3},
+  {q:"¿Qué significa 'Made in Mexico'?",opts:["Que fue diseñado en México pero fabricado en China","Que fue fabricado en México","Que se vende solo en México","Que paga más impuestos"],correct:1},
+  {q:"¿Qué es la logística en comercio exterior?",opts:["El diseño del empaque","El proceso de planificar el transporte y almacenamiento de mercancías","Un tipo de impuesto aduanal","El nombre del barco de carga"],correct:1},
+  {q:"¿Para qué sirve un seguro de carga?",opts:["Para asegurar que llega a tiempo","Para cubrir pérdidas o daños durante el transporte internacional","Para pagar menos impuestos","Para darle crédito al importador"],correct:1},
+  {q:"¿Por qué México es importante en el comercio mundial?",opts:["Solo por su tamaño geográfico","Por su ubicación estratégica, tratados comerciales y frontera con EE.UU.","Porque fabrica más autos que nadie","Porque tiene el puerto más grande del mundo"],correct:1},
+  {q:"¿Qué es el contrabando?",opts:["Importar legalmente pagando impuestos","Meter mercancías sin declararlas ni pagar los impuestos correspondientes","Exportar con todos los documentos","Vender productos importados en tiendas"],correct:1},
+  {q:"¿Qué es el comercio justo (fair trade)?",opts:["Un tipo de arancel reducido","Busca que productores de países en desarrollo reciban precios justos por sus productos","Comercio solo entre países del mismo continente","Intercambio de productos sin dinero"],correct:1},
+  {q:"¿Qué documento necesitas para viajar fuera de México?",opts:["RFC y CURP","Pasaporte y en algunos países visa","Solo la credencial del IMSS","Acta de nacimiento únicamente"],correct:1},
+  {q:"¿Cuál es un ejemplo de exportación mexicana famosa?",opts:["Ropa de marca europea","Electrónicos japoneses","Tequila, aguacate y productos automotrices","Teléfonos celulares coreanos"],correct:2},
+  {q:"¿Qué hace el gobierno con los impuestos que cobra en la aduana?",opts:["Los guarda sin usarlos","Los usa para financiar servicios públicos e infraestructura","Los devuelve a los importadores","Los manda a otros países"],correct:1},
+  {q:"¿Qué significa que AduaMex sea una agencia aduanal certificada?",opts:["Que tiene muchos años nada más","Que está autorizada oficialmente por el gobierno para realizar operaciones aduaneras","Que solo trabaja con empresas grandes","Que tiene oficinas en todo el mundo"],correct:1},
+  {q:"¿Por qué es importante contratar una Agencia Aduanal?",opts:["Para ahorrar en comida durante el viaje","Para asegurarse de que todo el proceso aduanero se haga correctamente y sin problemas legales","Porque es obligatorio para todos los viajeros","Para conseguir descuentos en gasolina"],correct:1},
+  {q:"¿Qué significa libre comercio entre dos países?",opts:["Que todo es gratis","Que pueden intercambiar productos con menos impuestos y restricciones","Que no hay reglas de ningún tipo","Que solo comercian entre ellos"],correct:1},
+  {q:"¿Qué es una factura comercial?",opts:["Solo un recibo de compra normal","Documento que describe las mercancías, su valor, vendedor y comprador, necesario en la aduana","Una carta de presentación del vendedor","El contrato de transporte"],correct:1},
+  {q:"¿Qué es un puerto marítimo?",opts:["Un tipo de impuesto portuario","Lugar donde los barcos cargan y descargan mercancías para el comercio internacional","El nombre de un tipo de contenedor","Una oficina de aduanas en el aeropuerto"],correct:1},
+  {q:"¿Qué pasa cuando un país exporta más de lo que importa?",opts:["Tiene déficit comercial","Tiene superávit comercial — entra más dinero del que sale","Es señal de crisis","No tiene ningún efecto"],correct:1},
+  {q:"¿Qué es el coyote en el contexto aduanal informal?",opts:["Un animal que vive en la frontera","Una persona que cruza mercancías ilegalmente evadiendo la aduana","Un tipo de contenedor pequeño","Un funcionario de aduana"],correct:1},
+  {q:"¿Qué es Tijuana conocida en comercio internacional?",opts:["Por ser el puerto marítimo más grande del Pacífico","Por ser una de las ciudades con mayor actividad de maquiladoras y comercio fronterizo","Por producir el mayor volumen de petróleo","Por ser la capital financiera de México"],correct:1},
+  {q:"¿Qué es una maquiladora?",opts:["Un tipo de almacén de aduanas","Una fábrica que importa insumos, los transforma y exporta el producto terminado","Un camión de carga fronterizo","Una tienda de productos importados"],correct:1},
+  {q:"¿Cuál es una ventaja de comprar productos importados?",opts:["Siempre son de mejor calidad","Pueden ofrecer variedad y precios que no siempre están disponibles localmente","No pagan impuestos","Siempre son más baratos que los nacionales"],correct:1},
+  {q:"¿Para qué sirve el número de rastreo de un paquete internacional?",opts:["Para saber el peso del paquete","Para seguir en tiempo real dónde está tu mercancía durante el envío","Para calcular los impuestos","Para identificar al vendedor"],correct:1},
+  {q:"¿Qué es AduaMex?",opts:["Una tienda de ropa importada","Una agencia aduanal certificada que ayuda a importar y exportar legalmente","Una escuela de comercio exterior","Una empresa de transporte de carga"],correct:1},
+  {q:"¿Dónde está ubicada AduaMex?",opts:["Ciudad de México","Monterrey, Nuevo León","Tijuana, Baja California","Guadalajara, Jalisco"],correct:2},
+  {q:"¿Qué significa que un producto pase por la aduana?",opts:["Que fue revisado y autorizado para entrar o salir del país cumpliendo las leyes","Que fue confiscado por el gobierno","Que pagó el doble de impuestos","Que no necesita documentos"],correct:0},
+  {q:"¿Qué es el tipo de cambio?",opts:["El precio del petróleo","La tasa que indica cuántos pesos equivalen a un dólar, afectando costos de importación","El impuesto al cambio de divisas","El costo del transporte aéreo"],correct:1},
+  {q:"¿Qué tipo de mercancías puede ayudarte a importar AduaMex?",opts:["Solo alimentos y bebidas","Solo ropa y textiles","Todo tipo de mercancías: maquinaria, electrónicos, alimentos, materias primas y más","Solo productos de lujo"],correct:2},
+  {q:"Si alguien quiere empezar a importar productos para vender en México, ¿qué necesita?",opts:["Solo dinero y ganas","Registro como importador, facturas, pagar impuestos y cumplir normas — AduaMex te ayuda con todo","Solo una licencia de conducir","Permiso del presidente"],correct:1},
+];
+
+let tvCurrentQ=[],tvQi=0,tvScore=0,tvTimer=null,tvTimeLeft=20,tvActive=false,tvResultTimer=null;
+let tvWins=0,tvLosses=0;
+
+function openTrivia(){
+  resetActivity();
+  tvCurrentQ=shuffle(TRIVIA_BANK).slice(0,5).map(buildShuffledQ);
+  tvQi=0;tvScore=0;tvActive=true;
+  document.getElementById('trivia-ov').classList.remove('hidden');
+  document.getElementById('tv-qv').classList.remove('hidden');
+  document.getElementById('tv-rv').classList.add('hidden');
+  for(let i=0;i<5;i++){const p=document.getElementById('tvp'+i);p.className='tv-pip';if(i===0)p.classList.add('cur');}
+  speakText('Bienvenido a AduaTrivia. Te haré cinco preguntas sencillas. Responde tocando la opción correcta. ¡Buena suerte!',null,()=>{ setTimeout(tvLoadQ,500); });
+}
+
+function tvLoadQ(){
+  const q=tvCurrentQ[tvQi];
+  document.getElementById('tv-qnum').textContent='PREGUNTA '+(tvQi+1)+' / 5';
+  document.getElementById('tv-qtxt').textContent=q.q;
+  const opts=document.getElementById('tv-opts');opts.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');b.className='tv-opt';b.textContent=o;
+    b.onclick=()=>tvAnsQ(i);opts.appendChild(b);
+  });
+  setTimeout(()=>speakText('Pregunta '+(tvQi+1)+'. '+q.q,null,null),200);
+  tvStartTimer();
+}
+
+function tvStartTimer(){
+  clearInterval(tvTimer);tvTimeLeft=20;tvUpdTimer();
+  tvTimer=setInterval(()=>{tvTimeLeft--;tvUpdTimer();
+    if(tvTimeLeft<=0){clearInterval(tvTimer);tvReveal(-1);}},1000);
+}
+
+function tvUpdTimer(){
+  document.getElementById('tv-tnum').textContent=tvTimeLeft;
+  const c=document.getElementById('tv-tc');
+  c.style.strokeDashoffset=201*(1-tvTimeLeft/20);
+  const col=tvTimeLeft>10?'#ffab00':tvTimeLeft>5?'#ff7700':'#ff1744';
+  c.style.stroke=col;
+  document.getElementById('tv-tnum').style.color=col;
+}
+
+function tvAnsQ(chosen){if(!tvActive)return;clearInterval(tvTimer);tvReveal(chosen);}
+
+function tvReveal(chosen){
+  const q=tvCurrentQ[tvQi];
+  const btns=[...document.querySelectorAll('.tv-opt')];
+  btns.forEach(b=>b.disabled=true);
+  const ok=chosen===q.answer;
+  if(chosen>=0)btns[chosen].classList.add(ok?'correct':'wrong');
+  if(!ok)btns[q.answer].classList.add('show-ok');
+  if(ok)tvScore++;
+  document.getElementById('tvp'+tvQi).className='tv-pip '+(ok?'ok':'fail');
+  const fb=ok
+    ?['¡Correcto! Muy bien.','¡Exacto! Lo sabías.','¡Correcto! Vas muy bien.'][tvQi%3]
+    :['No es correcta. La respuesta está marcada.','Incorrecto. Mira la respuesta marcada.','Error, pero sigue intentando.'][tvQi%3];
+  speakText(fb+(tvQi<4?' Siguiente pregunta.':''),null,null);
+  setTimeout(()=>{
+    tvQi++;
+    if(tvQi<5){document.getElementById('tvp'+tvQi).classList.add('cur');tvLoadQ();}
+    else tvShowResult();
+  },3500);
+}
+
+function tvShowResult(){
+  tvActive=false;
+  document.getElementById('tv-qv').classList.add('hidden');
+  document.getElementById('tv-rv').classList.remove('hidden');
+  document.getElementById('tv-score').textContent=tvScore+'/5';
+  const won=tvScore>=3;
+  document.getElementById('tv-msg').textContent=won?'¡GANASTE EL ADUATRIVIA!':'¡GRACIAS POR PARTICIPAR!';
+  document.getElementById('tv-prize').classList.toggle('hidden',!won);
+  if(won){
+    tvWins++;
+    const el=document.getElementById('tv-wins');
+    if(el){el.textContent=tvWins;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
+  } else {
+    tvLosses++;
+    const el=document.getElementById('tv-losses');
+    if(el){el.textContent=tvLosses;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
+  }
+  const msg=won
+    ?'¡Felicidades! Obtuviste '+tvScore+' de 5 en AduaTrivia. ¡Ganaste! Acércate al stand de AduaMex para reclamar tu premio.'
+    :'Obtuviste '+tvScore+' de 5. ¡Buen intento! Visítanos en el stand de AduaMex para conocer más sobre el comercio exterior.';
+  setTimeout(()=>speakText(msg,null,null),400);
+  clearTimeout(tvResultTimer);
+  tvResultTimer=setTimeout(()=>{
+    if(!document.getElementById('trivia-ov').classList.contains('hidden'))closeTrivia();
+  },40000);
+}
+
+function closeTrivia(){
+  clearTimeout(tvResultTimer);
+  document.getElementById('trivia-ov').classList.add('hidden');
+  clearInterval(tvTimer);tvActive=false;
+  window.speechSynthesis.cancel();resetActivity();
+}
+
 </script>
+
+<!-- ══ MODE SELECT MODAL ══ -->
+<div id="mode-select" class="hidden">
+  <div class="ms-logo">ELIGE TU RETO</div>
+  <div class="ms-sub">SELECCIONA TU NIVEL DE PARTICIPACIÓN</div>
+  <div class="ms-cards">
+    <div class="ms-card expert" onclick="startExpertReto()">
+      <div class="mc-icon">🎓</div>
+      <div class="mc-title">RETO ADUABOT</div>
+      <div class="mc-desc">Estudiantes y profesores<br>de Comercio Exterior<br>Nivel experto</div>
+      <div class="mc-badge">4/5 para ganar · 12 seg</div>
+    </div>
+    <div class="ms-card visitor" onclick="startTrivia()">
+      <div class="mc-icon">🌟</div>
+      <div class="mc-title">ADUATRIVIA</div>
+      <div class="mc-desc">Visitante general<br>Sin conocimientos previos<br>Nivel accesible</div>
+      <div class="mc-badge">3/5 para ganar · 20 seg</div>
+    </div>
+  </div>
+  <div class="ms-back" onclick="closeModeSelect()">← CANCELAR</div>
+</div>
+
+<!-- ══ ADUATRIVIA OVERLAY ══ -->
+<div id="trivia-ov" class="hidden">
+  <div class="tv-header">
+    <div class="tv-title">🌟 ADUATRIVIA</div>
+    <div class="tv-sub">NIVEL VISITANTE · 5 PREGUNTAS · GANA CON 3 CORRECTAS</div>
+  </div>
+  <div class="tv-meta">
+    <div class="tv-tw">
+      <svg id="tv-tsv" viewBox="0 0 70 70">
+        <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(255,171,0,.12)" stroke-width="5"/>
+        <circle id="tv-tc" cx="35" cy="35" r="30" fill="none" stroke="#ffab00" stroke-width="5"
+          stroke-linecap="round" stroke-dasharray="201" stroke-dashoffset="0"/>
+      </svg>
+      <div class="tv-tnum" id="tv-tnum">20</div>
+    </div>
+    <div class="tv-pips">
+      <div class="tv-pip cur" id="tvp0"></div>
+      <div class="tv-pip" id="tvp1"></div>
+      <div class="tv-pip" id="tvp2"></div>
+      <div class="tv-pip" id="tvp3"></div>
+      <div class="tv-pip" id="tvp4"></div>
+    </div>
+  </div>
+  <div id="tv-qv">
+    <div class="tv-card">
+      <div class="tv-qnum" id="tv-qnum">PREGUNTA 1 / 5</div>
+      <div class="tv-qtxt" id="tv-qtxt">...</div>
+    </div>
+    <div class="tv-opts" id="tv-opts"></div>
+  </div>
+  <div id="tv-rv" class="hidden tv-res">
+    <div class="tv-score" id="tv-score">0/5</div>
+    <div class="tv-msg" id="tv-msg">RESULTADO</div>
+    <div class="tv-prize hidden" id="tv-prize">🏆 ¡FELICIDADES! ACÉRCATE AL STAND DE ADUAMEX PARA RECLAMAR TU PREMIO 🏆</div>
+    <button class="tv-close" onclick="closeTrivia()">CERRAR</button>
+  </div>
+</div>
+
 </body>
 </html>
