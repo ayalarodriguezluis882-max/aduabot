@@ -380,6 +380,253 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
   .qtxt{ font-size:1.1rem !important; }
 }
 
+/* ─────────────────────────────────────
+   MODE SELECT MODAL
+───────────────────────────────────── */
+#mode-select{
+  position:fixed;inset:0;z-index:4500;
+  background:rgba(0,2,10,.96);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:18px;padding:22px;
+}
+.ms-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:1.5rem;letter-spacing:4px;
+  color:var(--c);text-align:center;
+  text-shadow:0 0 20px rgba(0,232,255,.5);
+}
+.ms-sub{
+  font-family:'Share Tech Mono';font-size:.58rem;
+  letter-spacing:3px;color:rgba(0,232,255,.4);
+  text-align:center;margin-top:-8px;
+}
+.ms-cards{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;}
+.ms-card{
+  width:148px;padding:18px 14px;border-radius:12px;
+  cursor:pointer;display:flex;flex-direction:column;
+  align-items:center;gap:10px;transition:all .22s;
+}
+.ms-card.c-student{
+  background:linear-gradient(160deg,#071828,#02080f);
+  border:2px solid var(--c);
+  box-shadow:0 0 16px rgba(0,232,255,.18);
+}
+.ms-card.c-teacher{
+  background:linear-gradient(160deg,#100828,#040012);
+  border:2px solid #a060ff;
+  box-shadow:0 0 16px rgba(160,96,255,.18);
+}
+.ms-card.c-visitor{
+  background:linear-gradient(160deg,#1a0a04,#080200);
+  border:2px solid var(--camb);
+  box-shadow:0 0 16px rgba(255,171,0,.18);
+}
+.ms-card.c-student:hover{box-shadow:0 0 30px rgba(0,232,255,.5);transform:translateY(-3px);}
+.ms-card.c-teacher:hover{box-shadow:0 0 30px rgba(160,96,255,.5);transform:translateY(-3px);}
+.ms-card.c-visitor:hover{box-shadow:0 0 30px rgba(255,171,0,.5);transform:translateY(-3px);}
+.ms-card:active{transform:scale(.97);}
+.ms-icon{font-size:2.2rem;line-height:1;}
+.ms-name{
+  font-family:'Orbitron',sans-serif;font-size:.68rem;
+  font-weight:900;letter-spacing:2px;text-align:center;
+}
+.ms-card.c-student .ms-name{color:var(--c);}
+.ms-card.c-teacher .ms-name{color:#a060ff;}
+.ms-card.c-visitor .ms-name{color:var(--camb);}
+.ms-desc{
+  font-family:'Share Tech Mono';font-size:.44rem;
+  letter-spacing:1px;text-align:center;line-height:1.6;
+}
+.ms-card.c-student .ms-desc{color:rgba(0,232,255,.55);}
+.ms-card.c-teacher .ms-desc{color:rgba(160,96,255,.55);}
+.ms-card.c-visitor .ms-desc{color:rgba(255,171,0,.55);}
+.ms-badge{
+  font-family:'Share Tech Mono';font-size:.42rem;
+  letter-spacing:1.5px;padding:4px 8px;border-radius:4px;
+}
+.ms-card.c-student .ms-badge{
+  background:rgba(0,232,255,.1);color:var(--c);
+  border:1px solid rgba(0,232,255,.3);
+}
+.ms-card.c-teacher .ms-badge{
+  background:rgba(160,96,255,.1);color:#a060ff;
+  border:1px solid rgba(160,96,255,.3);
+}
+.ms-card.c-visitor .ms-badge{
+  background:rgba(255,171,0,.1);color:var(--camb);
+  border:1px solid rgba(255,171,0,.3);
+}
+.ms-back{
+  font-family:'Share Tech Mono';font-size:.5rem;
+  letter-spacing:2px;color:rgba(0,232,255,.3);
+  cursor:pointer;padding:7px 16px;margin-top:4px;
+  border:1px solid rgba(0,232,255,.15);border-radius:4px;
+  transition:all .2s;
+}
+.ms-back:hover{color:var(--c);border-color:var(--c);}
+
+/* ─────────────────────────────────────
+   SHARED QUIZ/TRIVIA OVERLAY STYLES
+   #quiz-ov  → student / teacher (cyan theme)
+   #trivia-ov → visitor (amber theme)
+───────────────────────────────────── */
+
+/* TRIVIA overlay container */
+#trivia-ov{
+  position:fixed;inset:0;z-index:5000;
+  background:rgba(0,2,10,.97);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:16px;gap:11px;
+}
+
+/* Trivia header */
+.tv-title{
+  font-family:'Orbitron',sans-serif;font-weight:900;
+  font-size:var(--fs-2xl);letter-spacing:4px;
+  color:var(--camb);text-shadow:0 0 22px rgba(255,171,0,.5);
+  text-align:center;
+}
+.tv-sub{
+  font-family:'Share Tech Mono';font-size:var(--fs-xs);
+  letter-spacing:3px;color:rgba(255,171,0,.4);
+  text-align:center;margin-top:-4px;
+}
+
+/* Trivia timer ring */
+.tv-tw{position:relative;width:78px;height:78px;flex-shrink:0;}
+#tv-tsv{width:78px;height:78px;transform:rotate(-90deg);}
+#tv-tc{stroke-dasharray:201;stroke-dashoffset:0;transition:stroke-dashoffset 1s linear;}
+.tv-tnum{
+  position:absolute;inset:0;display:flex;
+  align-items:center;justify-content:center;
+  font-family:'Orbitron',sans-serif;font-size:1.4rem;
+  font-weight:700;color:var(--camb);
+}
+
+/* Trivia pips */
+.tv-pips{display:flex;gap:8px;}
+.tv-pip{width:38px;height:5px;border-radius:2.5px;background:rgba(255,171,0,.12);transition:background .3s;}
+.tv-pip.ok{background:var(--c3);}
+.tv-pip.fail{background:var(--cred);}
+.tv-pip.cur{background:var(--camb);box-shadow:0 0 9px var(--camb);}
+
+/* Trivia question card */
+.tv-card{
+  width:100%;max-width:680px;
+  background:rgba(12,6,0,.97);
+  border:1px solid rgba(255,171,0,.22);
+  border-top:3px solid var(--camb);
+  padding:16px 20px;border-radius:6px;
+}
+.tv-qnum{
+  font-family:'Share Tech Mono';font-size:var(--fs-xs);
+  letter-spacing:3px;color:rgba(255,171,0,.35);
+  margin-bottom:9px;
+}
+.tv-qtxt{
+  font-size:var(--fs-xl);font-weight:600;
+  color:#fff8e8;line-height:1.5;text-align:center;
+}
+
+/* Trivia options */
+.tv-opts{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;width:100%;max-width:680px;
+}
+.tv-opt{
+  background:rgba(12,6,0,.93);
+  border:1.5px solid rgba(255,171,0,.22);
+  padding:14px 14px;border-radius:6px;
+  font-family:'Rajdhani',sans-serif;
+  font-size:var(--fs-lg);font-weight:700;
+  color:#ffe8a0;cursor:pointer;
+  text-align:center;transition:all .2s;
+  min-height:50px;
+}
+.tv-opt:hover{border-color:var(--camb);color:var(--camb);}
+.tv-opt.correct{border-color:var(--c3);background:rgba(0,255,157,.08);color:var(--c3);}
+.tv-opt.wrong{border-color:var(--cred);background:rgba(255,23,68,.08);color:var(--cred);}
+.tv-opt.show-ok{border-color:var(--c3);color:var(--c3);opacity:.65;}
+.tv-opt:disabled{pointer-events:none;}
+
+/* Trivia result */
+.tv-res{text-align:center;display:flex;flex-direction:column;align-items:center;gap:13px;}
+.tv-score{
+  font-family:'Orbitron',sans-serif;font-size:3.8rem;
+  font-weight:900;color:var(--camb);
+  text-shadow:0 0 28px var(--camb);
+}
+.tv-msg{font-size:var(--fs-xl);font-weight:700;letter-spacing:2px;color:#fff8e8;}
+.tv-prize{
+  background:linear-gradient(135deg,rgba(255,171,0,.08),rgba(106,31,255,.06));
+  border:2px solid var(--camb);border-radius:8px;
+  padding:12px 18px;font-family:'Orbitron',sans-serif;
+  font-size:var(--fs-md);letter-spacing:2px;
+  color:var(--camb);text-align:center;
+  animation:prizep 1.5s ease-in-out infinite;
+}
+.tv-close{
+  background:transparent;border:2px solid var(--camb);
+  color:var(--camb);padding:12px 40px;
+  font-family:'Orbitron',sans-serif;font-size:var(--fs-md);
+  font-weight:700;letter-spacing:3px;
+  cursor:pointer;transition:all .2s;
+}
+.tv-close:hover{background:var(--camb);color:#000;}
+
+/* Trivia score chips */
+#tv-score-row .dchip{border-left-color:var(--camb)!important;}
+#tv-score-row .dchip.R{border-left:none!important;border-right-color:var(--camb)!important;}
+
+/* ─── hide opts+timer until AduaBot finishes reading ─── */
+.qz-waiting .qopts,
+.qz-waiting #tsv,
+.qz-waiting .tnum{opacity:0;pointer-events:none;}
+.qz-ready .qopts{opacity:1;pointer-events:all;transition:opacity .35s ease;}
+.qz-ready #tsv,
+.qz-ready .tnum{opacity:1;transition:opacity .35s ease;}
+
+.tv-waiting .tv-opts,
+.tv-waiting #tv-tsv,
+.tv-waiting .tv-tnum{opacity:0;pointer-events:none;}
+.tv-ready .tv-opts{opacity:1;pointer-events:all;transition:opacity .35s ease;}
+.tv-ready #tv-tsv,
+.tv-ready .tv-tnum{opacity:1;transition:opacity .35s ease;}
+
+/* ─── RESPONSIVE ─── */
+@media screen and (max-width:599px){
+  .ms-cards{flex-direction:column;gap:10px;}
+  .ms-card{width:88%;max-width:270px;}
+  .tv-opts,.qopts{grid-template-columns:1fr!important;gap:7px!important;}
+  .tv-opt{padding:11px 10px!important;font-size:.88rem!important;min-height:44px!important;}
+  .qopt{padding:11px 10px!important;font-size:.88rem!important;}
+  .tv-qtxt{font-size:1rem!important;}
+  .qtxt{font-size:1rem!important;}
+  .tv-card,.qcard{padding:12px!important;}
+  .tv-tw,.tw{width:54px!important;height:54px!important;}
+  #tv-tsv,#tsv{width:54px!important;height:54px!important;}
+  .tv-tnum,.tnum{font-size:.95rem!important;}
+  .tv-score,.qscore{font-size:2.6rem!important;}
+  .tv-title,.qo-title{font-size:1.2rem!important;letter-spacing:2px!important;}
+  .tv-pip,.pip{width:26px!important;height:4px!important;}
+  #trivia-ov,#quiz-ov{padding:9px!important;gap:8px!important;}
+  .tv-close,.qclose{padding:9px 24px!important;font-size:.65rem!important;}
+}
+@media screen and (max-height:500px) and (min-width:500px){
+  .tv-opts,.qopts{grid-template-columns:1fr 1fr!important;}
+  .tv-opt,.qopt{padding:8px 10px!important;font-size:.78rem!important;min-height:38px!important;}
+  .tv-qtxt,.qtxt{font-size:.9rem!important;}
+  .tv-card,.qcard{padding:10px!important;}
+  .tv-title,.qo-title{font-size:1rem!important;}
+  #trivia-ov,#quiz-ov{padding:8px!important;gap:6px!important;}
+  .tv-tw,.tw{width:48px!important;height:48px!important;}
+  #tv-tsv,#tsv{width:48px!important;height:48px!important;}
+  .ms-card{padding:10px!important;}
+  .ms-cards{gap:8px!important;}
+}
+
 </style>
 </head>
 <body>
@@ -965,202 +1212,50 @@ function speakText(t,onStart,onEnd){
 function speak(t){speakText(t,()=>setState('speaking'),()=>{setState('idle');busy=false;resetActivity();});}
 
 /* ═══════════════════════════════════════════════
-   QUIZ — 35 preguntas con opciones mezcladas
-   shuffle() mezcla las respuestas en cada ronda
-   y rastrea cuál es la correcta después de mezclar
+   UNIFIED 3-MODE QUIZ ENGINE  v17
+   student: 14s, 4/5 to win  |  BANK (84 hard questions)
+   teacher: 12s, 4/5 to win  |  BANK (84 hard questions)
+   visitor: 20s, 3/5 to win  |  TRIVIA_BANK (40 easy questions)
 ═══════════════════════════════════════════════ */
-const BANK=[
-  {q:"¿Qué documento certifica el origen de una mercancía para aplicar preferencias arancelarias en un TLC?",
-   opts:["Factura comercial","Certificado de origen","Packing list","Conocimiento de embarque"],correct:1},
-  {q:"¿Qué significa el régimen aduanero 'importación definitiva' en México?",
-   opts:["Importación temporal sin pagar impuestos","Ingreso permanente de mercancías pagando contribuciones","Tránsito internacional sin pago","Importación con exención fiscal total"],correct:1},
-  {q:"¿Qué organismo internacional regula el comercio entre sus países miembros?",
-   opts:["Fondo Monetario Internacional","Banco Mundial","Organización Mundial del Comercio","Banco Interamericano de Desarrollo"],correct:2},
-  {q:"El programa IMMEX permite importar insumos temporalmente para:",
-   opts:["Venderlos en el mercado nacional","Transformarlos y exportar el producto final","Almacenarlos sin límite de tiempo","Diferir aranceles por 10 años"],correct:1},
-  {q:"¿Cuántos dígitos tiene la fracción arancelaria en el Sistema Armonizado internacional?",
-   opts:["4 dígitos","6 dígitos","8 dígitos","10 dígitos"],correct:1},
-  {q:"¿Qué significa el INCOTERM DDP en comercio internacional?",
-   opts:["El comprador paga todo desde origen","Entregado con derechos pagados: el vendedor asume todos los costos hasta destino","El flete es compartido 50/50","Solo el seguro corre por cuenta del vendedor"],correct:1},
-  {q:"¿Qué es el DTA en aduanas mexicanas?",
-   opts:["Derecho de Trámite Aduanero","Declaración Total de Activos","Depósito Temporal Aduanal","Documento de Tránsito Arancelario"],correct:0},
-  {q:"¿Cuál es la función principal de un agente aduanal certificado?",
-   opts:["Transportar físicamente la mercancía","Diseñar aranceles para el gobierno","Representar al importador/exportador ante la autoridad aduanera","Fabricar productos de exportación"],correct:2},
-  {q:"¿Qué es el pedimento aduanal?",
-   opts:["Una factura de importación especial","El documento legal que ampara el despacho aduanero de mercancías","Un permiso de exportación masiva","Una carta de crédito bancaria internacional"],correct:1},
-  {q:"¿Qué significa la certificación OEA?",
-   opts:["Operador Económico Autorizado con beneficios aduaneros","Oficina de Exportaciones Anuales del SAT","Organismo de Evaluación Arancelaria","Operaciones de Exportación Automática"],correct:0},
-  {q:"¿Cuál es el tratado comercial entre México, EE.UU. y Canadá vigente?",
-   opts:["TLCUEM","ALCA","T-MEC (USMCA)","TLCAC"],correct:2},
-  {q:"¿Sobre qué base se calcula el Impuesto General de Importación?",
-   opts:["El precio de lista del catálogo","El valor en aduana de la mercancía","El costo de producción en origen","El precio de venta al público en México"],correct:1},
-  {q:"¿Qué impuestos se aplican principalmente al importar en México?",
-   opts:["ISR e IEPS exclusivamente","IVA e IGI (Impuesto General de Importación)","Solo el IVA en todos los casos","IEPS y derechos de autor"],correct:1},
-  {q:"¿Qué es el tránsito aduanero internacional?",
-   opts:["Importación permanente de mercancías","Exportación definitiva con beneficios","Movimiento de mercancías por territorio nacional sin pagar impuestos de importación","Pago anticipado de todos los aranceles"],correct:2},
-  {q:"¿Cuál es la diferencia entre exportación definitiva y temporal?",
-   opts:["No existe diferencia legal","Definitiva: sale permanentemente del país; temporal: debe regresar","La temporal paga más impuestos","La definitiva no requiere pedimento"],correct:1},
-  {q:"¿Qué es el reconocimiento aduanero de mercancías?",
-   opts:["Premio honorífico para importadores","Descuento especial en aranceles","La verificación física o documental realizada por la autoridad aduanera","Un tipo de importación consolidada"],correct:2},
-  {q:"¿Qué es la regla de origen en un TLC?",
-   opts:["El idioma oficial del contrato","El color y empaque del producto exportado","Los criterios que determinan la nacionalidad productiva de una mercancía","El país de destino final declarado"],correct:2},
-  {q:"¿Qué es una NOM en el contexto de importaciones a México?",
-   opts:["Un impuesto adicional de importación","Norma técnica obligatoria que deben cumplir ciertos productos","Un tratado bilateral especial","Un tipo de pedimento para productos peligrosos"],correct:1},
-  {q:"¿Qué significa el INCOTERM FOB?",
-   opts:["El importador paga flete y seguro","Free On Board: el vendedor entrega en el puerto de origen","Costo y flete pagados hasta destino","El seguro corre por cuenta del comprador hasta origen"],correct:1},
-  {q:"¿Qué es el arancel ad valorem?",
-   opts:["Arancel de monto fijo por unidad física","Arancel cero para países aliados","Impuesto calculado como porcentaje del valor en aduana","Exención fiscal temporal para industrias estratégicas"],correct:2},
-  {q:"¿Qué es el despacho aduanero de mercancías?",
-   opts:["El servicio postal internacional","El pago electrónico de aranceles","El conjunto de actos para someter mercancías a un régimen aduanero ante la autoridad","La clasificación interna del inventario"],correct:2},
-  {q:"¿Qué es el Drawback en comercio exterior?",
-   opts:["Arancel punitivo por prácticas desleales","La devolución de impuestos pagados en insumos importados usados para fabricar productos exportados","Régimen de almacenaje fiscal temporal","Modalidad de transporte multimodal"],correct:1},
-  {q:"¿Qué es el PROSEC (Programa de Promoción Sectorial)?",
-   opts:["Programa exclusivo para exportaciones agrícolas","Certificación de calidad para exportadores","Tipo especial de pedimento consolidado","Programa que otorga tasas arancelarias preferenciales para insumos de sectores industriales"],correct:3},
-  {q:"¿Qué es el dumping en comercio internacional?",
-   opts:["Arancel compensatorio del país importador","Subsidio gubernamental transparente","Práctica legal de importación masiva","Venta en mercados extranjeros a precios inferiores al costo de producción"],correct:3},
-  {q:"¿Qué es la balanza comercial de un país?",
-   opts:["El presupuesto para comercio exterior","El total de aranceles recaudados","Inventario de mercancías en proceso aduanal","La diferencia entre el valor de exportaciones e importaciones en un período"],correct:3},
-  {q:"¿Qué es el régimen de recinto fiscalizado estratégico?",
-   opts:["Zona informal sin regulación","Almacén del SAT para mercancías en disputa","Puerto exclusivo para países con TLC","Área autorizada para manufactura y servicios con beneficios aduaneros especiales"],correct:3},
-  {q:"¿Qué organismo certifica a los OEA en México?",
-   opts:["Banco de México","Secretaría de Economía","IMSS","SAT — Servicio de Administración Tributaria"],correct:3},
-  {q:"¿Qué es la VUCEM (Ventanilla Única de Comercio Exterior)?",
-   opts:["Banco especializado en exportadores","App móvil de consulta arancelaria","Programa de capacitación aduanal","Plataforma digital que concentra todos los trámites de comercio exterior"],correct:3},
-  {q:"¿Cuál es la diferencia entre aduana fronteriza y aduana interior?",
-   opts:["No existe diferencia operativa","La interior cobra aranceles más altos","La fronteriza solo opera en aeropuertos","La fronteriza está en puntos de entrada al país; la interior facilita el comercio desde ciudades del interior"],correct:3},
-  {q:"¿Qué es el régimen de importación temporal para elaboración, transformación o reparación en programas de maquila?",
-   opts:["PROSEC","PITEX","IMMEX","OEA"],correct:2},
-  {q:"¿Qué establece el Artículo 321 del T-MEC respecto a reglas de origen?",
-   opts:["Elimina todos los aranceles de inmediato","Establece que las mercancías deben cumplir contenido regional para recibir trato preferencial","Prohíbe la importación de productos agrícolas","Define los plazos de pago de aranceles"],correct:1},
-  {q:"¿Qué es el arancel específico en el sistema arancelario?",
-   opts:["Un porcentaje sobre el valor de la mercancía","Un arancel solo para productos de lujo","Un impuesto de monto fijo por unidad de medida (peso, volumen, pieza)","Un arancel preferencial para países emergentes"],correct:2},
-  {q:"¿Qué es el régimen aduanero de depósito fiscal?",
-   opts:["Importación definitiva con pago diferido","Almacenamiento de mercancías extranjeras en un almacén autorizado sin pagar impuestos hasta su importación","Exportación con depósito de garantía","Tránsito con escolta aduanal obligatoria"],correct:1},
-  {q:"¿Qué es el Sistema Generalizado de Preferencias (SGP)?",
-   opts:["Un arancel punitivo para países en desarrollo","Acuerdo por el que países desarrollados otorgan preferencias arancelarias unilaterales a países en desarrollo","Un tipo de TLC entre bloques regionales","Un programa de certificación de calidad"],correct:1},
-  {q:"¿Qué son las salvaguardas en comercio internacional?",
-   opts:["Seguros de carga obligatorios","Medidas temporales de protección aplicadas cuando el aumento de importaciones causa daño grave a la industria nacional","Documentos de garantía bancaria","Certificados de calidad para productos importados"],correct:1},
 
-  {q:"¿Qué es el arancel mixto en el sistema arancelario mexicano?",
-   opts:["Solo un porcentaje sobre el valor","Solo una cantidad fija por unidad","La combinación de un arancel ad valorem y uno específico aplicados simultáneamente","Un arancel exclusivo para países sin TLC"],correct:2},
-  {q:"¿Qué es el aforo en el proceso de despacho aduanero?",
-   opts:["El peso máximo permitido por contenedor","El reconocimiento físico y/o documental de mercancías por el agente aduanal","El pago del IVA en importaciones","El número de bultos declarados en el pedimento"],correct:1},
-  {q:"¿Qué es el régimen aduanero de elaboración en recinto fiscalizado?",
-   opts:["Almacenar mercancías sin procesar por tiempo indefinido","Importar definitivamente con pago diferido","Introducir mercancías extranjeras a un recinto autorizado para someterlas a procesos industriales sin pagar impuestos","Exportar temporalmente para reparación"],correct:2},
-  {q:"¿Cuál es la diferencia entre importación temporal y depósito fiscal?",
-   opts:["Son lo mismo con diferente nombre","En temporal la mercancía se usa en México; en depósito fiscal se almacena en bodega autorizada sin pagar impuestos aún","El depósito fiscal paga más impuestos","La temporal no requiere pedimento"],correct:1},
-  {q:"¿Qué es el precio de transferencia en operaciones de comercio exterior?",
-   opts:["El precio de venta al consumidor final","El valor declarado en la factura aduanal","El precio pactado entre empresas relacionadas en transacciones internacionales, sujeto a reglas fiscales especiales","El costo de transporte internacional"],correct:2},
-  {q:"¿Qué es el certificado fitosanitario en comercio exterior?",
-   opts:["Un permiso para exportar productos electrónicos","Documento que certifica que productos vegetales o animales cumplen requisitos sanitarios para ingresar a un país","Un arancel especial para productos orgánicos","Un tipo de seguro para mercancías perecederas"],correct:1},
-  {q:"¿Qué es la fracción arancelaria 9802 en el contexto del T-MEC?",
-   opts:["Productos completamente fabricados en México","Fracción para artículos de uso personal","Fracción que permite importar con arancel reducido componentes fabricados en EE.UU. que regresan al país tras proceso en México","Productos agrícolas con trato preferencial"],correct:2},
-  {q:"¿Qué es el despacho anticipado en aduanas mexicanas?",
-   opts:["Pagar aranceles antes del pedimento","Tramitar el pedimento y pagar impuestos antes de que la mercancía llegue a territorio nacional","Un descuento por tramitar rápidamente","Importar sin revisión física"],correct:1},
-  {q:"¿Qué es la carta de crédito documentaria (L/C) en comercio internacional?",
-   opts:["Un contrato de transporte marítimo","Un documento donde el banco del importador garantiza el pago al exportador si se presentan los documentos acordados","Un seguro de carga internacional","Un certificado de origen bancario"],correct:1},
-  {q:"¿Qué es el conocimiento de embarque (Bill of Lading)?",
-   opts:["La factura comercial de importación","Documento emitido por la naviera que acredita el contrato de transporte y la recepción de la mercancía","El pedimento aduanal marítimo","El certificado de origen para transporte marítimo"],correct:1},
-  {q:"¿Qué son las medidas antidumping?",
-   opts:["Aranceles que aplica un país para contrarrestar importaciones vendidas a precios artificialmente bajos que dañan su industria","Subsidios para exportadores nacionales","Restricciones cuantitativas a las importaciones","Normas técnicas obligatorias para productos importados"],correct:0},
-  {q:"¿Qué es el transporte multimodal en logística internacional?",
-   opts:["Transportar mercancías usando solo transporte marítimo","El uso de un solo medio de transporte para toda la cadena","El uso combinado de dos o más medios de transporte bajo un único contrato y documento","El transporte exclusivo por vía aérea"],correct:2},
-  {q:"¿Qué es la guía aérea (Air Waybill) en comercio exterior?",
-   opts:["El pedimento para importaciones aéreas","Documento de transporte aéreo que acredita el contrato entre el embarcador y la aerolínea para el transporte de mercancías","Un permiso de exportación por avión","La factura del flete aéreo internacional"],correct:1},
-  {q:"¿Qué es el seguro de carga en operaciones de comercio exterior?",
-   opts:["Un impuesto obligatorio sobre importaciones","La póliza que cubre pérdidas o daños a la mercancía durante el transporte internacional","Un trámite aduanal obligatorio","El costo del embalaje internacional"],correct:1},
-  {q:"¿Qué significa el INCOTERM CIF?",
-   opts:["El comprador paga todo desde origen","El vendedor paga solo el flete","Costo, Seguro y Flete: el vendedor paga transporte y seguro hasta el puerto de destino","El importador asume costos desde el almacén del vendedor"],correct:2},
-  {q:"¿Qué es el packing list o lista de empaque?",
-   opts:["El pedimento aduanal detallado","Documento que describe el contenido, peso y dimensiones de cada bulto de un embarque","La factura comercial de exportación","El certificado de calidad del producto"],correct:1},
-  {q:"¿Cuál es la función del Número de Identificación Comercial (NICO) en México?",
-   opts:["Es el RFC del importador","Código asignado a mercancías que identifica regulaciones especiales aplicables, complementando la fracción arancelaria","El número de pedimento aduanal","El folio del certificado de origen"],correct:1},
-  {q:"¿Qué es la declaración de valor en aduana?",
-   opts:["La lista de precios del proveedor extranjero","El documento donde el importador declara el valor de la mercancía para calcular los impuestos de importación","El certificado de origen del producto","El manifiesto de carga del buque"],correct:1},
-  {q:"¿Qué es el comercio de servicios en el contexto internacional?",
-   opts:["Solo el comercio de productos digitales","El intercambio internacional de servicios como turismo, finanzas, transporte, educación y telecomunicaciones, regulado por el AGCS de la OMC","El comercio informal en zonas fronterizas","La exportación de software únicamente"],correct:1},
-  {q:"¿Qué es la zona de libre comercio en su definición más básica?",
-   opts:["Una zona donde no hay ningún tipo de control","Un área donde se eliminan los aranceles entre los países miembros pero cada país mantiene sus propios aranceles frente a terceros","Un acuerdo donde todos los países tienen los mismos aranceles","Una región donde solo circulan productos locales"],correct:1},
-  {q:"¿Qué diferencia a una unión aduanera de una zona de libre comercio?",
-   opts:["No hay diferencia real entre ambas","En la unión aduanera los países adoptan un arancel externo común frente a terceros países; en la zona de libre comercio cada país mantiene el suyo","La zona de libre comercio elimina más barreras","La unión aduanera es solo para servicios"],correct:1},
-  {q:"¿Qué es el Sistema de Información Comercial (SNICE) en México?",
-   opts:["Una red social para empresas exportadoras","Sistema de la Secretaría de Economía con información sobre aranceles, cuotas y regulaciones aplicables al comercio exterior","El sistema de pagos del SAT para aranceles","La plataforma de logística del gobierno"],correct:1},
-  {q:"¿Qué es la declaratoria de cumplimiento de una NOM?",
-   opts:["Un permiso de exportación especial","El documento que acredita que un producto importado cumple con la norma técnica mexicana aplicable","Una exención fiscal para productos certificados","El sello de calidad del gobierno mexicano"],correct:1},
-  {q:"¿Qué es el COVE (Comprobante de Valor Electrónico) en aduanas mexicanas?",
-   opts:["El pedimento electrónico simplificado","El folio electrónico que vincula la factura comercial con el pedimento para acreditar el valor en aduana","El comprobante fiscal del pago de aranceles","El número de registro del agente aduanal"],correct:1},
-  {q:"¿Qué es la exportación definitiva de servicios en términos fiscales?",
-   opts:["Solo aplica a productos tangibles","La prestación de servicios a residentes en el extranjero que se consume fuera del territorio nacional, generalmente con tasa 0% de IVA","Un tipo de exportación que paga el doble de impuestos","La exportación de servicios profesionales únicamente"],correct:1},
-  {q:"¿Qué es la nomenclatura arancelaria?",
-   opts:["El nombre comercial del producto en el mercado","El sistema de codificación y descripción ordenada de las mercancías para fines aduaneros y estadísticos","El registro de importadores habituales","El catálogo de agentes aduanales autorizados"],correct:1},
-  {q:"¿Qué es el manifiesto de carga en logística aduanera?",
-   opts:["El pedimento del importador","Documento que relaciona todas las mercancías transportadas en un vehículo, buque o aeronave, presentado ante la aduana al arribo","La factura del transportista","El contrato de arrendamiento del contenedor"],correct:1},
-  {q:"¿Qué establece el Artículo 36 de la Ley Aduanera mexicana?",
-   opts:["Los requisitos para ser agente aduanal","Los documentos que deben presentarse ante la aduana para el despacho de importaciones y exportaciones","Las sanciones por evasión de impuestos","Los requisitos para obtener la certificación OEA"],correct:1},
-  {q:"¿Qué es el Pre-despacho en el sistema aduanero mexicano?",
-   opts:["Un pago anticipado de derechos","La modalidad que permite transmitir el pedimento y pagar contribuciones antes de que la mercancía llegue a México para agilizar su salida","Un tipo de despacho sin reconocimiento físico","El despacho exclusivo para importadores certificados"],correct:1},
-  {q:"¿Qué es el Sistema de Administración Aduanera (SAA)?",
-   opts:["El departamento de cobros del SAT","La plataforma tecnológica del SAT que gestiona y automatiza los procesos de despacho aduanero en México","El software de contabilidad para agentes aduanales","El registro nacional de mercancías peligrosas"],correct:1},
-  {q:"¿Qué es el comercio intraindustrial en economía internacional?",
-   opts:["El comercio exclusivamente entre micro empresas","El intercambio de bienes similares o del mismo sector entre dos países, como cuando México exporta e importa vehículos","El comercio solo dentro de un mismo estado","El comercio entre empresas del mismo grupo corporativo"],correct:1},
-  {q:"¿Qué son los contingentes arancelarios (cupos) en comercio exterior?",
-   opts:["Aranceles que aumentan automáticamente","El volumen máximo de mercancías que puede importarse con arancel reducido; las cantidades que lo superan pagan arancel mayor","La cantidad máxima de exportaciones permitidas","El límite de peso por contenedor marítimo"],correct:1},
-  {q:"¿Qué es el tipo de cambio en operaciones de comercio exterior?",
-   opts:["El costo del transporte internacional","La tasa de conversión entre la moneda nacional y la extranjera usada para calcular el valor en aduana en operaciones de importación","El precio del seguro de carga","El arancel convertido a pesos mexicanos"],correct:1},
-  {q:"¿Qué es la facilitación del comercio según la OMC?",
-   opts:["Eliminar todos los aranceles inmediatamente","La simplificación, modernización y armonización de los procedimientos de exportación e importación para reducir costos y tiempos","Reducir las normas de calidad para importar más rápido","Crear zonas francas en todos los países"],correct:1},
-  {q:"¿Qué es el SADEN (Sistema de Automatización del Despacho Especial) en México?",
-   opts:["El sistema de pagos electrónicos de aranceles","El mecanismo que permite realizar el despacho aduanero de mercancías consideradas de bajo riesgo de forma simplificada y expedita","El registro de empresas certificadas OEA","La plataforma de estadísticas de comercio exterior"],correct:1},
-  {q:"¿Qué es la triangulación de comercio en operaciones aduanales?",
-   opts:["Un método legal de transporte por tres países","El proceso de importar en un país, procesar y reexportar legalmente","Una práctica que puede usarse para evadir restricciones arancelarias enviando mercancías a través de un tercer país para falsear su origen","El uso de tres agentes aduanales en una operación"],correct:2},
-  {q:"¿Qué es el TLCUEM (Tratado de Libre Comercio México - Unión Europea)?",
-   opts:["Un acuerdo solo de servicios financieros","Un tratado que elimina aranceles entre México y los 27 países de la UE para bienes, servicios e inversión","Un programa de cooperación cultural solamente","Un acuerdo exclusivo para productos agrícolas"],correct:1},
-  {q:"¿Qué es la exportación indirecta?",
-   opts:["Exportar sin pagar impuestos","Vender productos a un intermediario nacional que se encarga de exportarlos al mercado extranjero","Exportar productos de manera clandestina","Exportar temporalmente para exposiciones"],correct:1},
-  {q:"¿Qué regula la Ley de Comercio Exterior en México?",
-   opts:["Solo los aranceles de importación","Los mecanismos para regular, promover y proteger el comercio exterior, incluyendo cuotas compensatorias, salvaguardas y prácticas desleales","Únicamente las exportaciones mexicanas","El transporte internacional de mercancías"],correct:1},
-  {q:"¿Qué es el pago de contribuciones en el despacho aduanero?",
-   opts:["Solo el pago del IVA","El entero de los impuestos (IGI, IVA, IEPS según aplique) y derechos causados por la importación, previo al despacho de la mercancía","Un depósito reembolsable de garantía","El pago al agente aduanal por sus servicios"],correct:1},
-  {q:"¿Qué es el rectificación de pedimento en aduanas?",
-   opts:["Cancelar completamente una importación","La corrección de datos erróneos en un pedimento ya tramitado, dentro de los plazos y supuestos permitidos por la Ley Aduanera","Duplicar un pedimento por error","Solicitar devolución de impuestos pagados de más"],correct:1},
-  {q:"¿Qué es la inteligencia aduanera?",
-   opts:["Un sistema de IA para clasificar mercancías","El uso de análisis de datos, perfiles de riesgo y tecnología para detectar contrabando, fraude fiscal y evasión en operaciones de comercio exterior","Un programa de capacitación para agentes aduanales","El sistema de vigilancia en recintos fiscales"],correct:1},
-  {q:"¿Qué es el Comprobante Fiscal Digital por Internet (CFDI) en exportaciones?",
-   opts:["Un documento solo para importaciones","El comprobante fiscal electrónico que ampara la exportación de mercancías, equivalente a la factura en operaciones nacionales","El pedimento de exportación simplificado","El certificado de origen digital"],correct:1},
-  {q:"¿Qué es la ventaja comparativa en teoría del comercio internacional?",
-   opts:["Tener más tecnología que otros países","Producir un bien con menor costo de oportunidad relativo que otro país, justificando la especialización y el comercio internacional","Exportar más de lo que se importa siempre","Tener los precios más bajos del mercado"],correct:1},
-  {q:"¿Qué es el Registro en el Esquema de Certificación (REC) de empresas OEA?",
-   opts:["El trámite para ser agente aduanal","El proceso mediante el cual el SAT certifica a empresas como operadores confiables con beneficios en rapidez y facilidades aduaneras","El registro de proveedores de logística","La certificación ISO para exportadores"],correct:1},
-  {q:"¿Qué es la cadena de suministro global (Global Supply Chain)?",
-   opts:["Solo la red de transporte marítimo mundial","La red integrada de proveedores, fabricantes, distribuidores y clientes que opera a nivel internacional para producir y entregar bienes","El sistema de pedimentos electrónicos","El conjunto de agentes aduanales certificados"],correct:1},
-  {q:"¿Cuál es la diferencia entre el IVA en importaciones definitivas y el IVA acreditable?",
-   opts:["No hay diferencia entre ambos","El IVA en importaciones se paga al momento del despacho como requisito; el IVA acreditable es el que la empresa puede recuperar contra el IVA cobrado en sus ventas","El IVA de importación es siempre mayor","El IVA acreditable solo aplica a exportadores"],correct:1},
-  {q:"¿Qué es el SECIIT (Servicio de Clasificación e Identificación de Instrumentos de Trabajo)?",
-   opts:["Un programa de capacitación aduanal","El sistema del SAT que permite a las empresas solicitar criterios de clasificación arancelaria de sus mercancías para tener certeza jurídica","El registro de agentes aduanales activos","Un certificado de calidad para importadores"],correct:1},
-  {q:"¿Qué son los Principios Generales de Valoración Aduanera de la OMC?",
-   opts:["Reglas para calcular el flete internacional","El conjunto de métodos en orden jerárquico para determinar el valor en aduana: valor de transacción, bienes idénticos, similares, deductivo, reconstruido y de últimos recursos","Las normas para certificar el origen de mercancías","Los procedimientos para el despacho aduanero"],correct:1},
-];
+/* ── Mode state ── */
+let currentMode = 'student';
+const MODE_CFG = {
+  student:{ time:14, toWin:4 },
+  teacher:{ time:12, toWin:4 },
+  visitor:{ time:20, toWin:3 },
+};
 
-let currentQ=[],qi=0,qScore=0,qtimer=null,qtl=12,qaActive=false;
-
-function shuffle(arr){return [...arr].sort(()=>Math.random()-.5);}
-
-/* Build a question with shuffled answer positions */
-function buildShuffledQ(raw){
-  // Create array of {text, isCorrect}
-  const items=raw.opts.map((o,i)=>({text:o,isCorrect:i===raw.correct}));
-  const shuffled=shuffle(items);
-  return {q:raw.q, opts:shuffled.map(x=>x.text), answer:shuffled.findIndex(x=>x.isCorrect)};
+/* ── Mode select ── */
+function openModeSelect(){
+  resetActivity();
+  document.getElementById('mode-select').classList.remove('hidden');
+  speakText('Elige tu nivel. Estudiante, profesor, o visitante general.',null,null);
 }
+function closeModeSelect(){
+  document.getElementById('mode-select').classList.add('hidden');
+  window.speechSynthesis.cancel();
+}
+function selectMode(mode){
+  currentMode = mode;
+  document.getElementById('mode-select').classList.add('hidden');
+  window.speechSynthesis.cancel();
+  setTimeout(()=>{ if(mode==='visitor') openTrivia(); else openQuiz(); }, 250);
+}
+
+/* ══ EXPERT QUIZ (student / teacher) ══ */
+let currentQ=[],qi=0,qScore=0,qtimer=null,qtl=0,qaActive=false;
+let quizResultTimer=null;
 
 function openQuiz(){
   resetActivity();
-  // Pick 5 random questions AND shuffle their answers
-  const picked=shuffle(BANK).slice(0,5);
-  currentQ=picked.map(buildShuffledQ);
-  qi=0;qScore=0;qaActive=true;
+  currentQ = shuffle(ALL_Q).slice(0,5).map(buildShuffledQ);
+  qi=0; qScore=0; qaActive=true;
+  const labels={student:'RETO ADUABOT · ESTUDIANTE',teacher:'RETO ADUABOT · PROFESOR'};
+  document.querySelector('.qo-title').textContent = labels[currentMode]||'RETO ADUABOT';
   document.getElementById('quiz-ov').classList.remove('hidden');
-  document.getElementById('qv').classList.remove('hidden');document.getElementById('qrv').classList.add('hidden');
+  document.getElementById('qv').classList.remove('hidden');
+  document.getElementById('qrv').classList.add('hidden');
   for(let i=0;i<5;i++){const p=document.getElementById('p'+i);p.className='pip';if(i===0)p.classList.add('cur');}
   loadQ();
 }
@@ -1169,27 +1264,49 @@ function loadQ(){
   const q=currentQ[qi];
   document.getElementById('qnum').textContent=`PREGUNTA ${qi+1} / 5`;
   document.getElementById('qtxt').textContent=q.q;
-  const opts=document.getElementById('qopts');opts.innerHTML='';
+  const optsEl=document.getElementById('qopts');
+  optsEl.innerHTML='';
   q.opts.forEach((o,i)=>{
-    const b=document.createElement('button');b.className='qopt';b.textContent=o;
-    b.onclick=()=>ansQ(i);opts.appendChild(b);});
-  setTimeout(()=>speakText(`Pregunta ${qi+1}. ${q.q}`,null,null),200);
-  startQTimer();
+    const b=document.createElement('button');
+    b.className='qopt';b.textContent=o;
+    b.onclick=()=>ansQ(i);
+    optsEl.appendChild(b);
+  });
+  // Hide options+timer while AduaBot reads
+  const ov=document.getElementById('quiz-ov');
+  ov.classList.add('qz-waiting');
+  ov.classList.remove('qz-ready');
+  speakText(`Pregunta ${qi+1}. ${q.q}`,null,()=>{
+    ov.classList.remove('qz-waiting');
+    ov.classList.add('qz-ready');
+    startQTimer();
+  });
 }
 
-function startQTimer(){clearInterval(qtimer);qtl=12;updTimer();
-  qtimer=setInterval(()=>{qtl--;updTimer();if(qtl<=0){clearInterval(qtimer);revealQ(-1);}},1000);}
+function startQTimer(){
+  const cfg=MODE_CFG[currentMode]||MODE_CFG.student;
+  clearInterval(qtimer);
+  qtl=cfg.time;
+  updTimer();
+  qtimer=setInterval(()=>{qtl--;updTimer();if(qtl<=0){clearInterval(qtimer);revealQ(-1);}},1000);
+}
 
 function updTimer(){
+  const cfg=MODE_CFG[currentMode]||MODE_CFG.student;
+  const maxTime=cfg.time;
   document.getElementById('tnum').textContent=qtl;
-  const c=document.getElementById('tc');c.style.strokeDashoffset=201*(1-qtl/12);
-  const col=qtl>6?'#00e8ff':qtl>3?'#ffab00':'#ff1744';
-  c.style.stroke=col;document.getElementById('tnum').style.color=col;}
+  const c=document.getElementById('tc');
+  c.style.strokeDashoffset=201*(1-qtl/maxTime);
+  const col=qtl>maxTime*.6?'#00e8ff':qtl>maxTime*.3?'#ffab00':'#ff1744';
+  c.style.stroke=col;
+  document.getElementById('tnum').style.color=col;
+}
 
 function ansQ(chosen){if(!qaActive)return;clearInterval(qtimer);revealQ(chosen);}
 
 function revealQ(chosen){
-  const q=currentQ[qi];const btns=[...document.querySelectorAll('.qopt')];
+  const q=currentQ[qi];
+  const btns=[...document.querySelectorAll('.qopt')];
   btns.forEach(b=>b.disabled=true);
   const ok=chosen===q.answer;
   if(chosen>=0)btns[chosen].classList.add(ok?'correct':'wrong');
@@ -1198,109 +1315,79 @@ function revealQ(chosen){
   document.getElementById('p'+qi).className='pip '+(ok?'ok':'fail');
   const fb=ok
     ?['¡Correcto! Excelente dominio del tema.','¡Acertaste! Eso es nivel experto.','¡Correcto! AduaBot reconoce tu conocimiento.'][qi%3]
-    :['Incorrecto. La respuesta correcta está marcada en verde.','Error. Revisa la opción correcta marcada.','No es correcta. Sigue aprendiendo con AduaMex.'][qi%3];
-  speakText(`${fb}${qi<4?' Siguiente pregunta.':''}`,null,null);
-  setTimeout(()=>{qi++;if(qi<5){document.getElementById('p'+qi).classList.add('cur');loadQ();}else showQResult();},4500);}
+    :['Incorrecto. La respuesta correcta está marcada.','Error. Revisa la opción marcada.','No es correcta. Sigue aprendiendo con AduaMex.'][qi%3];
+  speakText(fb+(qi<4?' Siguiente pregunta.':''),null,null);
+  setTimeout(()=>{qi++;if(qi<5){document.getElementById('p'+qi).classList.add('cur');loadQ();}else showQResult();},3800);
+}
 
 function showQResult(){
   qaActive=false;
-  document.getElementById('qv').classList.add('hidden');document.getElementById('qrv').classList.remove('hidden');
+  document.getElementById('qv').classList.add('hidden');
+  document.getElementById('qrv').classList.remove('hidden');
   document.getElementById('qscore').textContent=`${qScore}/5`;
-  const won=qScore>=4;
+  const cfg=MODE_CFG[currentMode]||MODE_CFG.student;
+  const won=qScore>=cfg.toWin;
   document.getElementById('qrmsg').textContent=won?'¡VENCISTE AL RETO ADUABOT!':'ADUABOT SIGUE INVICTO';
   document.getElementById('qprize').classList.toggle('hidden',!won);
-  // Update live score counter
-  if(won){
-    botLosses++;
-    const el=document.getElementById('score-losses');
-    if(el){el.textContent=botLosses;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
-  } else {
-    botWins++;
-    const el=document.getElementById('score-wins');
-    if(el){el.textContent=botWins;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
-  }
+  if(won){botLosses++;const el=document.getElementById('score-losses');if(el){el.textContent=botLosses;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}}
+  else{botWins++;const el=document.getElementById('score-wins');if(el){el.textContent=botWins;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}}
   const msg=won
-    ?`¡Felicidades! Obtuviste ${qScore} de 5. Venciste al Reto AduaBot. Eres un experto en comercio exterior. Acércate al stand de AduaMex para reclamar tu premio especial.`
-    :`Obtuviste ${qScore} de 5. AduaBot sigue invicto, pero lo intentaste bien. Sigue aprendiendo y vuelve a intentarlo. Visítanos en el stand de AduaMex.`;
+    ?`¡Felicidades! Obtuviste ${qScore} de 5. Venciste al Reto AduaBot. Eres un experto en comercio exterior. Acércate al stand de AduaMex para reclamar tu premio.`
+    :`Obtuviste ${qScore} de 5. AduaBot sigue invicto. Sigue aprendiendo y vuelve a intentarlo. Visítanos en el stand de AduaMex.`;
   setTimeout(()=>speakText(msg,null,null),400);
-  // Auto attract after 40s if nobody closes
   clearTimeout(quizResultTimer);
-  quizResultTimer=setTimeout(()=>{
-    if(!document.getElementById('quiz-ov').classList.contains('hidden')){
-      closeQuiz();
-    }
-  },40000);
+  quizResultTimer=setTimeout(()=>{if(!document.getElementById('quiz-ov').classList.contains('hidden'))closeQuiz();},40000);
 }
 
-function closeQuiz(){clearTimeout(quizResultTimer);document.getElementById('quiz-ov').classList.add('hidden');
-  clearInterval(qtimer);qaActive=false;window.speechSynthesis.cancel();resetActivity();}
-/* ═══════════════════════════════════════════════════
-   MODE SELECT
-═══════════════════════════════════════════════════ */
-function openModeSelect(){
-  resetActivity();
-  document.getElementById('mode-select').classList.remove('hidden');
-  speakText('Elige tu nivel. Reto AduaBot para estudiantes y profesores de comercio exterior, o AduaTrivia para visitantes generales.',null,null);
-}
-function closeModeSelect(){
-  document.getElementById('mode-select').classList.add('hidden');
-  window.speechSynthesis.cancel();
-}
-function startExpertReto(){
-  document.getElementById('mode-select').classList.add('hidden');
-  window.speechSynthesis.cancel();
-  setTimeout(openQuiz,200);
-}
-function startTrivia(){
-  document.getElementById('mode-select').classList.add('hidden');
-  window.speechSynthesis.cancel();
-  setTimeout(openTrivia,200);
+function closeQuiz(){
+  clearTimeout(quizResultTimer);
+  document.getElementById('quiz-ov').classList.add('hidden');
+  clearInterval(qtimer);qaActive=false;
+  window.speechSynthesis.cancel();resetActivity();
 }
 
-/* ═══════════════════════════════════════════════════
-   ADUATRIVIA BANK — 40 preguntas nivel visitante
-═══════════════════════════════════════════════════ */
+/* ══ VISITOR TRIVIA ══ */
 const TRIVIA_BANK=[
   {q:"¿Qué significa importar un producto?",opts:["Fabricarlo en México","Comprarlo en otro país y traerlo a México","Venderlo muy caro","Exportarlo al extranjero"],correct:1},
   {q:"¿Qué es un arancel?",opts:["Un tipo de camión de carga","El nombre del agente aduanal","Un impuesto que se paga cuando traes mercancías de otro país","El precio del dólar"],correct:2},
   {q:"¿Cuál es la frontera más activa de México para el comercio con EE.UU.?",opts:["Ciudad Juárez","Tijuana / Baja California","Cancún","Monterrey"],correct:1},
   {q:"¿Qué hace una Agencia Aduanal como AduaMex?",opts:["Vende seguros de carro","Ayuda a las empresas a cruzar legalmente sus mercancías por la aduana","Fabrica productos para exportar","Presta dinero a importadores"],correct:1},
-  {q:"¿Qué significa IVA?",opts:["Impuesto al Valor Agregado","Instituto de Ventas al Aire libre","Inversión de Valor Alto","Impuesto de Viajes al Aeropuerto"],correct:0},
+  {q:"¿Qué significa IVA?",opts:["Impuesto al Valor Agregado","Instituto de Ventas al Aire Libre","Inversión de Valor Alto","Impuesto de Viajes al Aeropuerto"],correct:0},
   {q:"Si una empresa mexicana vende sus productos en EE.UU., eso se llama:",opts:["Importar","Almacenar","Exportar","Revender"],correct:2},
-  {q:"¿Qué es el comercio exterior?",opts:["Vender cosas en el mercado del pueblo","Comprar y vender productos entre diferentes países","Abrir una tienda en el extranjero","Solo importar, no exportar"],correct:1},
+  {q:"¿Qué es el comercio exterior?",opts:["Vender cosas en el mercado del pueblo","Comprar y vender productos entre diferentes países","Abrir una tienda en el extranjero","Solo importar"],correct:1},
   {q:"¿Qué país es el principal socio comercial de México?",opts:["China","España","Estados Unidos","Brasil"],correct:2},
-  {q:"¿Qué es el T-MEC?",opts:["Un tipo de camión de carga pesada","Un impuesto especial de México","El tratado comercial entre México, Estados Unidos y Canadá","El nombre del aeropuerto de Tijuana"],correct:2},
-  {q:"¿Cómo se llama el lugar donde se revisan las mercancías al entrar a un país?",opts:["El almacén","La aduana","El aeropuerto únicamente","La frontera informal"],correct:1},
-  {q:"¿Qué es un contenedor en el comercio internacional?",opts:["Un tipo de documento aduanal","Una caja metálica grande usada para transportar mercancías en barcos y camiones","El nombre del barco de carga","Un almacén en el puerto"],correct:1},
-  {q:"Si compras algo en línea de China y te lo mandan a México, eso es:",opts:["Una exportación de México","Una importación a México","Un intercambio cultural","Una donación internacional"],correct:1},
-  {q:"¿Qué pasa si metes mercancías a México sin declararlas en la aduana?",opts:["No pasa nada, es normal","Pueden confiscarte la mercancía y hacerte pagar multas","Te dan una advertencia amistosa","Te piden que lo declares la próxima vez"],correct:1},
-  {q:"¿Cuál de estas cosas NO es un medio de transporte en comercio internacional?",opts:["Barco","Avión","Camión de carga","Bicicleta municipal"],correct:3},
-  {q:"¿Qué significa 'Made in Mexico'?",opts:["Que fue diseñado en México pero fabricado en China","Que fue fabricado en México","Que se vende solo en México","Que paga más impuestos"],correct:1},
-  {q:"¿Qué es la logística en comercio exterior?",opts:["El diseño del empaque","El proceso de planificar el transporte y almacenamiento de mercancías","Un tipo de impuesto aduanal","El nombre del barco de carga"],correct:1},
+  {q:"¿Qué es el T-MEC?",opts:["Un tipo de camión de carga pesada","Un impuesto especial","El tratado comercial entre México, Estados Unidos y Canadá","El nombre del aeropuerto de Tijuana"],correct:2},
+  {q:"¿Cómo se llama el lugar donde se revisan las mercancías al entrar a un país?",opts:["El almacén","La aduana","Solo el aeropuerto","La frontera informal"],correct:1},
+  {q:"¿Qué es un contenedor en el comercio internacional?",opts:["Un tipo de documento aduanal","Una caja metálica grande usada para transportar mercancías","El nombre del barco","Un almacén en el puerto"],correct:1},
+  {q:"Si compras algo en línea de China y te lo mandan a México, eso es:",opts:["Una exportación de México","Una importación a México","Un intercambio cultural","Una donación"],correct:1},
+  {q:"¿Qué pasa si metes mercancías a México sin declararlas?",opts:["No pasa nada","Pueden confiscarte la mercancía y hacerte pagar multas","Te dan una advertencia","Te piden los documentos después"],correct:1},
+  {q:"¿Cuál NO es un medio de transporte en comercio internacional?",opts:["Barco","Avión","Camión de carga","Bicicleta municipal"],correct:3},
+  {q:"¿Qué significa Made in Mexico?",opts:["Diseñado aquí pero fabricado en China","Fabricado en México","Se vende solo en México","Paga más impuestos"],correct:1},
+  {q:"¿Qué es la logística en comercio exterior?",opts:["El diseño del empaque","El proceso de planificar el transporte y almacenamiento de mercancías","Un tipo de impuesto","El nombre del barco"],correct:1},
   {q:"¿Para qué sirve un seguro de carga?",opts:["Para asegurar que llega a tiempo","Para cubrir pérdidas o daños durante el transporte internacional","Para pagar menos impuestos","Para darle crédito al importador"],correct:1},
-  {q:"¿Por qué México es importante en el comercio mundial?",opts:["Solo por su tamaño geográfico","Por su ubicación estratégica, tratados comerciales y frontera con EE.UU.","Porque fabrica más autos que nadie","Porque tiene el puerto más grande del mundo"],correct:1},
-  {q:"¿Qué es el contrabando?",opts:["Importar legalmente pagando impuestos","Meter mercancías sin declararlas ni pagar los impuestos correspondientes","Exportar con todos los documentos","Vender productos importados en tiendas"],correct:1},
-  {q:"¿Qué es el comercio justo (fair trade)?",opts:["Un tipo de arancel reducido","Busca que productores de países en desarrollo reciban precios justos por sus productos","Comercio solo entre países del mismo continente","Intercambio de productos sin dinero"],correct:1},
-  {q:"¿Qué documento necesitas para viajar fuera de México?",opts:["RFC y CURP","Pasaporte y en algunos países visa","Solo la credencial del IMSS","Acta de nacimiento únicamente"],correct:1},
-  {q:"¿Cuál es un ejemplo de exportación mexicana famosa?",opts:["Ropa de marca europea","Electrónicos japoneses","Tequila, aguacate y productos automotrices","Teléfonos celulares coreanos"],correct:2},
-  {q:"¿Qué hace el gobierno con los impuestos que cobra en la aduana?",opts:["Los guarda sin usarlos","Los usa para financiar servicios públicos e infraestructura","Los devuelve a los importadores","Los manda a otros países"],correct:1},
-  {q:"¿Qué significa que AduaMex sea una agencia aduanal certificada?",opts:["Que tiene muchos años nada más","Que está autorizada oficialmente por el gobierno para realizar operaciones aduaneras","Que solo trabaja con empresas grandes","Que tiene oficinas en todo el mundo"],correct:1},
-  {q:"¿Por qué es importante contratar una Agencia Aduanal?",opts:["Para ahorrar en comida durante el viaje","Para asegurarse de que todo el proceso aduanero se haga correctamente y sin problemas legales","Porque es obligatorio para todos los viajeros","Para conseguir descuentos en gasolina"],correct:1},
-  {q:"¿Qué significa libre comercio entre dos países?",opts:["Que todo es gratis","Que pueden intercambiar productos con menos impuestos y restricciones","Que no hay reglas de ningún tipo","Que solo comercian entre ellos"],correct:1},
-  {q:"¿Qué es una factura comercial?",opts:["Solo un recibo de compra normal","Documento que describe las mercancías, su valor, vendedor y comprador, necesario en la aduana","Una carta de presentación del vendedor","El contrato de transporte"],correct:1},
-  {q:"¿Qué es un puerto marítimo?",opts:["Un tipo de impuesto portuario","Lugar donde los barcos cargan y descargan mercancías para el comercio internacional","El nombre de un tipo de contenedor","Una oficina de aduanas en el aeropuerto"],correct:1},
-  {q:"¿Qué pasa cuando un país exporta más de lo que importa?",opts:["Tiene déficit comercial","Tiene superávit comercial — entra más dinero del que sale","Es señal de crisis","No tiene ningún efecto"],correct:1},
-  {q:"¿Qué es el coyote en el contexto aduanal informal?",opts:["Un animal que vive en la frontera","Una persona que cruza mercancías ilegalmente evadiendo la aduana","Un tipo de contenedor pequeño","Un funcionario de aduana"],correct:1},
-  {q:"¿Qué es Tijuana conocida en comercio internacional?",opts:["Por ser el puerto marítimo más grande del Pacífico","Por ser una de las ciudades con mayor actividad de maquiladoras y comercio fronterizo","Por producir el mayor volumen de petróleo","Por ser la capital financiera de México"],correct:1},
-  {q:"¿Qué es una maquiladora?",opts:["Un tipo de almacén de aduanas","Una fábrica que importa insumos, los transforma y exporta el producto terminado","Un camión de carga fronterizo","Una tienda de productos importados"],correct:1},
-  {q:"¿Cuál es una ventaja de comprar productos importados?",opts:["Siempre son de mejor calidad","Pueden ofrecer variedad y precios que no siempre están disponibles localmente","No pagan impuestos","Siempre son más baratos que los nacionales"],correct:1},
-  {q:"¿Para qué sirve el número de rastreo de un paquete internacional?",opts:["Para saber el peso del paquete","Para seguir en tiempo real dónde está tu mercancía durante el envío","Para calcular los impuestos","Para identificar al vendedor"],correct:1},
-  {q:"¿Qué es AduaMex?",opts:["Una tienda de ropa importada","Una agencia aduanal certificada que ayuda a importar y exportar legalmente","Una escuela de comercio exterior","Una empresa de transporte de carga"],correct:1},
+  {q:"¿Por qué México es importante en el comercio mundial?",opts:["Solo por su tamaño","Por su ubicación, tratados comerciales y frontera con EE.UU.","Fabrica más autos que nadie","Tiene el puerto más grande del mundo"],correct:1},
+  {q:"¿Qué es el contrabando?",opts:["Importar legalmente pagando impuestos","Meter mercancías sin declararlas ni pagar impuestos","Exportar con todos los documentos","Vender productos importados en tiendas"],correct:1},
+  {q:"¿Qué es AduaMex?",opts:["Una tienda de ropa importada","Una agencia aduanal certificada que ayuda a importar y exportar legalmente","Una escuela de comercio","Una empresa de transporte"],correct:1},
   {q:"¿Dónde está ubicada AduaMex?",opts:["Ciudad de México","Monterrey, Nuevo León","Tijuana, Baja California","Guadalajara, Jalisco"],correct:2},
-  {q:"¿Qué significa que un producto pase por la aduana?",opts:["Que fue revisado y autorizado para entrar o salir del país cumpliendo las leyes","Que fue confiscado por el gobierno","Que pagó el doble de impuestos","Que no necesita documentos"],correct:0},
-  {q:"¿Qué es el tipo de cambio?",opts:["El precio del petróleo","La tasa que indica cuántos pesos equivalen a un dólar, afectando costos de importación","El impuesto al cambio de divisas","El costo del transporte aéreo"],correct:1},
-  {q:"¿Qué tipo de mercancías puede ayudarte a importar AduaMex?",opts:["Solo alimentos y bebidas","Solo ropa y textiles","Todo tipo de mercancías: maquinaria, electrónicos, alimentos, materias primas y más","Solo productos de lujo"],correct:2},
-  {q:"Si alguien quiere empezar a importar productos para vender en México, ¿qué necesita?",opts:["Solo dinero y ganas","Registro como importador, facturas, pagar impuestos y cumplir normas — AduaMex te ayuda con todo","Solo una licencia de conducir","Permiso del presidente"],correct:1},
+  {q:"¿Qué hace el gobierno con los impuestos de la aduana?",opts:["Los guarda sin usarlos","Los usa para financiar servicios públicos e infraestructura","Los devuelve a los importadores","Los manda a otros países"],correct:1},
+  {q:"¿Qué es una maquiladora?",opts:["Un tipo de almacén de aduanas","Una fábrica que importa insumos, los transforma y exporta el producto","Un camión de carga fronterizo","Una tienda de importados"],correct:1},
+  {q:"¿Para qué sirve el número de rastreo de un paquete internacional?",opts:["Para saber el peso","Para seguir en tiempo real dónde está tu paquete","Para calcular los impuestos","Para identificar al vendedor"],correct:1},
+  {q:"Si quieres importar productos para vender en México, ¿qué necesitas?",opts:["Solo dinero y ganas","Registro como importador, facturas, pagar impuestos y cumplir normas","Solo una licencia","Permiso del presidente"],correct:1},
+  {q:"¿Cuál es un ejemplo de exportación mexicana famosa?",opts:["Ropa de marca europea","Electrónicos japoneses","Tequila, aguacate y autos","Teléfonos coreanos"],correct:2},
+  {q:"¿Qué significa libre comercio entre dos países?",opts:["Que todo es gratis","Pueden intercambiar productos con menos impuestos y restricciones","No hay reglas","Solo comercian entre ellos"],correct:1},
+  {q:"¿Qué es una factura comercial?",opts:["Solo un recibo de compra","Documento que describe las mercancías, su valor, vendedor y comprador, necesario en aduana","Una carta del vendedor","El contrato de transporte"],correct:1},
+  {q:"¿Qué pasa cuando un país exporta más de lo que importa?",opts:["Tiene déficit comercial","Tiene superávit: entra más dinero del que sale","Es señal de crisis","No tiene efecto"],correct:1},
+  {q:"¿Por qué contratar una Agencia Aduanal como AduaMex?",opts:["Para ahorrar en comida durante el viaje","Para asegurarse de que el proceso aduanero sea legal y sin problemas","Porque es obligatorio para todos","Para descuentos en gasolina"],correct:1},
+  {q:"¿Qué significa que AduaMex sea certificada?",opts:["Que tiene muchos años","Autorizada oficialmente por el gobierno para operaciones aduaneras","Solo trabaja con grandes empresas","Tiene oficinas en todo el mundo"],correct:1},
+  {q:"¿Qué es el tipo de cambio?",opts:["El precio del petróleo","La tasa que dice cuántos pesos equivalen a un dólar, afectando costos de importación","El impuesto al cambio de divisas","El costo del transporte aéreo"],correct:1},
+  {q:"¿Qué es Tijuana en el contexto comercial?",opts:["El puerto marítimo más grande del Pacífico","Una de las ciudades con mayor actividad de maquiladoras y comercio fronterizo México-EE.UU.","La capital financiera de México","La ciudad que produce más petróleo"],correct:1},
+  {q:"¿Qué tipo de mercancías puede importar AduaMex?",opts:["Solo alimentos","Solo ropa","Todo tipo: maquinaria, electrónicos, alimentos, materias primas y más","Solo productos de lujo"],correct:2},
+  {q:"¿Qué es un puerto marítimo?",opts:["Un tipo de impuesto portuario","Lugar donde los barcos cargan y descargan mercancías para el comercio internacional","El nombre de un contenedor","Una oficina de aduanas en aeropuerto"],correct:1},
+  {q:"¿Qué es el comercio justo (fair trade)?",opts:["Un tipo de arancel reducido","Busca que productores de países en desarrollo reciban precios justos","Comercio solo entre países del mismo continente","Intercambio sin dinero"],correct:1},
+  {q:"¿Qué necesitas para cruzar mercancías por la aduana legalmente?",opts:["Solo el dinero","Documentos en regla, pagar impuestos y cumplir normas — AduaMex te ayuda","Solo una identificación","Permiso presidencial"],correct:1},
+  {q:"¿Cuál es un beneficio del T-MEC para México?",opts:["Que México no paga impuestos en ningún país","Empresas mexicanas pueden vender más fácil en EE.UU. y Canadá","Todo es gratuito entre los tres países","México puede hacer lo que quiera sin reglas"],correct:1},
+  {q:"¿Qué hace AduaMex cuando importas maquinaria?",opts:["La fabrica en México","Gestiona todos los trámites para que entre legalmente y sin problemas","Solo la transporta del aeropuerto","Le presta dinero a tu empresa"],correct:1},
+  {q:"¿Por qué el contrabando es malo para la economía?",opts:["Es legal y ahorra impuestos","Pasa mercancías sin pagar impuestos ni cumplir leyes, dañando la economía y creando competencia desleal","Es un tipo de exportación especial","Cuando pagas más impuestos de lo necesario"],correct:1},
 ];
 
 let tvCurrentQ=[],tvQi=0,tvScore=0,tvTimer=null,tvTimeLeft=20,tvActive=false,tvResultTimer=null;
@@ -1314,33 +1401,41 @@ function openTrivia(){
   document.getElementById('tv-qv').classList.remove('hidden');
   document.getElementById('tv-rv').classList.add('hidden');
   for(let i=0;i<5;i++){const p=document.getElementById('tvp'+i);p.className='tv-pip';if(i===0)p.classList.add('cur');}
-  speakText('Bienvenido a AduaTrivia. Te haré cinco preguntas sencillas. Responde tocando la opción correcta. ¡Buena suerte!',null,()=>{ setTimeout(tvLoadQ,500); });
+  speakText('Bienvenido a AduaTrivia. Te haré cinco preguntas sencillas. Responde tocando la opción correcta. ¡Buena suerte!',null,()=>{setTimeout(tvLoadQ,400);});
 }
 
 function tvLoadQ(){
   const q=tvCurrentQ[tvQi];
-  document.getElementById('tv-qnum').textContent='PREGUNTA '+(tvQi+1)+' / 5';
+  document.getElementById('tv-qnum').textContent=`PREGUNTA ${tvQi+1} / 5`;
   document.getElementById('tv-qtxt').textContent=q.q;
-  const opts=document.getElementById('tv-opts');opts.innerHTML='';
+  const optsEl=document.getElementById('tv-opts');
+  optsEl.innerHTML='';
   q.opts.forEach((o,i)=>{
-    const b=document.createElement('button');b.className='tv-opt';b.textContent=o;
-    b.onclick=()=>tvAnsQ(i);opts.appendChild(b);
+    const b=document.createElement('button');
+    b.className='tv-opt';b.textContent=o;
+    b.onclick=()=>tvAnsQ(i);
+    optsEl.appendChild(b);
   });
-  setTimeout(()=>speakText('Pregunta '+(tvQi+1)+'. '+q.q,null,null),200);
-  tvStartTimer();
+  const ov=document.getElementById('trivia-ov');
+  ov.classList.add('tv-waiting');
+  ov.classList.remove('tv-ready');
+  speakText(`Pregunta ${tvQi+1}. ${q.q}`,null,()=>{
+    ov.classList.remove('tv-waiting');
+    ov.classList.add('tv-ready');
+    tvStartTimer();
+  });
 }
 
 function tvStartTimer(){
   clearInterval(tvTimer);tvTimeLeft=20;tvUpdTimer();
-  tvTimer=setInterval(()=>{tvTimeLeft--;tvUpdTimer();
-    if(tvTimeLeft<=0){clearInterval(tvTimer);tvReveal(-1);}},1000);
+  tvTimer=setInterval(()=>{tvTimeLeft--;tvUpdTimer();if(tvTimeLeft<=0){clearInterval(tvTimer);tvReveal(-1);}},1000);
 }
 
 function tvUpdTimer(){
   document.getElementById('tv-tnum').textContent=tvTimeLeft;
   const c=document.getElementById('tv-tc');
   c.style.strokeDashoffset=201*(1-tvTimeLeft/20);
-  const col=tvTimeLeft>10?'#ffab00':tvTimeLeft>5?'#ff7700':'#ff1744';
+  const col=tvTimeLeft>12?'#ffab00':tvTimeLeft>6?'#ff7700':'#ff1744';
   c.style.stroke=col;
   document.getElementById('tv-tnum').style.color=col;
 }
@@ -1358,40 +1453,27 @@ function tvReveal(chosen){
   document.getElementById('tvp'+tvQi).className='tv-pip '+(ok?'ok':'fail');
   const fb=ok
     ?['¡Correcto! Muy bien.','¡Exacto! Lo sabías.','¡Correcto! Vas muy bien.'][tvQi%3]
-    :['No es correcta. La respuesta está marcada.','Incorrecto. Mira la respuesta marcada.','Error, pero sigue intentando.'][tvQi%3];
+    :['No es correcta. La respuesta está marcada.','Incorrecto. Mira la respuesta marcada.','Error, sigue intentando.'][tvQi%3];
   speakText(fb+(tvQi<4?' Siguiente pregunta.':''),null,null);
-  setTimeout(()=>{
-    tvQi++;
-    if(tvQi<5){document.getElementById('tvp'+tvQi).classList.add('cur');tvLoadQ();}
-    else tvShowResult();
-  },3500);
+  setTimeout(()=>{tvQi++;if(tvQi<5){document.getElementById('tvp'+tvQi).classList.add('cur');tvLoadQ();}else tvShowResult();},3800);
 }
 
 function tvShowResult(){
   tvActive=false;
   document.getElementById('tv-qv').classList.add('hidden');
   document.getElementById('tv-rv').classList.remove('hidden');
-  document.getElementById('tv-score').textContent=tvScore+'/5';
+  document.getElementById('tv-score').textContent=`${tvScore}/5`;
   const won=tvScore>=3;
   document.getElementById('tv-msg').textContent=won?'¡GANASTE EL ADUATRIVIA!':'¡GRACIAS POR PARTICIPAR!';
   document.getElementById('tv-prize').classList.toggle('hidden',!won);
-  if(won){
-    tvWins++;
-    const el=document.getElementById('tv-wins');
-    if(el){el.textContent=tvWins;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
-  } else {
-    tvLosses++;
-    const el=document.getElementById('tv-losses');
-    if(el){el.textContent=tvLosses;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}
-  }
+  if(won){tvWins++;const el=document.getElementById('tv-wins');if(el){el.textContent=tvWins;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}}
+  else{tvLosses++;const el=document.getElementById('tv-losses');if(el){el.textContent=tvLosses;el.style.animation='none';void el.offsetHeight;el.style.animation='scorepop .4s ease-out';}}
   const msg=won
-    ?'¡Felicidades! Obtuviste '+tvScore+' de 5 en AduaTrivia. ¡Ganaste! Acércate al stand de AduaMex para reclamar tu premio.'
-    :'Obtuviste '+tvScore+' de 5. ¡Buen intento! Visítanos en el stand de AduaMex para conocer más sobre el comercio exterior.';
+    ?`¡Felicidades! Obtuviste ${tvScore} de 5 en AduaTrivia. ¡Ganaste! Acércate al stand de AduaMex para reclamar tu premio.`
+    :`Obtuviste ${tvScore} de 5. ¡Buen intento! Visítanos en el stand de AduaMex, tenemos mucho que enseñarte.`;
   setTimeout(()=>speakText(msg,null,null),400);
   clearTimeout(tvResultTimer);
-  tvResultTimer=setTimeout(()=>{
-    if(!document.getElementById('trivia-ov').classList.contains('hidden'))closeTrivia();
-  },40000);
+  tvResultTimer=setTimeout(()=>{if(!document.getElementById('trivia-ov').classList.contains('hidden'))closeTrivia();},40000);
 }
 
 function closeTrivia(){
@@ -1400,37 +1482,42 @@ function closeTrivia(){
   clearInterval(tvTimer);tvActive=false;
   window.speechSynthesis.cancel();resetActivity();
 }
-
 </script>
 
-<!-- ══ MODE SELECT MODAL ══ -->
+<!-- ═══ MODE SELECT ═══ -->
 <div id="mode-select" class="hidden">
-  <div class="ms-logo">ELIGE TU RETO</div>
-  <div class="ms-sub">SELECCIONA TU NIVEL DE PARTICIPACIÓN</div>
+  <div class="ms-title">ELIGE TU NIVEL</div>
+  <div class="ms-sub">SELECCIONA QUIÉN ERES PARA RECIBIR TUS PREGUNTAS</div>
   <div class="ms-cards">
-    <div class="ms-card expert" onclick="startExpertReto()">
-      <div class="mc-icon">🎓</div>
-      <div class="mc-title">RETO ADUABOT</div>
-      <div class="mc-desc">Estudiantes y profesores<br>de Comercio Exterior<br>Nivel experto</div>
-      <div class="mc-badge">4/5 para ganar · 12 seg</div>
+    <div class="ms-card c-student" onclick="selectMode('student')">
+      <div class="ms-icon">🎓</div>
+      <div class="ms-name">ESTUDIANTE</div>
+      <div class="ms-desc">Comercio Exterior<br>Nivel avanzado</div>
+      <div class="ms-badge">4/5 · 14 segundos</div>
     </div>
-    <div class="ms-card visitor" onclick="startTrivia()">
-      <div class="mc-icon">🌟</div>
-      <div class="mc-title">ADUATRIVIA</div>
-      <div class="mc-desc">Visitante general<br>Sin conocimientos previos<br>Nivel accesible</div>
-      <div class="mc-badge">3/5 para ganar · 20 seg</div>
+    <div class="ms-card c-teacher" onclick="selectMode('teacher')">
+      <div class="ms-icon">📚</div>
+      <div class="ms-name">PROFESOR</div>
+      <div class="ms-desc">Experto en la materia<br>Nivel máximo</div>
+      <div class="ms-badge">4/5 · 12 segundos</div>
+    </div>
+    <div class="ms-card c-visitor" onclick="selectMode('visitor')">
+      <div class="ms-icon">🌟</div>
+      <div class="ms-name">VISITANTE</div>
+      <div class="ms-desc">Sin conocimientos previos<br>Nivel accesible</div>
+      <div class="ms-badge">3/5 · 20 segundos</div>
     </div>
   </div>
   <div class="ms-back" onclick="closeModeSelect()">← CANCELAR</div>
 </div>
 
-<!-- ══ ADUATRIVIA OVERLAY ══ -->
+<!-- ═══ ADUATRIVIA (visitante) ═══ -->
 <div id="trivia-ov" class="hidden">
-  <div class="tv-header">
-    <div class="tv-title">🌟 ADUATRIVIA</div>
+  <div style="text-align:center">
+    <div class="tv-title">ADUATRIVIA</div>
     <div class="tv-sub">NIVEL VISITANTE · 5 PREGUNTAS · GANA CON 3 CORRECTAS</div>
   </div>
-  <div class="tv-meta">
+  <div style="display:flex;align-items:center;gap:18px">
     <div class="tv-tw">
       <svg id="tv-tsv" viewBox="0 0 70 70">
         <circle cx="35" cy="35" r="30" fill="none" stroke="rgba(255,171,0,.12)" stroke-width="5"/>
@@ -1457,7 +1544,9 @@ function closeTrivia(){
   <div id="tv-rv" class="hidden tv-res">
     <div class="tv-score" id="tv-score">0/5</div>
     <div class="tv-msg" id="tv-msg">RESULTADO</div>
-    <div class="tv-prize hidden" id="tv-prize">🏆 ¡FELICIDADES! ACÉRCATE AL STAND DE ADUAMEX PARA RECLAMAR TU PREMIO 🏆</div>
+    <div class="tv-prize hidden" id="tv-prize">
+      🏆 ¡FELICIDADES! ACÉRCATE AL STAND DE ADUAMEX PARA RECLAMAR TU PREMIO 🏆
+    </div>
     <button class="tv-close" onclick="closeTrivia()">CERRAR</button>
   </div>
 </div>
