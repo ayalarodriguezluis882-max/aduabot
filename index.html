@@ -223,9 +223,9 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
     --fs-lg:.9rem;  --fs-xl:1.1rem; --fs-2xl:1.4rem;
   }
 
-  /* Allow scroll on phone so nothing gets cut off */
-  html,body{ overflow:auto; position:relative; }
-  #app{ overflow-y:auto; height:auto; min-height:100vh; }
+  /* Allow scroll on phone — keep body fixed, scroll inside #app */
+  html,body{ overflow:hidden; position:fixed; }
+  #app{ overflow-y:auto; height:100vh; min-height:0; }
 
   /* Single column layout */
   .main-body{
@@ -832,7 +832,8 @@ body{background:var(--bg);font-family:'Rajdhani',sans-serif;color:var(--c);}
 })();
 
 /* GEAR ENGINE */
-const gc=document.getElementById('gear-canvas'),gx=gc.getContext('2d');
+const gc=document.getElementById('gear-canvas');
+const gx=gc?gc.getContext('2d'):null;
 let gW=400,gH=300,gState='idle',gLip=[0,0,0,0,0,0,0,0];
 const gangs=[0,0,0,0,0,0,0,0,0];
 
@@ -905,17 +906,24 @@ function getSM(){if(gState==='idle')return .3;if(gState==='listening')return 2.2
 function sHC(b){if(gState==='listening')return '#ff4466';if(gState==='thinking')return '#ffcc00';
   if(gState==='speaking')return '#00ff9d';return b;}
 function animGears(){
+  if(!gx)return;
   const rect=gc.getBoundingClientRect();
   if(rect.width>0){gW=gc.width=rect.width;gH=gc.height=rect.height||300;}
   GEARS=buildGears(gW,gH);
   gx.clearRect(0,0,gW,gH);
   const bgr=gx.createRadialGradient(gW*.5,gH*.42,0,gW*.5,gH*.5,Math.max(gW,gH)*.62);
   bgr.addColorStop(0,'rgba(8,22,44,.98)');bgr.addColorStop(1,'rgba(0,2,10,.99)');
-  gx.fillStyle=bgr;gx.beginPath();gx.roundRect(0,0,gW,gH,12);gx.fill();
+  gx.fillStyle=bgr;gx.beginPath();
+  if(gx.roundRect){gx.roundRect(0,0,gW,gH,12);}
+  else{gx.rect(0,0,gW,gH);}
+  gx.fill();
   const bd=gx.createLinearGradient(0,0,gW,gH);
   bd.addColorStop(0,'rgba(0,232,255,.45)');bd.addColorStop(.5,'rgba(0,232,255,.15)');bd.addColorStop(1,'rgba(0,232,255,.45)');
   gx.strokeStyle=bd;gx.lineWidth=1.5;gx.shadowBlur=0;gx.globalAlpha=1;
-  gx.beginPath();gx.roundRect(.75,.75,gW-1.5,gH-1.5,12);gx.stroke();
+  gx.beginPath();
+  if(gx.roundRect){gx.roundRect(.75,.75,gW-1.5,gH-1.5,12);}
+  else{gx.rect(.75,.75,gW-1.5,gH-1.5);}
+  gx.stroke();
   const cm=9;
   [[[cm,cm],[cm+12,cm]],[[cm,cm],[cm,cm+12]],[[gW-cm,cm],[gW-cm-12,cm]],[[gW-cm,cm],[gW-cm,cm+12]],
    [[cm,gH-cm],[cm+12,gH-cm]],[[cm,gH-cm],[cm,gH-cm-12]],
@@ -972,7 +980,8 @@ function initSystem(){
     w.volume=0;w.lang='es-MX';
     window.speechSynthesis.speak(w);
   });
-  animGears();startInactivityWatcher();
+  try{animGears();}catch(e){console.warn("gears:",e);}
+  startInactivityWatcher();
 }
 
 function consumeEnergy(a){energy=Math.max(0,energy-a);
@@ -1274,8 +1283,10 @@ function shuffle(arr){return [...arr].sort(()=>Math.random()-.5);}
 
 /* Build a question with shuffled answer positions */
 function buildShuffledQ(raw){
-  // Create array of {text, isCorrect}
-
+  const items=raw.opts.map((o,i)=>({text:o,isCorrect:i===raw.correct}));
+  const shuffled=shuffle(items);
+  return {q:raw.q, opts:shuffled.map(x=>x.text), answer:shuffled.findIndex(x=>x.isCorrect)};
+}
 
 const BANK=[
   {q:"¿Qué documento certifica el origen de una mercancía para aplicar preferencias arancelarias en un TLC?",
