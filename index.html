@@ -956,10 +956,22 @@ function resetActivity(){lastActivity=Date.now();
 function initSystem(){
   const v=document.getElementById('apiKey').value;
   if(v.length<10)return alert('LLAVE DENEGADA');
-  KEY=v;document.getElementById('ks').classList.add('hidden');appEl.classList.remove('hidden');
-  if(document.documentElement.requestFullscreen)document.documentElement.requestFullscreen();
-  // Pre-warm speech synthesis to reduce first-use lag
-  const warmup=new SpeechSynthesisUtterance(' ');warmup.volume=0;window.speechSynthesis.speak(warmup);
+  KEY=v;
+  document.getElementById('ks').classList.add('hidden');
+  appEl.classList.remove('hidden');
+  // Fullscreen — safe on all devices, never blocks init
+  try{
+    const fsEl=document.documentElement;
+    if(fsEl.requestFullscreen)fsEl.requestFullscreen().catch(()=>{});
+    else if(fsEl.webkitRequestFullscreen)fsEl.webkitRequestFullscreen();
+    else if(fsEl.mozRequestFullScreen)fsEl.mozRequestFullScreen();
+  }catch(e){}
+  // Pre-load voices NOW so first speakText has them ready
+  loadVoices(()=>{
+    const w=new SpeechSynthesisUtterance(' ');
+    w.volume=0;w.lang='es-MX';
+    window.speechSynthesis.speak(w);
+  });
   animGears();startInactivityWatcher();
 }
 
@@ -1196,18 +1208,62 @@ Visitante dice: "${q}"`;
   }catch{ctEl.textContent='Error de conexión. Por favor intenta de nuevo.';setState('idle');busy=false;}}
 
 /* TTS */
-function speakText(t,onStart,onEnd){
-  const sy=window.speechSynthesis;sy.cancel();
-  const u=new SpeechSynthesisUtterance(t);u.lang='es-MX';u.pitch=0.5;u.rate=0.9;
-  // Voice selection — cached after first call
-  if(!speakText._voices){speakText._voices=sy.getVoices();}
-  if(!speakText._voices.length){
-    sy.onvoiceschanged=()=>{speakText._voices=sy.getVoices();};
+/* ── loadVoices: cross-platform voice loader ── */
+function loadVoices(cb){
+  const sy=window.speechSynthesis;
+  const vs=sy.getVoices();
+  if(vs.length){if(cb)cb(vs);return;}
+  // Voices not ready yet (common on Android/iOS first load)
+  let tries=0;
+  const poll=setInterval(()=>{
+    const v=sy.getVoices();
+    if(v.length||tries>20){clearInterval(poll);if(cb)cb(v);}
+    tries++;
+  },100);
+}
+
+/* ── pickVoice: find best Spanish male voice ── */
+function pickVoice(voices){
+  if(!voices||!voices.length)return null;
+  // Priority order for Spanish male voice
+  const priority=[
+    v=>v.name.includes('Jorge'),
+    v=>v.name.includes('Pablo'),
+    v=>v.lang==='es-MX'&&v.name.toLowerCase().includes('male'),
+    v=>v.lang==='es-MX',
+    v=>v.lang.startsWith('es')&&v.name.toLowerCase().includes('male'),
+    v=>v.lang.startsWith('es'),
+  ];
+  for(const test of priority){
+    const found=voices.find(test);
+    if(found)return found;
   }
-  const m=speakText._voices.find(v=>v.name.includes('Jorge')||v.name.includes('Pablo')||v.name.toLowerCase().includes('male'));
-  if(m)u.voice=m;
-  if(onStart)u.onstart=onStart;
-  u.onend=()=>{if(onEnd)onEnd();};u.onerror=()=>{if(onEnd)onEnd();};sy.speak(u);}
+  return null;
+}
+
+function speakText(t,onStart,onEnd){
+  if(!t||!t.trim()){if(onEnd)onEnd();return;}
+  const sy=window.speechSynthesis;
+  sy.cancel();
+  loadVoices(voices=>{
+    const u=new SpeechSynthesisUtterance(t);
+    u.lang='es-MX';
+    u.pitch=0.45;  // Deep masculine voice
+    u.rate=0.88;
+    u.volume=1;
+    const voice=pickVoice(voices);
+    if(voice)u.voice=voice;
+    if(onStart)u.onstart=onStart;
+    u.onend=()=>{if(onEnd)onEnd();};
+    u.onerror=(e)=>{
+      // On mobile, 'interrupted' is normal — don't treat as error
+      if(e.error==='interrupted'||e.error==='canceled'){if(onEnd)onEnd();return;}
+      if(onEnd)onEnd();
+    };
+    // Small delay prevents Android audio glitch on first speak
+    setTimeout(()=>sy.speak(u),80);
+  });
+}
 
 function speak(t){speakText(t,()=>setState('speaking'),()=>{setState('idle');busy=false;resetActivity();});}
 
