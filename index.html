@@ -1278,42 +1278,14 @@ function speak(t){speakText(t,()=>setState('speaking'),()=>{setState('idle');bus
 
 
 
-function normalizarOpciones(opciones){
-  const promedio = Math.round(
-    opciones.reduce((acc, op) => acc + op.length, 0) / opciones.length
-  );
+function shuffle(arr){return [...arr].sort(()=>Math.random()-.5);}
 
-  return opciones.map(op => {
-    if(op.length < promedio){
-      return op + " dentro del proceso correspondiente";
-    } 
-    else if(op.length > promedio + 25){
-      return op.substring(0, promedio + 10) + "...";
-    }
-    return op;
-  });
-}
 
+/* Build a question with shuffled answer positions */
 function buildShuffledQ(raw){
-  const items = raw.opts.map((o,i)=>({
-    text:o,
-    isCorrect:i===raw.correct
-  }));
-
-  const shuffled = shuffle(items);
-
-  let opciones = shuffled.map(x=>x.text);
-  opciones = normalizarOpciones(opciones);
-
-  return {
-    q: raw.q,
-    opts: opciones,
-    answer: shuffled.findIndex(x=>x.isCorrect)
-  };
-}
-
-
-
+  const items=raw.opts.map((o,i)=>({text:o,isCorrect:i===raw.correct}));
+  const shuffled=shuffle(items);
+  return {q:raw.q, opts:shuffled.map(x=>x.text), answer:shuffled.findIndex(x=>x.isCorrect)};
 }
 
 const BANK=[
